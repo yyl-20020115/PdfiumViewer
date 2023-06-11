@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
@@ -11,26 +7,54 @@ namespace PdfiumViewer.Demo
 {
     public partial class MainForm : Form
     {
-        private SearchForm _searchForm;
+        private string PdfDatabasePath = string.Empty;
 
-        public MainForm()
+        private SearchForm searchForm;
+
+        private PdfViewer PdfViewer 
+            => this.tabControlBooks?.SelectedTab?.Controls?[0] as PdfViewer;
+
+        public class PdfRecord
+        {
+            public string PdfPath;
+        }
+
+
+        public MainForm(string dir)
         {
             InitializeComponent();
 
+            if (!string.IsNullOrEmpty(dir) && Directory.Exists(PdfDatabasePath = dir))
+            {
+                var files = Directory.GetFiles(PdfDatabasePath,"*.pdf", SearchOption.AllDirectories);
+                foreach(var file in files)
+                {
+                    var record = new PdfRecord() { PdfPath = file };
+                    var ti = new TreeNode(Path.GetFileNameWithoutExtension(file)) { Tag = record };
+                    this.treeViewBooks.Nodes.Add(ti);
+                    
+                    var tabPage = new TabPage() { Tag = record };
+                    
+                }
+
+
+            }
+
+
             renderToBitmapsToolStripMenuItem.Enabled = false;
 
-            pdfViewer1.Renderer.DisplayRectangleChanged += Renderer_DisplayRectangleChanged;
-            pdfViewer1.Renderer.ZoomChanged += Renderer_ZoomChanged;
+            PdfViewer.Renderer.DisplayRectangleChanged += Renderer_DisplayRectangleChanged;
+            PdfViewer.Renderer.ZoomChanged += Renderer_ZoomChanged;
 
-            pdfViewer1.Renderer.MouseMove += Renderer_MouseMove;
-            pdfViewer1.Renderer.MouseLeave += Renderer_MouseLeave;
+            PdfViewer.Renderer.MouseMove += Renderer_MouseMove;
+            PdfViewer.Renderer.MouseLeave += Renderer_MouseLeave;
             ShowPdfLocation(PdfPoint.Empty);
 
             cutMarginsWhenPrintingToolStripMenuItem.PerformClick();
 
-            _zoom.Text = pdfViewer1.Renderer.Zoom.ToString();
+            zoom.Text = PdfViewer.Renderer.Zoom.ToString();
 
-            Disposed += (s, e) => pdfViewer1.Document?.Dispose();
+            Disposed += (s, e) => PdfViewer?.Document?.Dispose();
         }
 
         private void Renderer_MouseLeave(object sender, EventArgs e)
@@ -40,7 +64,7 @@ namespace PdfiumViewer.Demo
 
         private void Renderer_MouseMove(object sender, MouseEventArgs e)
         {
-            ShowPdfLocation(pdfViewer1.Renderer.PointToPdf(e.Location));
+            ShowPdfLocation(PdfViewer.Renderer.PointToPdf(e.Location));
         }
 
         private void ShowPdfLocation(PdfPoint point)
@@ -59,12 +83,12 @@ namespace PdfiumViewer.Demo
 
         void Renderer_ZoomChanged(object sender, EventArgs e)
         {
-            _zoom.Text = pdfViewer1.Renderer.Zoom.ToString();
+            zoom.Text = PdfViewer.Renderer.Zoom.ToString();
         }
 
         void Renderer_DisplayRectangleChanged(object sender, EventArgs e)
         {
-            _page.Text = (pdfViewer1.Renderer.Page + 1).ToString();
+            page.Text = (PdfViewer.Renderer.Page + 1).ToString();
         }
 
         private void MainForm_Shown(object sender, EventArgs e)
@@ -73,8 +97,10 @@ namespace PdfiumViewer.Demo
 
             if (args.Length > 1)
             {
-                pdfViewer1.Document?.Dispose();
-                pdfViewer1.Document = OpenDocument(args[1]);
+
+
+                PdfViewer.Document?.Dispose();
+                PdfViewer.Document = OpenDocument(args[1]);
                 renderToBitmapsToolStripMenuItem.Enabled = true;
             }
             else
@@ -82,8 +108,8 @@ namespace PdfiumViewer.Demo
                 OpenFile();
             }
 
-            _showBookmarks.Checked = pdfViewer1.ShowBookmarks;
-            _showToolbar.Checked = pdfViewer1.ShowToolbar;
+            _showBookmarks.Checked = PdfViewer.ShowBookmarks;
+            _showToolbar.Checked = PdfViewer.ShowToolbar;
         }
 
         private PdfDocument OpenDocument(string fileName)
@@ -113,23 +139,23 @@ namespace PdfiumViewer.Demo
                     return;
                 }
 
-                pdfViewer1.Document?.Dispose();
-                pdfViewer1.Document = OpenDocument(form.FileName);
+                PdfViewer.Document?.Dispose();
+                PdfViewer.Document = OpenDocument(form.FileName);
                 renderToBitmapsToolStripMenuItem.Enabled = true;
             }
         }
 
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Close();
         }
 
-        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFile();
         }
 
-        private void renderToBitmapsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void RenderToBitmapsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             int dpiX;
             int dpiY;
@@ -153,7 +179,7 @@ namespace PdfiumViewer.Demo
                 path = form.SelectedPath;
             }
 
-            var document = pdfViewer1.Document;
+            var document = PdfViewer.Document;
 
             for (int i = 0; i < document.PageCount; i++)
             {
@@ -164,147 +190,145 @@ namespace PdfiumViewer.Demo
             }
         }
 
-        private void toolStripButton1_Click_1(object sender, EventArgs e)
+        private void ToolStripButton1_Click_MM(object sender, EventArgs e)
         {
-            pdfViewer1.Renderer.Page--;
+            PdfViewer.Renderer.Page--;
         }
 
-        private void toolStripButton2_Click(object sender, EventArgs e)
+        private void ToolStripButton2_Click_PP(object sender, EventArgs e)
         {
-            pdfViewer1.Renderer.Page++;
+            PdfViewer.Renderer.Page++;
         }
 
-        private void cutMarginsWhenPrintingToolStripMenuItem_Click(object sender, EventArgs e)
+        private void CutMarginsWhenPrintingToolStripMenuItem_Click(object sender, EventArgs e)
         {
             cutMarginsWhenPrintingToolStripMenuItem.Checked = true;
             shrinkToMarginsWhenPrintingToolStripMenuItem.Checked = false;
 
-            pdfViewer1.DefaultPrintMode = PdfPrintMode.CutMargin;
+            PdfViewer.DefaultPrintMode = PdfPrintMode.CutMargin;
         }
 
-        private void shrinkToMarginsWhenPrintingToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ShrinkToMarginsWhenPrintingToolStripMenuItem_Click(object sender, EventArgs e)
         {
             shrinkToMarginsWhenPrintingToolStripMenuItem.Checked = true;
             cutMarginsWhenPrintingToolStripMenuItem.Checked = false;
 
-            pdfViewer1.DefaultPrintMode = PdfPrintMode.ShrinkToMargin;
+            PdfViewer.DefaultPrintMode = PdfPrintMode.ShrinkToMargin;
         }
 
         private void printPreviewToolStripMenuItem_Click(object sender, EventArgs e)
         {
             using (var form = new PrintPreviewDialog())
             {
-                form.Document = pdfViewer1.Document.CreatePrintDocument(pdfViewer1.DefaultPrintMode);
+                form.Document = PdfViewer.Document.CreatePrintDocument(PdfViewer.DefaultPrintMode);
                 form.ShowDialog(this);
             }
         }
 
-        private void _fitWidth_Click(object sender, EventArgs e)
+        private void FitWidth_Click(object sender, EventArgs e)
         {
             FitPage(PdfViewerZoomMode.FitWidth);
         }
 
         private void FitPage(PdfViewerZoomMode zoomMode)
         {
-            int page = pdfViewer1.Renderer.Page;
-            pdfViewer1.ZoomMode = zoomMode;
-            pdfViewer1.Renderer.Zoom = 1;
-            pdfViewer1.Renderer.Page = page;
+            int page = PdfViewer.Renderer.Page;
+            PdfViewer.ZoomMode = zoomMode;
+            PdfViewer.Renderer.Zoom = 1;
+            PdfViewer.Renderer.Page = page;
         }
 
-        private void _fitHeight_Click(object sender, EventArgs e)
+        private void FitHeight_Click(object sender, EventArgs e)
         {
             FitPage(PdfViewerZoomMode.FitHeight);
         }
 
-        private void _fitBest_Click(object sender, EventArgs e)
+        private void FitBest_Click(object sender, EventArgs e)
         {
             FitPage(PdfViewerZoomMode.FitBest);
         }
 
-        private void _page_KeyDown(object sender, KeyEventArgs e)
+        private void Page_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
                 e.Handled = true;
 
-                int page;
-                if (int.TryParse(_page.Text, out page))
-                    pdfViewer1.Renderer.Page = page - 1;
+                if (int.TryParse(this.page.Text, out int page))
+                    PdfViewer.Renderer.Page = page - 1;
             }
         }
 
-        private void _zoom_KeyDown(object sender, KeyEventArgs e)
+        private void Zoom_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
                 e.Handled = true;
 
-                float zoom;
-                if (float.TryParse(_zoom.Text, out zoom))
-                    pdfViewer1.Renderer.Zoom = zoom;
+                if (float.TryParse(this.zoom.Text, out float zoom))
+                    PdfViewer.Renderer.Zoom = zoom;
             }
         }
 
-        private void toolStripButton4_Click(object sender, EventArgs e)
+        private void ToolStripButton4_Click(object sender, EventArgs e)
         {
-            pdfViewer1.Renderer.ZoomIn();
+            PdfViewer.Renderer.ZoomIn();
         }
 
-        private void toolStripButton3_Click(object sender, EventArgs e)
+        private void ToolStripButton3_Click(object sender, EventArgs e)
         {
-            pdfViewer1.Renderer.ZoomOut();
+            PdfViewer.Renderer.ZoomOut();
         }
 
-        private void _rotateLeft_Click(object sender, EventArgs e)
+        private void RotateLeft_Click(object sender, EventArgs e)
         {
-            pdfViewer1.Renderer.RotateLeft();
+            PdfViewer.Renderer.RotateLeft();
         }
 
-        private void _rotateRight_Click(object sender, EventArgs e)
+        private void RotateRight_Click(object sender, EventArgs e)
         {
-            pdfViewer1.Renderer.RotateRight();
+            PdfViewer.Renderer.RotateRight();
         }
 
-        private void _hideToolbar_Click(object sender, EventArgs e)
+        private void HideToolbar_Click(object sender, EventArgs e)
         {
-            pdfViewer1.ShowToolbar = _showToolbar.Checked;
+            PdfViewer.ShowToolbar = _showToolbar.Checked;
         }
 
-        private void _hideBookmarks_Click(object sender, EventArgs e)
+        private void HideBookmarks_Click(object sender, EventArgs e)
         {
-            pdfViewer1.ShowBookmarks = _showBookmarks.Checked;
+            PdfViewer.ShowBookmarks = _showBookmarks.Checked;
         }
 
-        private void deleteCurrentPageToolStripMenuItem_Click(object sender, EventArgs e)
+        private void DeleteCurrentPageToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // PdfRenderer does not support changes to the loaded document,
             // so we fake it by reloading the document into the renderer.
 
-            int page = pdfViewer1.Renderer.Page;
-            var document = pdfViewer1.Document;
-            pdfViewer1.Document = null;
+            int page = PdfViewer.Renderer.Page;
+            var document = PdfViewer.Document;
+            PdfViewer.Document = null;
             document.DeletePage(page);
-            pdfViewer1.Document = document;
-            pdfViewer1.Renderer.Page = page;
+            PdfViewer.Document = document;
+            PdfViewer.Renderer.Page = page;
         }
 
-        private void rotate0ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void Rotate0ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Rotate(PdfRotation.Rotate0);
         }
 
-        private void rotate90ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void Rotate90ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Rotate(PdfRotation.Rotate90);
         }
 
-        private void rotate180ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void Rotate180ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Rotate(PdfRotation.Rotate180);
         }
 
-        private void rotate270ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void Rotate270ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Rotate(PdfRotation.Rotate270);
         }
@@ -314,28 +338,28 @@ namespace PdfiumViewer.Demo
             // PdfRenderer does not support changes to the loaded document,
             // so we fake it by reloading the document into the renderer.
 
-            int page = pdfViewer1.Renderer.Page;
-            var document = pdfViewer1.Document;
-            pdfViewer1.Document = null;
+            int page = PdfViewer.Renderer.Page;
+            var document = PdfViewer.Document;
+            PdfViewer.Document = null;
             document.RotatePage(page, rotate);
-            pdfViewer1.Document = document;
-            pdfViewer1.Renderer.Page = page;
+            PdfViewer.Document = document;
+            PdfViewer.Renderer.Page = page;
         }
 
-        private void showRangeOfPagesToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ShowRangeOfPagesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (var form = new PageRangeForm(pdfViewer1.Document))
+            using (var form = new PageRangeForm(PdfViewer.Document))
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
-                    pdfViewer1.Document = form.Document;
+                    PdfViewer.Document = form.Document;
                 }
             }
 		}
 			
-        private void informationToolStripMenuItem_Click(object sender, EventArgs e)
+        private void InformationToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            PdfInformation info = pdfViewer1.Document.GetInformation();
+            PdfInformation info = PdfViewer.Document.GetInformation();
             StringBuilder sz = new StringBuilder();
             sz.AppendLine($"Author: {info.Author}");
             sz.AppendLine($"Creator: {info.Creator}");
@@ -349,34 +373,40 @@ namespace PdfiumViewer.Demo
             MessageBox.Show(sz.ToString(), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
 		}	
 
-        private void _getTextFromPage_Click(object sender, EventArgs e)
+        private void GetTextFromPage_Click(object sender, EventArgs e)
         {
-            int page = pdfViewer1.Renderer.Page;
-            string text = pdfViewer1.Document.GetPdfText(page);
+            int page = PdfViewer.Renderer.Page;
+            string text = PdfViewer.Document.GetPdfText(page);
             string caption = string.Format("Page {0} contains {1} character(s):", page + 1, text.Length);
-
-            if (text.Length > 128) text = text.Substring(0, 125) + "...\n\n\n\n..." + text.Substring(text.Length - 125);
-            MessageBox.Show(this, text, caption, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            var cform = new FormContent() { Content = text, Text = text };
+            cform.ShowDialog(this);
+            //if (text.Length > 128) text = text.Substring(0, 125) + "...\n\n\n\n..." + text.Substring(text.Length - 125);
+            //MessageBox.Show(this, text, caption, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void findToolStripMenuItem_Click(object sender, EventArgs e)
+        private void FindToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (_searchForm == null)
+            if (searchForm == null)
             {
-                _searchForm = new SearchForm(pdfViewer1.Renderer);
-                _searchForm.Disposed += (s, ea) => _searchForm = null;
-                _searchForm.Show(this);
+                searchForm = new SearchForm(PdfViewer.Renderer);
+                searchForm.Disposed += (s, ea) => searchForm = null;
+                searchForm.Show(this);
             }
 
-            _searchForm.Focus();
+            searchForm.Focus();
         }
 
-        private void printMultiplePagesToolStripMenuItem_Click(object sender, EventArgs e)
+        private void PrintMultiplePagesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (var form = new PrintMultiplePagesForm(pdfViewer1))
+            using (var form = new PrintMultiplePagesForm(PdfViewer))
             {
                 form.ShowDialog(this);
             }
+        }
+
+        private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new AboutForm().ShowDialog(this);
         }
     }
 }

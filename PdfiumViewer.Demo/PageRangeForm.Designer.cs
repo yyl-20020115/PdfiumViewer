@@ -39,67 +39,68 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 15);
+            this.label1.Location = new System.Drawing.Point(12, 14);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(59, 13);
+            this.label1.Size = new System.Drawing.Size(59, 12);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Start page:";
+            this.label1.Text = "开始页面:";
             // 
             // _startPage
             // 
             this._startPage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this._startPage.Location = new System.Drawing.Point(83, 12);
+            this._startPage.Location = new System.Drawing.Point(83, 11);
             this._startPage.Name = "_startPage";
-            this._startPage.Size = new System.Drawing.Size(264, 20);
+            this._startPage.Size = new System.Drawing.Size(264, 21);
             this._startPage.TabIndex = 1;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 41);
+            this.label2.Location = new System.Drawing.Point(12, 38);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(56, 13);
+            this.label2.Size = new System.Drawing.Size(59, 12);
             this.label2.TabIndex = 2;
-            this.label2.Text = "End page:";
+            this.label2.Text = "结束页面:";
             // 
             // _endPage
             // 
             this._endPage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this._endPage.Location = new System.Drawing.Point(83, 38);
+            this._endPage.Location = new System.Drawing.Point(83, 35);
             this._endPage.Name = "_endPage";
-            this._endPage.Size = new System.Drawing.Size(264, 20);
+            this._endPage.Size = new System.Drawing.Size(264, 21);
             this._endPage.TabIndex = 3;
             // 
             // _acceptButton
             // 
             this._acceptButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this._acceptButton.Location = new System.Drawing.Point(191, 64);
+            this._acceptButton.Location = new System.Drawing.Point(191, 59);
             this._acceptButton.Name = "_acceptButton";
-            this._acceptButton.Size = new System.Drawing.Size(75, 23);
+            this._acceptButton.Size = new System.Drawing.Size(75, 21);
             this._acceptButton.TabIndex = 4;
-            this._acceptButton.Text = "OK";
+            this._acceptButton.Text = "确定(&O)";
             this._acceptButton.UseVisualStyleBackColor = true;
             this._acceptButton.Click += new System.EventHandler(this._acceptButton_Click);
             // 
             // _cancelButton
             // 
             this._cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this._cancelButton.Location = new System.Drawing.Point(272, 64);
+            this._cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this._cancelButton.Location = new System.Drawing.Point(272, 59);
             this._cancelButton.Name = "_cancelButton";
-            this._cancelButton.Size = new System.Drawing.Size(75, 23);
+            this._cancelButton.Size = new System.Drawing.Size(75, 21);
             this._cancelButton.TabIndex = 5;
-            this._cancelButton.Text = "Cancel";
+            this._cancelButton.Text = "取消(&C)";
             this._cancelButton.UseVisualStyleBackColor = true;
             // 
             // PageRangeForm
             // 
             this.AcceptButton = this._acceptButton;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this._cancelButton;
-            this.ClientSize = new System.Drawing.Size(359, 99);
+            this.ClientSize = new System.Drawing.Size(359, 91);
             this.Controls.Add(this._cancelButton);
             this.Controls.Add(this._acceptButton);
             this.Controls.Add(this._endPage);
@@ -108,7 +109,7 @@
             this.Controls.Add(this.label1);
             this.Name = "PageRangeForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Show Range of Pages";
+            this.Text = "显示页面范围";
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 
 namespace PdfiumViewer.Demo
@@ -13,15 +8,9 @@ namespace PdfiumViewer.Demo
         private int _dpiX;
         private int _dpiY;
 
-        public int DpiX
-        {
-            get { return _dpiX; }
-        }
+        public int DpiX => _dpiX;
 
-        public int DpiY
-        {
-            get { return _dpiY; }
-        }
+        public int DpiY => _dpiY;
 
         public ExportBitmapsForm()
         {
@@ -29,17 +18,17 @@ namespace PdfiumViewer.Demo
             UpdateEnabled();
         }
 
-        private void _acceptButton_Click(object sender, EventArgs e)
+        private void AcceptButton_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.OK;
         }
 
-        private void _dpiX_TextChanged(object sender, EventArgs e)
+        private void DpiX_TextChanged(object sender, EventArgs e)
         {
             UpdateEnabled();
         }
 
-        private void _dpiY_TextChanged(object sender, EventArgs e)
+        private void DpiY_TextChanged(object sender, EventArgs e)
         {
             UpdateEnabled();
         }
@@ -51,4 +40,6 @@ namespace PdfiumViewer.Demo
                 int.TryParse(_dpiYTextBox.Text, out _dpiY);
         }
     }
+
 }
+
