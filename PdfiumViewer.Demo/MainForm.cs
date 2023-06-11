@@ -5,17 +5,19 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using YamlDotNet.Serialization;
 
 namespace PdfiumViewer.Demo
 {
     public partial class MainForm : Form
     {
-        private string PdfDatabasePath;
+
+        public string PdfDatabasePath = "";
 
         private SearchForm searchForm;
 
         private PdfViewer PdfViewer
-            => this.tabControlBooks.SelectedTab!=null && this.tabControlBooks.SelectedTab.Controls.Count > 0
+            => this.tabControlBooks.SelectedTab != null && this.tabControlBooks.SelectedTab.Controls.Count > 0
                 ? this.tabControlBooks.SelectedTab.Controls?[0] as PdfViewer
                 : null;
 
@@ -35,17 +37,17 @@ namespace PdfiumViewer.Demo
             text = (text ?? "").Trim();
             if (text.Length == 0) return;
 
+            if (!Directory.Exists(PdfDatabasePath)) return;
             var found = FindPdfs(this.PdfDatabasePath, text);
-            foreach(var p in found.OrderBy(p=>p.Key))
+            foreach (var p in found.OrderBy(p => p.Key))
             {
                 var file = p.Key;
                 var name = Path.GetFileNameWithoutExtension(file);
 
-                
-                var record = new PdfRecord() { Name=name,  PdfPath = file ,PdfMatches = p.Value};
+                var record = new PdfRecord() { Name = name, PdfPath = file, PdfMatches = p.Value };
                 var treeNode = new TreeNode(name);
 
-                foreach(var match in p.Value.Items)
+                foreach (var match in p.Value.Items)
                 {
                     var matchNode = new TreeNode(
                         $"{match.Text}: 页码={match.Page}, 开始位置={match.TextSpan.Offset}, 长度={match.TextSpan.Length}")
@@ -77,20 +79,21 @@ namespace PdfiumViewer.Demo
             => FindPdfs(Directory.GetFiles(directory, "*.pdf", SearchOption.AllDirectories), text);
 
 
-        public Dictionary<string,PdfMatches> FindPdfs(string[] files, string text)
+        public Dictionary<string, PdfMatches> FindPdfs(string[] files, string text)
         {
-            var found = new ConcurrentBag<(string,PdfMatches)>();    
-            files.AsParallel().ForAll(f => {
+            var found = new ConcurrentBag<(string, PdfMatches)>();
+            files.AsParallel().ForAll(f =>
+            {
                 using (var doc = PdfDocument.Load(f))
                 {
                     var matches = doc.Search(text, false, false);
-                    if (matches.Items.Any()) 
-                        found.Add((f,matches));
+                    if (matches.Items.Any())
+                        found.Add((f, matches));
                 }
 
             });
             var ret = new Dictionary<string, PdfMatches>();
-            foreach(var (file,matches) in found)
+            foreach (var (file, matches) in found)
             {
                 ret[file] = matches;
             }
@@ -119,9 +122,8 @@ namespace PdfiumViewer.Demo
             _showToolbar.Checked = pdfViewer.ShowToolbar;
 
         }
-        public MainForm(string PdfDatabasePath)
+        public MainForm()
         {
-            this.PdfDatabasePath = PdfDatabasePath;
             InitializeComponent();
         }
 
@@ -164,7 +166,12 @@ namespace PdfiumViewer.Demo
 
         private void MainForm_Shown(object sender, EventArgs e)
         {
+            this.PdfDatabasePath = Program.GlobalConfig.PDFDatabasePath;
 
+            if (string.IsNullOrEmpty(this.PdfDatabasePath)||!Directory.Exists(this.PdfDatabasePath))
+            {
+                SettingsToolStripMenuItem_Click(sender, e);
+            }
         }
 
         private PdfDocument OpenDocument(string fileName)
@@ -417,8 +424,8 @@ namespace PdfiumViewer.Demo
                     PdfViewer.Document = form.Document;
                 }
             }
-		}
-			
+        }
+
         private void InformationToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (PdfViewer == null) return;
@@ -435,7 +442,7 @@ namespace PdfiumViewer.Demo
             builder.AppendLine($"修改日期: {info.ModificationDate}");
 
             MessageBox.Show(builder.ToString(), "相关信息", MessageBoxButtons.OK, MessageBoxIcon.Information);
-		}	
+        }
 
         private void GetTextFromPage_Click(object sender, EventArgs e)
         {
@@ -474,15 +481,16 @@ namespace PdfiumViewer.Demo
 
         private void TreeViewBooks_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            if(e.Node.Tag is TabPage page)
+            if (e.Node.Tag is TabPage page)
             {
                 this.tabControlBooks.SelectedTab = page;
-            }else if(e.Node.Tag is PdfMatch match)
+            }
+            else if (e.Node.Tag is PdfMatch match)
             {
                 if (this.PdfViewer == null)
                     return;
                 var parent = e.Node.Parent;
-                if(parent.Tag is TabPage cp && cp.Tag is PdfRecord record)
+                if (parent.Tag is TabPage cp && cp.Tag is PdfRecord record)
                 {
                     this.tabControlBooks.SelectedTab = cp;
                     record.PdfSearchManager.ScrollIntoView(match);
@@ -493,10 +501,26 @@ namespace PdfiumViewer.Demo
 
         private void ToolStripTextBoxTextSearch_KeyDown(object sender, KeyEventArgs e)
         {
-            if(e.KeyCode == Keys.Enter)
+            if (e.KeyCode == Keys.Enter)
             {
                 e.Handled = true;
                 ToolStripButtonTextSearch_Click(sender, e);
+            }
+        }
+
+        private void SettingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var dialog = new FolderBrowserDialog())
+            {
+                dialog.Description = "请选择PDF文件所在的文件夹";
+
+                var result = dialog.ShowDialog(this);
+
+                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(dialog.SelectedPath))
+                {
+                    Program.GlobalConfig.PDFDatabasePath = this.PdfDatabasePath = dialog.SelectedPath;
+                    Program.SaveGlobalConfig();
+                }
             }
         }
     }

@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33723.286
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PdfiumViewer", "PdfiumViewer\PdfiumViewer.csproj", "{438914B6-5D1C-482C-B942-5C0E057EEF6F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PdfiumViewer.Demo", "PdfiumViewer.Demo\PdfiumViewer.Demo.csproj", "{ADD131F6-17EB-4E42-932F-74CBE6DBEEB3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PdSearcher", "PdfiumViewer.Demo\PdSearcher.csproj", "{ADD131F6-17EB-4E42-932F-74CBE6DBEEB3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PdfiumViewer.WPFDemo", "PdfiumViewer.WPFDemo\PdfiumViewer.WPFDemo.csproj", "{CBD6C52A-F0F4-48B8-957B-8CAD54ACD837}"
 EndProject
