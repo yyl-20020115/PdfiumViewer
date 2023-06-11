@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace PdfiumViewer
+﻿namespace PdfiumViewer
 {
     /// <summary>
     /// Specifies the rotation of pages shown in the PDF renderer.
     /// </summary>
-    public enum PdfRotation
+    public enum PdfRotation: int
     {
         /// <summary>
         /// Rotates the output 0 degrees.

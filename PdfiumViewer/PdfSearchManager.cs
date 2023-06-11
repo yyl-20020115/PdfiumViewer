@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Reflection;
-using System.Text;
-using System.Windows.Forms.VisualStyles;
 
 namespace PdfiumViewer
 {
@@ -12,11 +9,11 @@ namespace PdfiumViewer
     /// </summary>
     public class PdfSearchManager
     {
-        private bool _highlightAllMatches;
-        private PdfMatches _matches;
-        private List<(PdfMatch,IList<PdfRectangle>)> _bounds;
-        private int _firstMatch;
-        private int _offset;
+        private bool highlightAllMatches;
+        private PdfMatches matches;
+        private List<(PdfMatch,IList<PdfRectangle>)> bounds;
+        private int firstMatch;
+        private int offset;
 
         /// <summary>
         /// The renderer associated with the search manager.
@@ -68,12 +65,12 @@ namespace PdfiumViewer
         /// </summary>
         public bool HighlightAllMatches
         {
-            get { return _highlightAllMatches; }
+            get { return highlightAllMatches; }
             set
             {
-                if (_highlightAllMatches != value)
+                if (highlightAllMatches != value)
                 {
-                    _highlightAllMatches = value;
+                    highlightAllMatches = value;
                     UpdateHighlights();
                 }
             }
@@ -103,27 +100,27 @@ namespace PdfiumViewer
 
             if (string.IsNullOrEmpty(text))
             {
-                _matches = null;
-                _bounds = null;
+                matches = null;
+                bounds = null;
             }
             else
             {
-                _matches = Renderer.Document.Search(text, MatchCase, MatchWholeWord);
-                _bounds = GetAllBounds();
+                matches = Renderer.Document.Search(text, MatchCase, MatchWholeWord);
+                bounds = GetAllBounds();
             }
 
-            _offset = -1;
+            offset = -1;
 
             UpdateHighlights();
 
-            return _matches != null && _matches.Items.Count > 0;
+            return matches != null && matches.Items.Count > 0;
         }
 
         private List<(PdfMatch,IList<PdfRectangle>)> GetAllBounds()
         {
             var result = new List<(PdfMatch,IList<PdfRectangle>)>();
 
-            foreach (var match in _matches.Items)
+            foreach (var match in matches.Items)
             {
                 result.Add((match,Renderer.Document.GetTextBounds(match.TextSpan)));
             }
@@ -138,13 +135,13 @@ namespace PdfiumViewer
         /// <returns>False when the first match was found again; otherwise true.</returns>
         public bool FindNext(bool forward)
         {
-            if (_matches == null || _matches.Items.Count == 0)
+            if (matches == null || matches.Items.Count == 0)
                 return false;
 
-            if (_offset == -1)
+            if (offset == -1)
             {
-                _offset = FindFirstFromCurrentPage();
-                _firstMatch = _offset;
+                offset = FindFirstFromCurrentPage();
+                firstMatch = offset;
 
                 UpdateHighlights();
                 ScrollCurrentIntoView();
@@ -154,21 +151,21 @@ namespace PdfiumViewer
 
             if (forward)
             {
-                _offset++;
-                if (_offset >= _matches.Items.Count)
-                    _offset = 0;
+                offset++;
+                if (offset >= matches.Items.Count)
+                    offset = 0;
             }
             else
             {
-                _offset--;
-                if (_offset < 0)
-                    _offset = _matches.Items.Count - 1;
+                offset--;
+                if (offset < 0)
+                    offset = matches.Items.Count - 1;
             }
 
             UpdateHighlights();
             ScrollCurrentIntoView();
 
-            return _offset != _firstMatch;
+            return offset != firstMatch;
         }
 
         public void ScrollIntoView(PdfMatch match)
@@ -203,7 +200,7 @@ namespace PdfiumViewer
         }
         private void ScrollCurrentIntoView()
         {
-            var current = _bounds[_offset];
+            var current = bounds[offset];
             if (current.Item2.Count > 0)
                 Renderer.ScrollIntoView(current.Item2[0]);
         }
@@ -214,9 +211,9 @@ namespace PdfiumViewer
             {
                 int page = (i + Renderer.Page) % Renderer.Document.PageCount;
 
-                for (int j = 0; j < _matches.Items.Count; j++)
+                for (int j = 0; j < matches.Items.Count; j++)
                 {
-                    var match = _matches.Items[j];
+                    var match = matches.Items[j];
                     if (match.Page == page)
                         return j;
                 }
@@ -237,25 +234,25 @@ namespace PdfiumViewer
         {
             Renderer.Markers.Clear();
 
-            if (_matches == null)
+            if (matches == null)
                 return;
 
-            if (_highlightAllMatches)
+            if (highlightAllMatches)
             {
-                for (int i = 0; i < _matches.Items.Count; i++)
+                for (int i = 0; i < matches.Items.Count; i++)
                 {
-                    AddMatch(i, i == _offset);
+                    AddMatch(i, i == offset);
                 }
             }
-            else if (_offset != -1)
+            else if (offset != -1)
             {
-                AddMatch(_offset, true);
+                AddMatch(offset, true);
             }
         }
 
         private void AddMatch(int index, bool current)
         {
-            foreach (var pdfBounds in _bounds[index].Item2)
+            foreach (var pdfBounds in bounds[index].Item2)
             {
                 var bounds = new RectangleF(
                     pdfBounds.Bounds.Left - 1,

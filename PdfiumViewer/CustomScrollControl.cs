@@ -378,7 +378,7 @@ namespace PdfiumViewer
 
         private void SyncScrollbars()
         {
-            Rectangle displayRect = displayRect;
+            var displayRect = this.displayRect;
 
             if (!IsHandleCreated)
                 return;

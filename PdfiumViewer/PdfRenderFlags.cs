@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace PdfiumViewer
 {
@@ -8,7 +6,7 @@ namespace PdfiumViewer
     /// Flags that influence the page rendering process.
     /// </summary>
     [Flags]
-    public enum PdfRenderFlags
+    public enum PdfRenderFlags : int
     {
         /// <summary>
         /// No flags.

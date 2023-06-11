@@ -14,13 +14,13 @@ namespace PdfiumViewer
     {
         private static readonly Padding PageMargin = new Padding(4);
 
-        private int _height;
-        private int _maxWidth;
-        private int _maxHeight;
-        private double _documentScaleFactor;
-        private bool _disposed;
+        private int height;
+        private int maxWidth;
+        private int maxHeight;
+        private double documentScaleFactor;
+        private bool disposed;
         private double _scaleFactor;
-        private ShadeBorder _shadeBorder = new ShadeBorder();
+        private ShadeBorder shadeBorder = new ShadeBorder();
         private int _suspendPaintCount;
         private ToolTip _toolTip;
         private PdfViewerZoomMode _zoomMode;
@@ -355,7 +355,7 @@ namespace PdfiumViewer
         private Size GetScrollOffset()
         {
             var bounds = GetScrollClientArea();
-            int maxWidth = (int)(_maxWidth * _scaleFactor) + ShadeBorder.Size.Horizontal + PageMargin.Horizontal;
+            int maxWidth = (int)(this.maxWidth * _scaleFactor) + ShadeBorder.Size.Horizontal + PageMargin.Horizontal;
             int leftOffset = (HScroll ? DisplayRectangle.X : (bounds.Width - maxWidth) / 2) + maxWidth / 2;
             int topOffset = VScroll ? DisplayRectangle.Y : 0;
 
@@ -404,19 +404,19 @@ namespace PdfiumViewer
 
         private void ReloadDocument()
         {
-            _height = 0;
-            _maxWidth = 0;
-            _maxHeight = 0;
+            height = 0;
+            maxWidth = 0;
+            maxHeight = 0;
 
             foreach (var size in Document.PageSizes)
             {
                 var translated = TranslateSize(size);
-                _height += (int)translated.Height;
-                _maxWidth = Math.Max((int)translated.Width, _maxWidth);
-                _maxHeight = Math.Max((int)translated.Height, _maxHeight);
+                height += (int)translated.Height;
+                maxWidth = Math.Max((int)translated.Width, maxWidth);
+                maxHeight = Math.Max((int)translated.Height, maxHeight);
             }
 
-            _documentScaleFactor = _maxHeight != 0 ? (double)_maxWidth / _maxHeight : 0D;
+            documentScaleFactor = maxHeight != 0 ? (double)maxWidth / maxHeight : 0D;
 
             _markers = null;
 
@@ -466,7 +466,7 @@ namespace PdfiumViewer
 
             _pageCacheValid = true;
 
-            int maxWidth = (int)(_maxWidth * _scaleFactor) + ShadeBorder.Size.Horizontal + PageMargin.Horizontal;
+            int maxWidth = (int)(this.maxWidth * _scaleFactor) + ShadeBorder.Size.Horizontal + PageMargin.Horizontal;
             int leftOffset = -maxWidth / 2;
 
             int offset = 0;
@@ -477,7 +477,7 @@ namespace PdfiumViewer
                 int height = (int)(size.Height * _scaleFactor);
                 int fullHeight = height + ShadeBorder.Size.Vertical + PageMargin.Vertical;
                 int width = (int)(size.Width * _scaleFactor);
-                int maxFullWidth = (int)(_maxWidth * _scaleFactor) + ShadeBorder.Size.Horizontal + PageMargin.Horizontal;
+                int maxFullWidth = (int)(this.maxWidth * _scaleFactor) + ShadeBorder.Size.Horizontal + PageMargin.Horizontal;
                 int fullWidth = width + ShadeBorder.Size.Horizontal + PageMargin.Horizontal;
                 int thisLeftOffset = leftOffset + (maxFullWidth - fullWidth) / 2;
 
@@ -566,13 +566,13 @@ namespace PdfiumViewer
             {
                 int height = bounds.Height - ShadeBorder.Size.Vertical - PageMargin.Vertical;
 
-                _scaleFactor = ((double)height / _maxHeight) * Zoom;
+                _scaleFactor = ((double)height / maxHeight) * Zoom;
             }
             else
             {
                 int width = bounds.Width - ShadeBorder.Size.Horizontal - PageMargin.Horizontal;
 
-                _scaleFactor = ((double)width / _maxWidth) * Zoom;
+                _scaleFactor = ((double)width / maxWidth) * Zoom;
             }
         }
 
@@ -585,7 +585,7 @@ namespace PdfiumViewer
 
             var controlScaleFactor = (double)bounds.Width / bounds.Height;
 
-            return controlScaleFactor >= _documentScaleFactor ? PdfViewerZoomMode.FitHeight : PdfViewerZoomMode.FitWidth;
+            return controlScaleFactor >= documentScaleFactor ? PdfViewerZoomMode.FitHeight : PdfViewerZoomMode.FitWidth;
         }
 
         /// <summary>
@@ -650,7 +650,7 @@ namespace PdfiumViewer
 
                     DrawPageImage(e.Graphics, page, pageBounds);
 
-                    _shadeBorder.Draw(e.Graphics, pageBounds);
+                    shadeBorder.Draw(e.Graphics, pageBounds);
 
                     DrawMarkers(e.Graphics, page);
                 }
@@ -678,8 +678,8 @@ namespace PdfiumViewer
         /// <returns>The document bounds.</returns>
         protected override Rectangle GetDocumentBounds()
         {
-            int height = (int)(_height * _scaleFactor + (ShadeBorder.Size.Vertical + PageMargin.Vertical) * Document.PageCount);
-            int width = (int)(_maxWidth * _scaleFactor + ShadeBorder.Size.Horizontal + PageMargin.Horizontal);
+            int height = (int)(this.height * _scaleFactor + (ShadeBorder.Size.Vertical + PageMargin.Vertical) * Document.PageCount);
+            int width = (int)(maxWidth * _scaleFactor + ShadeBorder.Size.Horizontal + PageMargin.Horizontal);
             
             var center = new Point(
                 DisplayRectangle.Width / 2,
@@ -987,12 +987,12 @@ namespace PdfiumViewer
         /// <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources. </param>
         protected override void Dispose(bool disposing)
         {
-            if (!_disposed && disposing)
+            if (!disposed && disposing)
             {
-                if (_shadeBorder != null)
+                if (shadeBorder != null)
                 {
-                    _shadeBorder.Dispose();
-                    _shadeBorder = null;
+                    shadeBorder.Dispose();
+                    shadeBorder = null;
                 }
 
                 if (_toolTip != null)
@@ -1010,7 +1010,7 @@ namespace PdfiumViewer
                     }
                 }
 
-                _disposed = true;
+                disposed = true;
             }
 
             base.Dispose(disposing);

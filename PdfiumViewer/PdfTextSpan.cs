@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 #pragma warning disable 1591
 
@@ -27,12 +25,8 @@ namespace PdfiumViewer
                 Length == other.Length;
         }
 
-        public override bool Equals(object obj)
-        {
-            return
-                obj is PdfTextSpan &&
-                Equals((PdfTextSpan)obj);
-        }
+        public override bool Equals(object obj) => obj is PdfTextSpan span &&
+                Equals(span);
 
         public override int GetHashCode()
         {
@@ -45,14 +39,8 @@ namespace PdfiumViewer
             }
         }
 
-        public static bool operator ==(PdfTextSpan left, PdfTextSpan right)
-        {
-            return left.Equals(right);
-        }
+        public static bool operator ==(PdfTextSpan left, PdfTextSpan right) => left.Equals(right);
 
-        public static bool operator !=(PdfTextSpan left, PdfTextSpan right)
-        {
-            return !left.Equals(right);
-        }
+        public static bool operator !=(PdfTextSpan left, PdfTextSpan right) => !left.Equals(right);
     }
 }

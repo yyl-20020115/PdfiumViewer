@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Windows.Forms;
 using System.IO;
 
 #pragma warning disable 1591
@@ -16,7 +14,7 @@ namespace PdfiumViewer
         // library is not thread safe, and this way of locking
         // guarantees that we don't access the Pdfium library from different
         // threads, even when there are multiple AppDomain's in play.
-        private static readonly string LockString = String.Intern("e362349b-001d-4cb2-bf55-a71606a3e36f");
+        private static readonly string LockString = string.Intern("e362349b-001d-4cb2-bf55-a71606a3e36f");
 
         public static void FPDF_AddRef()
         {

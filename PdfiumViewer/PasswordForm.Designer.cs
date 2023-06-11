@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this._acceptButton = new System.Windows.Forms.Button();
+            this.acceptButton = new System.Windows.Forms.Button();
             this._cancelButton = new System.Windows.Forms.Button();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this._helpLabel = new System.Windows.Forms.Label();
@@ -45,7 +45,7 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.Controls.Add(this._acceptButton, 1, 1);
+            this.tableLayoutPanel1.Controls.Add(this.acceptButton, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this._cancelButton, 2, 1);
             this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 0, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -59,13 +59,13 @@
             // 
             // _acceptButton
             // 
-            this._acceptButton.Location = new System.Drawing.Point(160, 61);
-            this._acceptButton.Name = "_acceptButton";
-            this._acceptButton.Size = new System.Drawing.Size(75, 23);
-            this._acceptButton.TabIndex = 1;
-            this._acceptButton.Text = "OK";
-            this._acceptButton.UseVisualStyleBackColor = true;
-            this._acceptButton.Click += new System.EventHandler(this._acceptButton_Click);
+            this.acceptButton.Location = new System.Drawing.Point(160, 61);
+            this.acceptButton.Name = "_acceptButton";
+            this.acceptButton.Size = new System.Drawing.Size(75, 23);
+            this.acceptButton.TabIndex = 1;
+            this.acceptButton.Text = "OK";
+            this.acceptButton.UseVisualStyleBackColor = true;
+            this.acceptButton.Click += new System.EventHandler(this.AcceptButton_Click);
             // 
             // _cancelButton
             // 
@@ -128,11 +128,11 @@
             this._password.Size = new System.Drawing.Size(251, 20);
             this._password.TabIndex = 2;
             this._password.UseSystemPasswordChar = true;
-            this._password.TextChanged += new System.EventHandler(this._password_TextChanged);
+            this._password.TextChanged += new System.EventHandler(this.Password_TextChanged);
             // 
             // PasswordForm
             // 
-            this.AcceptButton = this._acceptButton;
+            this.AcceptButton = this.acceptButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this._cancelButton;
@@ -157,7 +157,7 @@
         #endregion
 
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.Button _acceptButton;
+        private System.Windows.Forms.Button acceptButton;
         private System.Windows.Forms.Button _cancelButton;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.Label _helpLabel;

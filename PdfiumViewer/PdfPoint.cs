@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
 
 #pragma warning disable 1591
 
@@ -12,39 +10,24 @@ namespace PdfiumViewer
         public static readonly PdfPoint Empty = new PdfPoint();
 
         // _page is offset by 1 so that Empty returns an invalid point.
-        private readonly int _page;
+        private readonly int page;
 
-        public int Page
-        {
-            get { return _page - 1; }
-        }
+        public int Page => page - 1;
 
         public PointF Location { get; }
 
-        public bool IsValid
-        {
-            get { return _page != 0; }
-        }
+        public bool IsValid => page != 0;
 
         public PdfPoint(int page, PointF location)
         {
-            _page = page + 1;
+            this.page = page + 1;
             Location = location;
         }
 
-        public bool Equals(PdfPoint other)
-        {
-            return
-                Page == other.Page &&
+        public bool Equals(PdfPoint other) => Page == other.Page &&
                 Location == other.Location;
-        }
 
-        public override bool Equals(object obj)
-        {
-            return
-                obj is PdfPoint &&
-                Equals((PdfPoint)obj);
-        }
+        public override bool Equals(object obj) => obj is PdfPoint point && Equals(point);
 
         public override int GetHashCode()
         {
@@ -54,14 +37,8 @@ namespace PdfiumViewer
             }
         }
 
-        public static bool operator ==(PdfPoint left, PdfPoint right)
-        {
-            return left.Equals(right);
-        }
+        public static bool operator ==(PdfPoint left, PdfPoint right) => left.Equals(right);
 
-        public static bool operator !=(PdfPoint left, PdfPoint right)
-        {
-            return !left.Equals(right);
-        }
+        public static bool operator !=(PdfPoint left, PdfPoint right) => !left.Equals(right);
     }
 }

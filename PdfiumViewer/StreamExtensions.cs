@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace PdfiumViewer
 {
@@ -10,7 +8,7 @@ namespace PdfiumViewer
         public static byte[] ToByteArray(Stream stream)
         {
             if (stream == null)
-                throw new ArgumentNullException("stream");
+                throw new ArgumentNullException(nameof(stream));
 
             var memoryStream = stream as MemoryStream;
 

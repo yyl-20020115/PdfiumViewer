@@ -6,7 +6,6 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Drawing.Printing;
 using System.IO;
-using System.Text;
 using System.Windows.Forms;
 
 namespace PdfiumViewer
@@ -16,31 +15,23 @@ namespace PdfiumViewer
     /// </summary>
     public class PdfDocument : IPdfDocument
     {
-        private bool _disposed;
-        private PdfFile _file;
-        private readonly List<SizeF> _pageSizes;
+        private bool disposed;
+        private PdfFile file;
+        private readonly List<SizeF> pageSizes;
 
         /// <summary>
         /// Initializes a new instance of the PdfDocument class with the provided path.
         /// </summary>
         /// <param name="path">Path to the PDF document.</param>
-        public static PdfDocument Load(string path)
-        {
-            return Load(path, null);
-        }
+        public static PdfDocument Load(string path) => Load(path, null);
 
         /// <summary>
         /// Initializes a new instance of the PdfDocument class with the provided path.
         /// </summary>
         /// <param name="path">Path to the PDF document.</param>
         /// <param name="password">Password for the PDF document.</param>
-        public static PdfDocument Load(string path, string password)
-        {
-            if (path == null)
-                throw new ArgumentNullException(nameof(path));
-
-            return Load(File.OpenRead(path), password);
-        }
+        public static PdfDocument Load(string path, string password) 
+            => Load(File.OpenRead(path ?? throw new ArgumentNullException(nameof(path))), password);
 
         /// <summary>
         /// Initializes a new instance of the PdfDocument class with the provided path.
@@ -111,39 +102,24 @@ namespace PdfiumViewer
         /// Initializes a new instance of the PdfDocument class with the provided stream.
         /// </summary>
         /// <param name="stream">Stream for the PDF document.</param>
-        public static PdfDocument Load(Stream stream)
-        {
-            return Load(stream, null);
-        }
+        public static PdfDocument Load(Stream stream) => Load(stream, null);
 
         /// <summary>
         /// Initializes a new instance of the PdfDocument class with the provided stream.
         /// </summary>
         /// <param name="stream">Stream for the PDF document.</param>
         /// <param name="password">Password for the PDF document.</param>
-        public static PdfDocument Load(Stream stream, string password)
-        {
-            if (stream == null)
-                throw new ArgumentNullException(nameof(stream));
-
-            return new PdfDocument(stream, password);
-        }
+        public static PdfDocument Load(Stream stream, string password) => new PdfDocument(stream ?? throw new ArgumentNullException(nameof(stream)), password);
 
         /// <summary>
         /// Number of pages in the PDF document.
         /// </summary>
-        public int PageCount
-        {
-            get { return PageSizes.Count; }
-        }
+        public int PageCount => PageSizes.Count;
 
         /// <summary>
         /// Bookmarks stored in this PdfFile
         /// </summary>
-        public PdfBookmarkCollection Bookmarks
-        {
-            get { return _file.Bookmarks; }
-        }
+        public PdfBookmarkCollection Bookmarks => file.Bookmarks;
 
         /// <summary>
         /// Size of each page in the PDF document.
@@ -152,13 +128,13 @@ namespace PdfiumViewer
 
         private PdfDocument(Stream stream, string password)
         {
-            _file = new PdfFile(stream, password);
+            file = new PdfFile(stream, password);
 
-            _pageSizes = _file.GetPDFDocInfo();
-            if (_pageSizes == null)
+            pageSizes = file.GetPDFDocInfo();
+            if (pageSizes == null)
                 throw new Win32Exception();
 
-            PageSizes = new ReadOnlyCollection<SizeF>(_pageSizes);
+            PageSizes = new ReadOnlyCollection<SizeF>(pageSizes);
         }
 
         /// <summary>
@@ -188,7 +164,7 @@ namespace PdfiumViewer
         {
             if (graphics == null)
                 throw new ArgumentNullException("graphics");
-            if (_disposed)
+            if (disposed)
                 throw new ObjectDisposedException(GetType().Name);
 
             float graphicsDpiX = graphics.DpiX;
@@ -213,7 +189,7 @@ namespace PdfiumViewer
                 var point = new NativeMethods.POINT();
                 NativeMethods.SetViewportOrgEx(dc, bounds.X, bounds.Y, out point);
 
-                bool success = _file.RenderPDFPageToDC(
+                bool success = file.RenderPDFPageToDC(
                     page,
                     dc,
                     (int)dpiX, (int)dpiY,
@@ -305,7 +281,7 @@ namespace PdfiumViewer
         /// <returns>The rendered image.</returns>
         public Image Render(int page, int width, int height, float dpiX, float dpiY, PdfRotation rotate, PdfRenderFlags flags)
         {
-            if (_disposed)
+            if (disposed)
                 throw new ObjectDisposedException(GetType().Name);
 
             if ((flags & PdfRenderFlags.CorrectFromDpi) != 0)
@@ -329,7 +305,7 @@ namespace PdfiumViewer
 
                     NativeMethods.FPDFBitmap_FillRect(handle, 0, 0, width, height, background);
 
-                    bool success = _file.RenderPDFPageToBitmap(
+                    bool success = file.RenderPDFPageToBitmap(
                         page,
                         handle,
                         (int)dpiX, (int)dpiY,
@@ -384,7 +360,7 @@ namespace PdfiumViewer
             if (stream == null)
                 throw new ArgumentNullException("stream");
 
-            _file.Save(stream);
+            file.Save(stream);
         }
 
         /// <summary>
@@ -423,7 +399,7 @@ namespace PdfiumViewer
         /// <returns>All matches.</returns>
         public PdfMatches Search(string text, bool matchCase, bool wholeWord, int startPage, int endPage)
         {
-            return _file.Search(text, matchCase, wholeWord, startPage, endPage);
+            return file.Search(text, matchCase, wholeWord, startPage, endPage);
         }
 
         /// <summary>
@@ -433,7 +409,7 @@ namespace PdfiumViewer
         /// <returns>The text on the page.</returns>
         public string GetPdfText(int page)
         {
-            return _file.GetPdfText(page);
+            return file.GetPdfText(page);
         }
 
         /// <summary>
@@ -443,7 +419,7 @@ namespace PdfiumViewer
         /// <returns>The text matching the span.</returns>
         public string GetPdfText(PdfTextSpan textSpan)
         {
-            return _file.GetPdfText(textSpan);
+            return file.GetPdfText(textSpan);
         }
 
         /// <summary>
@@ -457,7 +433,7 @@ namespace PdfiumViewer
         /// <returns>The bounding rectangles.</returns>
         public IList<PdfRectangle> GetTextBounds(PdfTextSpan textSpan)
         {
-            return _file.GetTextBounds(textSpan);
+            return file.GetTextBounds(textSpan);
         }
 
         /// <summary>
@@ -468,7 +444,7 @@ namespace PdfiumViewer
         /// <returns>The converted point.</returns>
         public PointF PointToPdf(int page, Point point)
         {
-            return _file.PointToPdf(page, point);
+            return file.PointToPdf(page, point);
         }
 
         /// <summary>
@@ -479,7 +455,7 @@ namespace PdfiumViewer
         /// <returns>The converted point.</returns>
         public Point PointFromPdf(int page, PointF point)
         {
-            return _file.PointFromPdf(page, point);
+            return file.PointFromPdf(page, point);
         }
 
         /// <summary>
@@ -490,7 +466,7 @@ namespace PdfiumViewer
         /// <returns>The converted rectangle.</returns>
         public RectangleF RectangleToPdf(int page, Rectangle rect)
         {
-            return _file.RectangleToPdf(page, rect);
+            return file.RectangleToPdf(page, rect);
         }
 
         /// <summary>
@@ -501,7 +477,7 @@ namespace PdfiumViewer
         /// <returns>The converted rectangle.</returns>
         public Rectangle RectangleFromPdf(int page, RectangleF rect)
         {
-            return _file.RectangleFromPdf(page, rect);
+            return file.RectangleFromPdf(page, rect);
         }
 
         /// <summary>
@@ -542,7 +518,7 @@ namespace PdfiumViewer
         /// <returns>A collection with the links on the page.</returns>
         public PdfPageLinks GetPageLinks(int page, Size size)
         {
-            return _file.GetPageLinks(page, size);
+            return file.GetPageLinks(page, size);
         }
 
         /// <summary>
@@ -551,8 +527,8 @@ namespace PdfiumViewer
         /// <param name="page">The page to delete.</param>
         public void DeletePage(int page)
         {
-            _file.DeletePage(page);
-            _pageSizes.RemoveAt(page);
+            file.DeletePage(page);
+            pageSizes.RemoveAt(page);
         }
 
         /// <summary>
@@ -562,18 +538,15 @@ namespace PdfiumViewer
         /// <param name="rotation">How to rotate the page.</param>
         public void RotatePage(int page, PdfRotation rotation)
         {
-            _file.RotatePage(page, rotation);
-            _pageSizes[page] = _file.GetPDFDocInfo(page);
+            file.RotatePage(page, rotation);
+            pageSizes[page] = file.GetPDFDocInfo(page);
         }
 
         /// <summary>
         /// Get metadata information from the PDF document.
         /// </summary>
         /// <returns>The PDF metadata.</returns>
-        public PdfInformation GetInformation()
-        {
-            return _file.GetInformation();
-        }
+        public PdfInformation GetInformation() => file.GetInformation();
 
         /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
         /// <filterpriority>2</filterpriority>
@@ -587,15 +560,15 @@ namespace PdfiumViewer
         /// <param name="disposing">Whether this method is called from Dispose.</param>
         protected void Dispose(bool disposing)
         {
-            if (!_disposed && disposing)
+            if (!disposed && disposing)
             {
-                if (_file != null)
+                if (file != null)
                 {
-                    _file.Dispose();
-                    _file = null;
+                    file.Dispose();
+                    file = null;
                 }
 
-                _disposed = true;
+                disposed = true;
             }
         }
     }

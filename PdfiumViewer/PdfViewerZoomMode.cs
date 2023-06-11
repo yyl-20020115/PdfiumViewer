@@ -2,7 +2,7 @@
 
 namespace PdfiumViewer
 {
-    public enum PdfViewerZoomMode
+    public enum PdfViewerZoomMode : int
     {
         FitHeight,
         FitWidth,

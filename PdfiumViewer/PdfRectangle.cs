@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
 
 #pragma warning disable 1591
 
@@ -12,39 +10,25 @@ namespace PdfiumViewer
         public static readonly PdfRectangle Empty = new PdfRectangle();
 
         // _page is offset by 1 so that Empty returns an invalid rectangle.
-        private readonly int _page;
+        private readonly int page;
 
-        public int Page
-        {
-            get { return _page - 1; }
-        }
+        public int Page => page - 1;
 
         public RectangleF Bounds { get; }
 
-        public bool IsValid
-        {
-            get { return _page != 0; }
-        }
+        public bool IsValid => page != 0;
 
         public PdfRectangle(int page, RectangleF bounds)
         {
-            _page = page + 1;
+            this.page = page + 1;
             Bounds = bounds;
         }
 
-        public bool Equals(PdfRectangle other)
-        {
-            return
-                Page == other.Page &&
+        public bool Equals(PdfRectangle other) => Page == other.Page &&
                 Bounds == other.Bounds;
-        }
 
-        public override bool Equals(object obj)
-        {
-            return
-                obj is PdfRectangle &&
-                Equals((PdfRectangle)obj);
-        }
+        public override bool Equals(object obj) => obj is PdfRectangle rectangle &&
+                Equals(rectangle);
 
         public override int GetHashCode()
         {
@@ -54,14 +38,8 @@ namespace PdfiumViewer
             }
         }
 
-        public static bool operator ==(PdfRectangle left, PdfRectangle right)
-        {
-            return left.Equals(right);
-        }
+        public static bool operator ==(PdfRectangle left, PdfRectangle right) => left.Equals(right);
 
-        public static bool operator !=(PdfRectangle left, PdfRectangle right)
-        {
-            return !left.Equals(right);
-        }
+        public static bool operator !=(PdfRectangle left, PdfRectangle right) => !left.Equals(right);
     }
 }

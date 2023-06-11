@@ -34,47 +34,47 @@ namespace PdfiumViewer
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PdfViewer));
             this._toolStrip = new System.Windows.Forms.ToolStrip();
-            this._saveButton = new System.Windows.Forms.ToolStripButton();
-            this._printButton = new System.Windows.Forms.ToolStripButton();
+            this.saveButton = new System.Windows.Forms.ToolStripButton();
+            this.printButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this._zoomInButton = new System.Windows.Forms.ToolStripButton();
-            this._zoomOutButton = new System.Windows.Forms.ToolStripButton();
-            this._container = new System.Windows.Forms.SplitContainer();
-            this._bookmarks = new PdfiumViewer.NativeTreeView();
-            this._renderer = new PdfiumViewer.PdfRenderer();
+            this.zoomInButton = new System.Windows.Forms.ToolStripButton();
+            this.zoomOutButton = new System.Windows.Forms.ToolStripButton();
+            this.container = new System.Windows.Forms.SplitContainer();
+            this.bookmarks = new PdfiumViewer.NativeTreeView();
+            this.renderer = new PdfiumViewer.PdfRenderer();
             this._toolStrip.SuspendLayout();
-            this._container.Panel1.SuspendLayout();
-            this._container.Panel2.SuspendLayout();
-            this._container.SuspendLayout();
+            this.container.Panel1.SuspendLayout();
+            this.container.Panel2.SuspendLayout();
+            this.container.SuspendLayout();
             this.SuspendLayout();
             // 
             // _toolStrip
             // 
             this._toolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this._toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this._saveButton,
-            this._printButton,
+            this.saveButton,
+            this.printButton,
             this.toolStripSeparator1,
-            this._zoomInButton,
-            this._zoomOutButton});
+            this.zoomInButton,
+            this.zoomOutButton});
             resources.ApplyResources(this._toolStrip, "_toolStrip");
             this._toolStrip.Name = "_toolStrip";
             // 
             // _saveButton
             // 
-            this._saveButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this._saveButton.Image = global::PdfiumViewer.Properties.Resources.disk_blue;
-            resources.ApplyResources(this._saveButton, "_saveButton");
-            this._saveButton.Name = "_saveButton";
-            this._saveButton.Click += new System.EventHandler(this._saveButton_Click);
+            this.saveButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.saveButton.Image = global::PdfiumViewer.Properties.Resources.disk_blue;
+            resources.ApplyResources(this.saveButton, "_saveButton");
+            this.saveButton.Name = "_saveButton";
+            this.saveButton.Click += new System.EventHandler(this._saveButton_Click);
             // 
             // _printButton
             // 
-            this._printButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this._printButton.Image = global::PdfiumViewer.Properties.Resources.printer;
-            resources.ApplyResources(this._printButton, "_printButton");
-            this._printButton.Name = "_printButton";
-            this._printButton.Click += new System.EventHandler(this._printButton_Click);
+            this.printButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.printButton.Image = global::PdfiumViewer.Properties.Resources.printer;
+            resources.ApplyResources(this.printButton, "_printButton");
+            this.printButton.Name = "_printButton";
+            this.printButton.Click += new System.EventHandler(this._printButton_Click);
             // 
             // toolStripSeparator1
             // 
@@ -83,65 +83,65 @@ namespace PdfiumViewer
             // 
             // _zoomInButton
             // 
-            this._zoomInButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this._zoomInButton.Image = global::PdfiumViewer.Properties.Resources.zoom_in;
-            resources.ApplyResources(this._zoomInButton, "_zoomInButton");
-            this._zoomInButton.Name = "_zoomInButton";
-            this._zoomInButton.Click += new System.EventHandler(this._zoomInButton_Click);
+            this.zoomInButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.zoomInButton.Image = global::PdfiumViewer.Properties.Resources.zoom_in;
+            resources.ApplyResources(this.zoomInButton, "_zoomInButton");
+            this.zoomInButton.Name = "_zoomInButton";
+            this.zoomInButton.Click += new System.EventHandler(this._zoomInButton_Click);
             // 
             // _zoomOutButton
             // 
-            this._zoomOutButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this._zoomOutButton.Image = global::PdfiumViewer.Properties.Resources.zoom_out;
-            resources.ApplyResources(this._zoomOutButton, "_zoomOutButton");
-            this._zoomOutButton.Name = "_zoomOutButton";
-            this._zoomOutButton.Click += new System.EventHandler(this._zoomOutButton_Click);
+            this.zoomOutButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.zoomOutButton.Image = global::PdfiumViewer.Properties.Resources.zoom_out;
+            resources.ApplyResources(this.zoomOutButton, "_zoomOutButton");
+            this.zoomOutButton.Name = "_zoomOutButton";
+            this.zoomOutButton.Click += new System.EventHandler(this._zoomOutButton_Click);
             // 
             // _container
             // 
-            resources.ApplyResources(this._container, "_container");
-            this._container.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this._container.Name = "_container";
+            resources.ApplyResources(this.container, "_container");
+            this.container.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.container.Name = "_container";
             // 
             // _container.Panel1
             // 
-            this._container.Panel1.Controls.Add(this._bookmarks);
+            this.container.Panel1.Controls.Add(this.bookmarks);
             // 
             // _container.Panel2
             // 
-            this._container.Panel2.Controls.Add(this._renderer);
-            this._container.TabStop = false;
+            this.container.Panel2.Controls.Add(this.renderer);
+            this.container.TabStop = false;
             // 
             // _bookmarks
             // 
-            resources.ApplyResources(this._bookmarks, "_bookmarks");
-            this._bookmarks.FullRowSelect = true;
-            this._bookmarks.Name = "_bookmarks";
-            this._bookmarks.ShowLines = false;
-            this._bookmarks.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this._bookmarks_AfterSelect);
+            resources.ApplyResources(this.bookmarks, "_bookmarks");
+            this.bookmarks.FullRowSelect = true;
+            this.bookmarks.Name = "_bookmarks";
+            this.bookmarks.ShowLines = false;
+            this.bookmarks.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this._bookmarks_AfterSelect);
             // 
             // _renderer
             // 
-            this._renderer.Cursor = System.Windows.Forms.Cursors.Default;
-            resources.ApplyResources(this._renderer, "_renderer");
-            this._renderer.Name = "_renderer";
-            this._renderer.Page = 0;
-            this._renderer.Rotation = PdfiumViewer.PdfRotation.Rotate0;
-            this._renderer.ZoomMode = PdfiumViewer.PdfViewerZoomMode.FitHeight;
-            this._renderer.LinkClick += new PdfiumViewer.LinkClickEventHandler(this._renderer_LinkClick);
+            this.renderer.Cursor = System.Windows.Forms.Cursors.Default;
+            resources.ApplyResources(this.renderer, "_renderer");
+            this.renderer.Name = "_renderer";
+            this.renderer.Page = 0;
+            this.renderer.Rotation = PdfiumViewer.PdfRotation.Rotate0;
+            this.renderer.ZoomMode = PdfiumViewer.PdfViewerZoomMode.FitHeight;
+            this.renderer.LinkClick += new PdfiumViewer.LinkClickEventHandler(this._renderer_LinkClick);
             // 
             // PdfViewer
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this._container);
+            this.Controls.Add(this.container);
             this.Controls.Add(this._toolStrip);
             this.Name = "PdfViewer";
             this._toolStrip.ResumeLayout(false);
             this._toolStrip.PerformLayout();
-            this._container.Panel1.ResumeLayout(false);
-            this._container.Panel2.ResumeLayout(false);
-            this._container.ResumeLayout(false);
+            this.container.Panel1.ResumeLayout(false);
+            this.container.Panel2.ResumeLayout(false);
+            this.container.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -150,13 +150,13 @@ namespace PdfiumViewer
         #endregion
 
         private System.Windows.Forms.ToolStrip _toolStrip;
-        private System.Windows.Forms.ToolStripButton _saveButton;
-        private System.Windows.Forms.ToolStripButton _printButton;
+        private System.Windows.Forms.ToolStripButton saveButton;
+        private System.Windows.Forms.ToolStripButton printButton;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripButton _zoomInButton;
-        private System.Windows.Forms.ToolStripButton _zoomOutButton;
-        private System.Windows.Forms.SplitContainer _container;
-        private NativeTreeView _bookmarks;
-        private PdfRenderer _renderer;
+        private System.Windows.Forms.ToolStripButton zoomInButton;
+        private System.Windows.Forms.ToolStripButton zoomOutButton;
+        private System.Windows.Forms.SplitContainer container;
+        private NativeTreeView bookmarks;
+        private PdfRenderer renderer;
     }
 }

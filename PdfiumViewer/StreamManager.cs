@@ -1,43 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace PdfiumViewer
 {
     internal static class StreamManager
     {
-        private static readonly object _syncRoot = new object();
-        private static int _nextId = 1;
-        private static readonly Dictionary<int, Stream> _files = new Dictionary<int, Stream>();
+        private static readonly object syncRoot = new object();
+        private static int nextId = 1;
+        private static readonly Dictionary<int, Stream> files = new Dictionary<int, Stream>();
 
         public static int Register(Stream stream)
         {
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
 
-            lock (_syncRoot)
+            lock (syncRoot)
             {
-                int id = _nextId++;
-                _files.Add(id, stream);
+                int id = nextId++;
+                files.Add(id, stream);
                 return id;
             }
         }
 
         public static void Unregister(int id)
         {
-            lock (_syncRoot)
+            lock (syncRoot)
             {
-                _files.Remove(id);
+                files.Remove(id);
             }
         }
 
         public static Stream Get(int id)
         {
-            lock (_syncRoot)
+            lock (syncRoot)
             {
-                Stream stream;
-                _files.TryGetValue(id, out stream);
+                files.TryGetValue(id, out Stream stream);
                 return stream;
             }
         }

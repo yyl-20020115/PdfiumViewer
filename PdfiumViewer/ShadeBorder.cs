@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Text;
 using System.Windows.Forms;
 
 namespace PdfiumViewer
@@ -11,7 +9,7 @@ namespace PdfiumViewer
     {
         public static readonly Padding Size = new Padding(4);
 
-        private bool _disposed;
+        private bool disposed;
         private TextureBrush _n = new TextureBrush(Properties.Resources.ShadeBorder_N, WrapMode.Tile);
         private Image _ne = Properties.Resources.ShadeBorder_NE;
         private TextureBrush _e = new TextureBrush(Properties.Resources.ShadeBorder_E, WrapMode.Tile);
@@ -23,7 +21,7 @@ namespace PdfiumViewer
 
         public void Draw(Graphics graphics, Rectangle bounds)
         {
-            if (_disposed)
+            if (disposed)
                 throw new ObjectDisposedException(GetType().Name);
             if (graphics == null)
                 throw new ArgumentNullException("graphics");
@@ -99,7 +97,7 @@ namespace PdfiumViewer
 
         public void Dispose()
         {
-            if (!_disposed)
+            if (!disposed)
             {
                 if (_n != null)
                 {
@@ -149,7 +147,7 @@ namespace PdfiumViewer
                     _nw = null;
                 }
 
-                _disposed = true;
+                disposed = true;
             }
         }
     }

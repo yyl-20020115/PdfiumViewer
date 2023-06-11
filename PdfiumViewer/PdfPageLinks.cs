@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 
 namespace PdfiumViewer
 {
@@ -21,10 +20,7 @@ namespace PdfiumViewer
         /// <param name="links">The links on the PDF page.</param>
         public PdfPageLinks(IList<PdfPageLink> links)
         {
-            if (links == null)
-                throw new ArgumentNullException("links");
-
-            Links = new ReadOnlyCollection<PdfPageLink>(links);
+            Links = new ReadOnlyCollection<PdfPageLink>(links ?? throw new ArgumentNullException(nameof(links)));
         }
     }
 }

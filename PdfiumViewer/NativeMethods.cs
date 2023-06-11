@@ -86,28 +86,18 @@ namespace PdfiumViewer
         public class MemoryMappedHandle : SafeHandleZeroOrMinusOneIsInvalid
         {
             public MemoryMappedHandle()
-                : base(true)
-            {
-            }
+                : base(true) { }
 
             [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
-            protected override bool ReleaseHandle()
-            {
-                return CloseHandle(handle);
-            }
+            protected override bool ReleaseHandle() => CloseHandle(handle);
         }
 
         public class MappedViewHandle : SafeHandleZeroOrMinusOneIsInvalid
         {
             public MappedViewHandle()
-                : base(true)
-            {
-            }
+                : base(true) { }
 
-            protected override bool ReleaseHandle()
-            {
-                return UnmapViewOfFile(handle);
-            }
+            protected override bool ReleaseHandle() => UnmapViewOfFile(handle);
         }
 
         public const int GM_ADVANCED = 2;
@@ -190,10 +180,7 @@ namespace PdfiumViewer
                 bottom = r.Bottom;
             }
 
-            public Rectangle ToRectangle()
-            {
-                return new Rectangle(left, top, right - left, bottom - top);
-            }
+            public Rectangle ToRectangle() => new Rectangle(left, top, right - left, bottom - top);
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -239,15 +226,9 @@ namespace PdfiumViewer
 
         public static class Util
         {
-            private static int LOWORD(int n)
-            {
-                return n & 0xffff;
-            }
+            private static int LOWORD(int n) => n & 0xffff;
 
-            public static int LOWORD(IntPtr n)
-            {
-                return LOWORD(unchecked((int)(long)n));
-            }
+            public static int LOWORD(IntPtr n) => LOWORD(unchecked((int)(long)n));
         }
 
         [DllImport("gdi32.dll")]
@@ -278,7 +259,7 @@ namespace PdfiumViewer
         [DllImport("gdi32.dll")]
         public static extern IntPtr CreateSolidBrush(int crColor);
 
-        public enum HitTestValues
+        public enum HitTestValues : int
         {
             HTERROR = -2,
             HTTRANSPARENT = -1,

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Text;
+﻿using System.Collections.ObjectModel;
 
 #pragma warning disable 1591
 
@@ -15,15 +11,9 @@ namespace PdfiumViewer
 
         public PdfBookmarkCollection Children { get; }
 
-        public PdfBookmark()
-        {
-            Children = new PdfBookmarkCollection();
-        }
+        public PdfBookmark() => Children = new PdfBookmarkCollection();
 
-        public override string ToString()
-        {
-            return Title;
-        }
+        public override string ToString() => Title;
     }
 
     public class PdfBookmarkCollection : Collection<PdfBookmark>

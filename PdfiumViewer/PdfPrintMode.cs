@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace PdfiumViewer
+﻿namespace PdfiumViewer
 {
     /// <summary>
     /// Specifies the mode in which the document should be printed.
@@ -13,7 +9,7 @@ namespace PdfiumViewer
     /// scaled to fit into this margin, or that the margin should be cut off of
     /// the page.
     /// </remarks>
-    public enum PdfPrintMode
+    public enum PdfPrintMode : int
     {
         /// <summary>
         /// Shrink the print area to fall within the hard printer margin.

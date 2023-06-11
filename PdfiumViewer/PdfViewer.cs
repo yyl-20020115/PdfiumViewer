@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
 using System.Windows.Forms;
 
 namespace PdfiumViewer
@@ -11,8 +9,8 @@ namespace PdfiumViewer
     /// </summary>
     public partial class PdfViewer : UserControl
     {
-        private IPdfDocument _document;
-        private bool _showBookmarks;
+        private IPdfDocument document;
+        private bool showBookmarks;
 
         /// <summary>
         /// Gets or sets the PDF document.
@@ -20,16 +18,16 @@ namespace PdfiumViewer
         [DefaultValue(null)]
         public IPdfDocument Document
         {
-            get { return _document; }
+            get => document;
             set
             {
-                if (_document != value)
+                if (document != value)
                 {
-                    _document = value;
+                    document = value;
 
-                    if (_document != null)
+                    if (document != null)
                     {
-                        _renderer.Load(_document);
+                        renderer.Load(document);
                         UpdateBookmarks();
                     }
 
@@ -43,7 +41,7 @@ namespace PdfiumViewer
         /// </summary>
         public PdfRenderer Renderer
         {
-            get { return _renderer; }
+            get { return renderer; }
         }
 
         /// <summary>
@@ -64,8 +62,8 @@ namespace PdfiumViewer
         [DefaultValue(PdfViewerZoomMode.FitHeight)]
         public PdfViewerZoomMode ZoomMode
         {
-            get { return _renderer.ZoomMode; }
-            set { _renderer.ZoomMode = value; }
+            get { return renderer.ZoomMode; }
+            set { renderer.ZoomMode = value; }
         }
 
         /// <summary>
@@ -84,10 +82,10 @@ namespace PdfiumViewer
         [DefaultValue(true)]
         public bool ShowBookmarks
         {
-            get { return _showBookmarks; }
+            get { return showBookmarks; }
             set
             {
-                _showBookmarks = value;
+                showBookmarks = value;
                 UpdateBookmarks();
             }
         }
@@ -119,17 +117,17 @@ namespace PdfiumViewer
 
         private void UpdateBookmarks()
         {
-            bool visible = _showBookmarks && _document != null && _document.Bookmarks.Count > 0;
+            bool visible = showBookmarks && document != null && document.Bookmarks.Count > 0;
 
-            _container.Panel1Collapsed = !visible;
+            container.Panel1Collapsed = !visible;
 
             if (visible)
             {
-                _container.Panel1Collapsed = false;
+                container.Panel1Collapsed = false;
 
-                _bookmarks.Nodes.Clear();
-                foreach (var bookmark in _document.Bookmarks)
-                    _bookmarks.Nodes.Add(GetBookmarkNode(bookmark));
+                bookmarks.Nodes.Clear();
+                foreach (var bookmark in document.Bookmarks)
+                    bookmarks.Nodes.Add(GetBookmarkNode(bookmark));
             }
         }
 
@@ -150,17 +148,17 @@ namespace PdfiumViewer
 
         private void UpdateEnabled()
         {
-            _toolStrip.Enabled = _document != null;
+            _toolStrip.Enabled = document != null;
         }
 
         private void _zoomInButton_Click(object sender, EventArgs e)
         {
-            _renderer.ZoomIn();
+            renderer.ZoomIn();
         }
 
         private void _zoomOutButton_Click(object sender, EventArgs e)
         {
-            _renderer.ZoomOut();
+            renderer.ZoomOut();
         }
 
         private void _saveButton_Click(object sender, EventArgs e)
@@ -177,7 +175,7 @@ namespace PdfiumViewer
                 {
                     try
                     {
-                        _document.Save(form.FileName);
+                        document.Save(form.FileName);
                     }
                     catch
                     {
@@ -196,13 +194,13 @@ namespace PdfiumViewer
         private void _printButton_Click(object sender, EventArgs e)
         {
             using (var form = new PrintDialog())
-            using (var document = _document.CreatePrintDocument(DefaultPrintMode))
+            using (var document = this.document.CreatePrintDocument(DefaultPrintMode))
             {
                 form.AllowSomePages = true;
                 form.Document = document;
                 form.UseEXDialog = true;
                 form.Document.PrinterSettings.FromPage = 1;
-                form.Document.PrinterSettings.ToPage = _document.PageCount;
+                form.Document.PrinterSettings.ToPage = this.document.PageCount;
                 if (DefaultPrinter != null)
                     form.Document.PrinterSettings.PrinterName = DefaultPrinter;
 
@@ -210,7 +208,7 @@ namespace PdfiumViewer
                 {
                     try
                     {
-                        if (form.Document.PrinterSettings.FromPage <= _document.PageCount)
+                        if (form.Document.PrinterSettings.FromPage <= this.document.PageCount)
                             form.Document.Print();
                     }
                     catch
@@ -235,7 +233,7 @@ namespace PdfiumViewer
 
         private void _bookmarks_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            _renderer.Page = ((PdfBookmark)e.Node.Tag).PageIndex;
+            renderer.Page = ((PdfBookmark)e.Node.Tag).PageIndex;
         }
 
         private void _renderer_LinkClick(object sender, LinkClickEventArgs e)

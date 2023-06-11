@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-#pragma warning disable 1591
+﻿#pragma warning disable 1591
 
 namespace PdfiumViewer
 {
-    public enum PdfError
+    public enum PdfError : int
     {
         Success = (int)NativeMethods.FPDF_ERR.FPDF_ERR_SUCCESS,
         Unknown = (int)NativeMethods.FPDF_ERR.FPDF_ERR_UNKNOWN,

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 
 #pragma warning disable 1591
 
@@ -17,12 +16,10 @@ namespace PdfiumViewer
 
         public PdfMatches(int startPage, int endPage, IList<PdfMatch> matches)
         {
-            if (matches == null)
-                throw new ArgumentNullException("matches");
-
+            Items = new ReadOnlyCollection<PdfMatch>(
+                matches ?? throw new ArgumentNullException(nameof(matches)));
             StartPage = startPage;
             EndPage = endPage;
-            Items = new ReadOnlyCollection<PdfMatch>(matches);
         }
     }
 }
