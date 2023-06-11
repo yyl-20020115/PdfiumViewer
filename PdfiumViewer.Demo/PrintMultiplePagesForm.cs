@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using PdfiumViewer;
 
@@ -11,40 +6,33 @@ namespace PdfSearcher
 {
     public partial class PrintMultiplePagesForm : Form
     {
-        private readonly PdfViewer _viewer;
+        private readonly PdfViewer viewer;
 
         public PrintMultiplePagesForm(PdfViewer viewer)
         {
-            if (viewer == null)
-                throw new ArgumentNullException(nameof(viewer));
-
-            _viewer = viewer;
+            this.viewer = viewer ?? throw new ArgumentNullException(nameof(viewer));
 
             InitializeComponent();
         }
 
-        private void _acceptButton_Click(object sender, EventArgs e)
+        private void AcceptButton_Click(object sender, EventArgs e)
         {
-            int horizontal;
-            int vertical;
-            float margin;
-
-            if (!int.TryParse(_horizontal.Text, out horizontal))
+            if (!int.TryParse(_horizontal.Text, out int horizontal))
             {
                 MessageBox.Show(this, "Invalid horizontal");
             }
-            else if (!int.TryParse(_vertical.Text, out vertical))
+            else if (!int.TryParse(_vertical.Text, out int vertical))
             {
                 MessageBox.Show(this, "Invalid vertical");
             }
-            else if (!float.TryParse(_margin.Text, out margin))
+            else if (!float.TryParse(_margin.Text, out float margin))
             {
                 MessageBox.Show(this, "Invalid margin");
             }
             else
             {
                 var settings = new PdfPrintSettings(
-                    _viewer.DefaultPrintMode,
+                    viewer.DefaultPrintMode,
                     new PdfPrintMultiplePages(
                         horizontal,
                         vertical,
@@ -55,7 +43,7 @@ namespace PdfSearcher
 
                 using (var form = new PrintPreviewDialog())
                 {
-                    form.Document = _viewer.Document.CreatePrintDocument(settings);
+                    form.Document = viewer.Document.CreatePrintDocument(settings);
                     form.ShowDialog(this);
                 }
 

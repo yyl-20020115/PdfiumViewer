@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.label1 = new System.Windows.Forms.Label();
-            this._startPage = new System.Windows.Forms.TextBox();
+            this.startPage = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this._endPage = new System.Windows.Forms.TextBox();
+            this.endPage = new System.Windows.Forms.TextBox();
             this._acceptButton = new System.Windows.Forms.Button();
             this._cancelButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
@@ -47,12 +47,12 @@
             // 
             // _startPage
             // 
-            this._startPage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.startPage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this._startPage.Location = new System.Drawing.Point(83, 11);
-            this._startPage.Name = "_startPage";
-            this._startPage.Size = new System.Drawing.Size(264, 21);
-            this._startPage.TabIndex = 1;
+            this.startPage.Location = new System.Drawing.Point(83, 11);
+            this.startPage.Name = "_startPage";
+            this.startPage.Size = new System.Drawing.Size(264, 21);
+            this.startPage.TabIndex = 1;
             // 
             // label2
             // 
@@ -65,12 +65,12 @@
             // 
             // _endPage
             // 
-            this._endPage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.endPage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this._endPage.Location = new System.Drawing.Point(83, 35);
-            this._endPage.Name = "_endPage";
-            this._endPage.Size = new System.Drawing.Size(264, 21);
-            this._endPage.TabIndex = 3;
+            this.endPage.Location = new System.Drawing.Point(83, 35);
+            this.endPage.Name = "_endPage";
+            this.endPage.Size = new System.Drawing.Size(264, 21);
+            this.endPage.TabIndex = 3;
             // 
             // _acceptButton
             // 
@@ -81,7 +81,7 @@
             this._acceptButton.TabIndex = 4;
             this._acceptButton.Text = "确定(&O)";
             this._acceptButton.UseVisualStyleBackColor = true;
-            this._acceptButton.Click += new System.EventHandler(this._acceptButton_Click);
+            this._acceptButton.Click += new System.EventHandler(this.AcceptButton_Click);
             // 
             // _cancelButton
             // 
@@ -103,9 +103,9 @@
             this.ClientSize = new System.Drawing.Size(359, 91);
             this.Controls.Add(this._cancelButton);
             this.Controls.Add(this._acceptButton);
-            this.Controls.Add(this._endPage);
+            this.Controls.Add(this.endPage);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this._startPage);
+            this.Controls.Add(this.startPage);
             this.Controls.Add(this.label1);
             this.Name = "PageRangeForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -118,9 +118,9 @@
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox _startPage;
+        private System.Windows.Forms.TextBox startPage;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox _endPage;
+        private System.Windows.Forms.TextBox endPage;
         private System.Windows.Forms.Button _acceptButton;
         private System.Windows.Forms.Button _cancelButton;
     }

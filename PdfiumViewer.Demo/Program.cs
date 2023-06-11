@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Windows.Forms;
 using YamlDotNet.Serialization;
 
 namespace PdfSearcher
 {
     [YamlSerializable]
-    public class Config
+    public class Configure
     {
 
         [YamlMember]
@@ -21,9 +19,9 @@ namespace PdfSearcher
 
         public const string ConfigFile = "Config.yml";
 
-        public static Config GlobalConfig = new Config();
+        public static Configure GlobalConfigure = new Configure();
 
-        public static void LoadGlobalConfig()
+        public static void LoadGlobalConfigure()
         {
             var ConfigPath = Path.Combine(Environment.CurrentDirectory, ConfigFile);
 
@@ -32,20 +30,20 @@ namespace PdfSearcher
                 using (var reader = new StreamReader(ConfigPath))
                 {
                     var des = new Deserializer();
-                    GlobalConfig = des.Deserialize<Config>(reader);
-                    GlobalConfig = GlobalConfig ?? new Config();
+                    GlobalConfigure = des.Deserialize<Configure>(reader);
+                    GlobalConfigure = GlobalConfigure ?? new Configure();
                 }
             }
         }
-        public static void SaveGlobalConfig()
+        public static void SaveGlobalConfigure()
         {
-            if (GlobalConfig != null)
+            if (GlobalConfigure != null)
             {
                 var ConfigPath = Path.Combine(Environment.CurrentDirectory, ConfigFile);
                 using (var writer = new StreamWriter(ConfigPath))
                 {
                     var ser = new Serializer();
-                    ser.Serialize(writer,GlobalConfig);
+                    ser.Serialize(writer, GlobalConfigure);
                 }
             }
         }
@@ -55,7 +53,7 @@ namespace PdfSearcher
         [STAThread]
         public static void Main()
         {
-            LoadGlobalConfig();
+            LoadGlobalConfigure();
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

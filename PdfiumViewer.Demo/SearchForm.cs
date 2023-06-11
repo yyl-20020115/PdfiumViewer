@@ -11,12 +11,9 @@ namespace PdfSearcher
 
         public SearchForm(PdfRenderer renderer)
         {
-            if (renderer == null)
-                throw new ArgumentNullException(nameof(renderer));
+            this.searchManager = new PdfSearchManager(renderer ?? throw new ArgumentNullException(nameof(renderer)));
 
             InitializeComponent();
-
-            searchManager = new PdfSearchManager(renderer);
 
             matchCase.Checked = searchManager.MatchCase;
             matchWholeWord.Checked = searchManager.MatchWholeWord;

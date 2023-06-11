@@ -32,7 +32,7 @@
             this._dpiXTextBox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this._dpiYTextBox = new System.Windows.Forms.TextBox();
-            this._acceptButton = new System.Windows.Forms.Button();
+            this.acceptButton = new System.Windows.Forms.Button();
             this._cancelButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
@@ -74,13 +74,13 @@
             // 
             // _acceptButton
             // 
-            this._acceptButton.Location = new System.Drawing.Point(190, 59);
-            this._acceptButton.Name = "_acceptButton";
-            this._acceptButton.Size = new System.Drawing.Size(75, 21);
-            this._acceptButton.TabIndex = 4;
-            this._acceptButton.Text = "确定(&O)";
-            this._acceptButton.UseVisualStyleBackColor = true;
-            this._acceptButton.Click += new System.EventHandler(this.AcceptButton_Click);
+            this.acceptButton.Location = new System.Drawing.Point(190, 59);
+            this.acceptButton.Name = "_acceptButton";
+            this.acceptButton.Size = new System.Drawing.Size(75, 21);
+            this.acceptButton.TabIndex = 4;
+            this.acceptButton.Text = "确定(&O)";
+            this.acceptButton.UseVisualStyleBackColor = true;
+            this.acceptButton.Click += new System.EventHandler(this.AcceptButton_Click);
             // 
             // _cancelButton
             // 
@@ -94,13 +94,13 @@
             // 
             // ExportBitmapsForm
             // 
-            this.AcceptButton = this._acceptButton;
+            this.AcceptButton = this.acceptButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this._cancelButton;
             this.ClientSize = new System.Drawing.Size(358, 91);
             this.Controls.Add(this._cancelButton);
-            this.Controls.Add(this._acceptButton);
+            this.Controls.Add(this.acceptButton);
             this.Controls.Add(this._dpiYTextBox);
             this.Controls.Add(this.label2);
             this.Controls.Add(this._dpiXTextBox);
@@ -123,7 +123,7 @@
         private System.Windows.Forms.TextBox _dpiXTextBox;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox _dpiYTextBox;
-        private System.Windows.Forms.Button _acceptButton;
+        private System.Windows.Forms.Button acceptButton;
         private System.Windows.Forms.Button _cancelButton;
     }
 }

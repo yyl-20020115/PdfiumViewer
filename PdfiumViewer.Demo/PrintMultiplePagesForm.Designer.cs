@@ -143,7 +143,7 @@
             this._acceptButton.TabIndex = 7;
             this._acceptButton.Text = "打印(&P)";
             this._acceptButton.UseVisualStyleBackColor = true;
-            this._acceptButton.Click += new System.EventHandler(this._acceptButton_Click);
+            this._acceptButton.Click += new System.EventHandler(this.AcceptButton_Click);
             // 
             // _cancelButton
             // 

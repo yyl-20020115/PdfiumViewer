@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Printing;
 using System.IO;
-using System.Text;
 using PdfiumViewer;
 
 namespace PdfSearcher
@@ -29,33 +28,23 @@ namespace PdfSearcher
             );
         }
 
-        private readonly IPdfDocument _document;
-        private readonly int _startPage;
-        private readonly int _endPage;
-        private PdfBookmarkCollection _bookmarks;
-        private IList<SizeF> _sizes;
+        private readonly IPdfDocument document;
+        private readonly int startPage;
+        private readonly int endPage;
+        private PdfBookmarkCollection bookmarks;
+        private IList<SizeF> sizes;
 
         private PdfRangeDocument(IPdfDocument document, int startPage, int endPage)
         {
-            _document = document;
-            _startPage = startPage;
-            _endPage = endPage;
+            this.document = document;
+            this.startPage = startPage;
+            this.endPage = endPage;
         }
 
-        public int PageCount
-        {
-            get { return _endPage - _startPage + 1; }
-        }
+        public int PageCount => endPage - startPage + 1;
 
-        public PdfBookmarkCollection Bookmarks
-        {
-            get
-            {
-                if (_bookmarks == null)
-                    _bookmarks = TranslateBookmarks(_document.Bookmarks);
-                return _bookmarks;
-            }
-        }
+        public PdfBookmarkCollection Bookmarks 
+            => bookmarks = bookmarks ?? TranslateBookmarks(document.Bookmarks);
 
         private PdfBookmarkCollection TranslateBookmarks(PdfBookmarkCollection bookmarks)
         {
@@ -70,11 +59,11 @@ namespace PdfSearcher
         {
             foreach (var bookmark in bookmarks)
             {
-                if (bookmark.PageIndex >= _startPage && bookmark.PageIndex <= _endPage)
+                if (bookmark.PageIndex >= startPage && bookmark.PageIndex <= endPage)
                 {
                     var resultBookmark = new PdfBookmark
                     {
-                        PageIndex = bookmark.PageIndex - _startPage,
+                        PageIndex = bookmark.PageIndex - startPage,
                         Title = bookmark.Title
                     };
 
@@ -85,21 +74,14 @@ namespace PdfSearcher
             }
         }
 
-        public IList<SizeF> PageSizes
-        {
-            get
-            {
-                if (_sizes == null)
-                    _sizes = TranslateSizes(_document.PageSizes);
-                return _sizes;
-            }
-        }
+        public IList<SizeF> PageSizes 
+            => sizes = sizes ?? TranslateSizes(document.PageSizes);
 
         private IList<SizeF> TranslateSizes(IList<SizeF> pageSizes)
         {
             var result = new List<SizeF>();
 
-            for (int i = _startPage; i <= _endPage; i++)
+            for (var i = startPage; i <= endPage; i++)
             {
                 result.Add(pageSizes[i]);
             }
@@ -107,65 +89,29 @@ namespace PdfSearcher
             return result;
         }
 
-        public void Render(int page, Graphics graphics, float dpiX, float dpiY, Rectangle bounds, bool forPrinting)
-        {
-            _document.Render(TranslatePage(page), graphics, dpiX, dpiY, bounds, forPrinting);
-        }
+        public void Render(int page, Graphics graphics, float dpiX, float dpiY, Rectangle bounds, bool forPrinting) => document.Render(TranslatePage(page), graphics, dpiX, dpiY, bounds, forPrinting);
 
-        public void Render(int page, Graphics graphics, float dpiX, float dpiY, Rectangle bounds, PdfRenderFlags flags)
-        {
-            _document.Render(TranslatePage(page), graphics, dpiX, dpiY, bounds, flags);
-        }
+        public void Render(int page, Graphics graphics, float dpiX, float dpiY, Rectangle bounds, PdfRenderFlags flags) => document.Render(TranslatePage(page), graphics, dpiX, dpiY, bounds, flags);
 
-        public Image Render(int page, float dpiX, float dpiY, bool forPrinting)
-        {
-            return _document.Render(TranslatePage(page), dpiX, dpiY, forPrinting);
-        }
+        public Image Render(int page, float dpiX, float dpiY, bool forPrinting) => document.Render(TranslatePage(page), dpiX, dpiY, forPrinting);
 
-        public Image Render(int page, float dpiX, float dpiY, PdfRenderFlags flags)
-        {
-            return _document.Render(TranslatePage(page), dpiX, dpiY, flags);
-        }
+        public Image Render(int page, float dpiX, float dpiY, PdfRenderFlags flags) => document.Render(TranslatePage(page), dpiX, dpiY, flags);
 
-        public Image Render(int page, int width, int height, float dpiX, float dpiY, bool forPrinting)
-        {
-            return _document.Render(TranslatePage(page), width, height, dpiX, dpiY, forPrinting);
-        }
+        public Image Render(int page, int width, int height, float dpiX, float dpiY, bool forPrinting) => document.Render(TranslatePage(page), width, height, dpiX, dpiY, forPrinting);
 
-        public Image Render(int page, int width, int height, float dpiX, float dpiY, PdfRenderFlags flags)
-        {
-            return _document.Render(TranslatePage(page), width, height, dpiX, dpiY, flags);
-        }
+        public Image Render(int page, int width, int height, float dpiX, float dpiY, PdfRenderFlags flags) => document.Render(TranslatePage(page), width, height, dpiX, dpiY, flags);
 
-        public Image Render(int page, int width, int height, float dpiX, float dpiY, PdfRotation rotate, PdfRenderFlags flags)
-        {
-            return _document.Render(page, width, height, dpiX, dpiY, rotate, flags);
-        }
+        public Image Render(int page, int width, int height, float dpiX, float dpiY, PdfRotation rotate, PdfRenderFlags flags) => document.Render(page, width, height, dpiX, dpiY, rotate, flags);
 
-        public void Save(string path)
-        {
-            _document.Save(path);
-        }
+        public void Save(string path) => document.Save(path);
 
-        public void Save(Stream stream)
-        {
-            _document.Save(stream);
-        }
+        public void Save(Stream stream) => document.Save(stream);
 
-        public PdfMatches Search(string text, bool matchCase, bool wholeWord)
-        {
-            return TranslateMatches(_document.Search(text, matchCase, wholeWord));
-        }
+        public PdfMatches Search(string text, bool matchCase, bool wholeWord) => TranslateMatches(document.Search(text, matchCase, wholeWord));
 
-        public PdfMatches Search(string text, bool matchCase, bool wholeWord, int page)
-        {
-            return TranslateMatches(_document.Search(text, matchCase, wholeWord, page));
-        }
+        public PdfMatches Search(string text, bool matchCase, bool wholeWord, int page) => TranslateMatches(document.Search(text, matchCase, wholeWord, page));
 
-        public PdfMatches Search(string text, bool matchCase, bool wholeWord, int startPage, int endPage)
-        {
-            return TranslateMatches(_document.Search(text, matchCase, wholeWord, startPage, endPage));
-        }
+        public PdfMatches Search(string text, bool matchCase, bool wholeWord, int startPage, int endPage) => TranslateMatches(document.Search(text, matchCase, wholeWord, startPage, endPage));
 
         private PdfMatches TranslateMatches(PdfMatches search)
         {
@@ -178,37 +124,25 @@ namespace PdfSearcher
             {
                 matches.Add(new PdfMatch(
                     match.Text,
-                    new PdfTextSpan(match.TextSpan.Page + _startPage, match.TextSpan.Offset, match.TextSpan.Length),
-                    match.Page + _startPage
+                    new PdfTextSpan(match.TextSpan.Page + startPage, match.TextSpan.Offset, match.TextSpan.Length),
+                    match.Page + startPage
                 ));
             }
 
             return new PdfMatches(
-                search.StartPage + _startPage,
-                search.EndPage + _startPage,
+                search.StartPage + startPage,
+                search.EndPage + startPage,
                 matches
             );
         }
 
-        public PrintDocument CreatePrintDocument()
-        {
-            return _document.CreatePrintDocument();
-        }
+        public PrintDocument CreatePrintDocument() => document.CreatePrintDocument();
 
-        public PrintDocument CreatePrintDocument(PdfPrintMode printMode)
-        {
-            return _document.CreatePrintDocument(printMode);
-        }
+        public PrintDocument CreatePrintDocument(PdfPrintMode printMode) => document.CreatePrintDocument(printMode);
 
-        public PrintDocument CreatePrintDocument(PdfPrintSettings settings)
-        {
-            return _document.CreatePrintDocument(settings);
-        }
+        public PrintDocument CreatePrintDocument(PdfPrintSettings settings) => document.CreatePrintDocument(settings);
 
-        public PdfPageLinks GetPageLinks(int pageNumber, Size pageSize)
-        {
-            return TranslateLinks(_document.GetPageLinks(pageNumber + _startPage, pageSize));
-        }
+        public PdfPageLinks GetPageLinks(int pageNumber, Size pageSize) => TranslateLinks(document.GetPageLinks(pageNumber + startPage, pageSize));
 
         private PdfPageLinks TranslateLinks(PdfPageLinks pageLinks)
         {
@@ -221,7 +155,7 @@ namespace PdfSearcher
             {
                 links.Add(new PdfPageLink(
                     link.Bounds,
-                    link.TargetPage + _startPage,
+                    link.TargetPage + startPage,
                     link.Uri
                 ));
             }
@@ -229,39 +163,24 @@ namespace PdfSearcher
             return new PdfPageLinks(links);
         }
 
-        public void DeletePage(int pageNumber)
-        {
-            _document.DeletePage(TranslatePage(pageNumber));
-        }
+        public void DeletePage(int pageNumber) => document.DeletePage(TranslatePage(pageNumber));
 
-        public void RotatePage(int pageNumber, PdfRotation rotation)
-        {
-            _document.RotatePage(TranslatePage(pageNumber), rotation);
-        }
+        public void RotatePage(int pageNumber, PdfRotation rotation) => document.RotatePage(TranslatePage(pageNumber), rotation);
 
-        public PdfInformation GetInformation()
-        {
-            return _document.GetInformation();
-        }
+        public PdfInformation GetInformation() => document.GetInformation();
 
-        public string GetPdfText(int page)
-        {
-            return _document.GetPdfText(TranslatePage(page));
-        }
+        public string GetPdfText(int page) => document.GetPdfText(TranslatePage(page));
 
-        public string GetPdfText(PdfTextSpan textSpan)
-        {
-            return _document.GetPdfText(textSpan);
-        }
+        public string GetPdfText(PdfTextSpan textSpan) => document.GetPdfText(textSpan);
 
         public IList<PdfRectangle> GetTextBounds(PdfTextSpan textSpan)
         {
             var result = new List<PdfRectangle>();
 
-            foreach (var rectangle in _document.GetTextBounds(textSpan))
+            foreach (var rectangle in document.GetTextBounds(textSpan))
             {
                 result.Add(new PdfRectangle(
-                    rectangle.Page + _startPage,
+                    rectangle.Page + startPage,
                     rectangle.Bounds
                 ));
             }
@@ -269,36 +188,16 @@ namespace PdfSearcher
             return result;
         }
 
-        public PointF PointToPdf(int page, Point point)
-        {
-            return _document.PointToPdf(TranslatePage(page), point);
-        }
+        public PointF PointToPdf(int page, Point point) => document.PointToPdf(TranslatePage(page), point);
 
-        public Point PointFromPdf(int page, PointF point)
-        {
-            return _document.PointFromPdf(TranslatePage(page), point);
-        }
+        public Point PointFromPdf(int page, PointF point) => document.PointFromPdf(TranslatePage(page), point);
 
-        public RectangleF RectangleToPdf(int page, Rectangle rect)
-        {
-            return _document.RectangleToPdf(TranslatePage(page), rect);
-        }
+        public RectangleF RectangleToPdf(int page, Rectangle rect) => document.RectangleToPdf(TranslatePage(page), rect);
 
-        public Rectangle RectangleFromPdf(int page, RectangleF rect)
-        {
-            return _document.RectangleFromPdf(TranslatePage(page), rect);
-        }
+        public Rectangle RectangleFromPdf(int page, RectangleF rect) => document.RectangleFromPdf(TranslatePage(page), rect);
 
-        private int TranslatePage(int page)
-        {
-            if (page < 0 || page >= PageCount)
-                throw new ArgumentException("Page number out of range");
-            return page + _startPage;
-        }
+        private int TranslatePage(int page) => page < 0 || page >= PageCount ? throw new ArgumentException("Page number out of range") : page + startPage;
 
-        public void Dispose()
-        {
-            _document.Dispose();
-        }
+        public void Dispose() => document.Dispose();
     }
 }

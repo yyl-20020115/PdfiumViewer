@@ -89,13 +89,13 @@ namespace PdfSearcher
             this._rotateLeft = new System.Windows.Forms.ToolStripButton();
             this._rotateRight = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
-            this._showToolbar = new System.Windows.Forms.ToolStripButton();
-            this._showBookmarks = new System.Windows.Forms.ToolStripButton();
+            this.showToolbar = new System.Windows.Forms.ToolStripButton();
+            this.showBookmarks = new System.Windows.Forms.ToolStripButton();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this._pageToolStripLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.pageToolStripLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
-            this._coordinatesToolStripLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.coordinatesToolStripLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.treeViewBooks = new System.Windows.Forms.TreeView();
             this.tabControlBooks = new System.Windows.Forms.TabControl();
             this.menuStrip1.SuspendLayout();
@@ -359,8 +359,8 @@ namespace PdfSearcher
             this._rotateLeft,
             this._rotateRight,
             this.toolStripSeparator6,
-            this._showToolbar,
-            this._showBookmarks});
+            this.showToolbar,
+            this.showBookmarks});
             this.toolStrip1.Location = new System.Drawing.Point(0, 25);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(1264, 25);
@@ -561,33 +561,33 @@ namespace PdfSearcher
             // 
             // _showToolbar
             // 
-            this._showToolbar.CheckOnClick = true;
-            this._showToolbar.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this._showToolbar.Image = ((System.Drawing.Image)(resources.GetObject("_showToolbar.Image")));
-            this._showToolbar.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this._showToolbar.Name = "_showToolbar";
-            this._showToolbar.Size = new System.Drawing.Size(72, 22);
-            this._showToolbar.Text = "显示工具条";
-            this._showToolbar.Click += new System.EventHandler(this.HideToolbar_Click);
+            this.showToolbar.CheckOnClick = true;
+            this.showToolbar.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.showToolbar.Image = ((System.Drawing.Image)(resources.GetObject("_showToolbar.Image")));
+            this.showToolbar.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.showToolbar.Name = "_showToolbar";
+            this.showToolbar.Size = new System.Drawing.Size(72, 22);
+            this.showToolbar.Text = "显示工具条";
+            this.showToolbar.Click += new System.EventHandler(this.HideToolbar_Click);
             // 
             // _showBookmarks
             // 
-            this._showBookmarks.CheckOnClick = true;
-            this._showBookmarks.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this._showBookmarks.Image = ((System.Drawing.Image)(resources.GetObject("_showBookmarks.Image")));
-            this._showBookmarks.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this._showBookmarks.Name = "_showBookmarks";
-            this._showBookmarks.Size = new System.Drawing.Size(60, 22);
-            this._showBookmarks.Text = "显示书签";
-            this._showBookmarks.Click += new System.EventHandler(this.HideBookmarks_Click);
+            this.showBookmarks.CheckOnClick = true;
+            this.showBookmarks.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.showBookmarks.Image = ((System.Drawing.Image)(resources.GetObject("_showBookmarks.Image")));
+            this.showBookmarks.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.showBookmarks.Name = "_showBookmarks";
+            this.showBookmarks.Size = new System.Drawing.Size(60, 22);
+            this.showBookmarks.Text = "显示书签";
+            this.showBookmarks.Click += new System.EventHandler(this.HideBookmarks_Click);
             // 
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1,
-            this._pageToolStripLabel,
+            this.pageToolStripLabel,
             this.toolStripStatusLabel2,
-            this._coordinatesToolStripLabel});
+            this.coordinatesToolStripLabel});
             this.statusStrip1.Location = new System.Drawing.Point(0, 579);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(1264, 22);
@@ -602,9 +602,9 @@ namespace PdfSearcher
             // 
             // _pageToolStripLabel
             // 
-            this._pageToolStripLabel.Name = "_pageToolStripLabel";
-            this._pageToolStripLabel.Size = new System.Drawing.Size(40, 17);
-            this._pageToolStripLabel.Text = "(页码)";
+            this.pageToolStripLabel.Name = "_pageToolStripLabel";
+            this.pageToolStripLabel.Size = new System.Drawing.Size(40, 17);
+            this.pageToolStripLabel.Text = "(页码)";
             // 
             // toolStripStatusLabel2
             // 
@@ -614,9 +614,9 @@ namespace PdfSearcher
             // 
             // _coordinatesToolStripLabel
             // 
-            this._coordinatesToolStripLabel.Name = "_coordinatesToolStripLabel";
-            this._coordinatesToolStripLabel.Size = new System.Drawing.Size(40, 17);
-            this._coordinatesToolStripLabel.Text = "(坐标)";
+            this.coordinatesToolStripLabel.Name = "_coordinatesToolStripLabel";
+            this.coordinatesToolStripLabel.Size = new System.Drawing.Size(40, 17);
+            this.coordinatesToolStripLabel.Text = "(坐标)";
             // 
             // treeViewBooks
             // 
@@ -693,8 +693,8 @@ namespace PdfSearcher
         private System.Windows.Forms.ToolStripButton _rotateRight;
         private System.Windows.Forms.ToolStripButton _fitBest;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
-        private System.Windows.Forms.ToolStripButton _showToolbar;
-        private System.Windows.Forms.ToolStripButton _showBookmarks;
+        private System.Windows.Forms.ToolStripButton showToolbar;
+        private System.Windows.Forms.ToolStripButton showBookmarks;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem4;
         private System.Windows.Forms.ToolStripMenuItem deleteCurrentPageToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem rotateCurrentPageToolStripMenuItem;
@@ -705,9 +705,9 @@ namespace PdfSearcher
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
-        private System.Windows.Forms.ToolStripStatusLabel _pageToolStripLabel;
+        private System.Windows.Forms.ToolStripStatusLabel pageToolStripLabel;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
-        private System.Windows.Forms.ToolStripStatusLabel _coordinatesToolStripLabel;
+        private System.Windows.Forms.ToolStripStatusLabel coordinatesToolStripLabel;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem5;
         private System.Windows.Forms.ToolStripMenuItem showRangeOfPagesToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem6;

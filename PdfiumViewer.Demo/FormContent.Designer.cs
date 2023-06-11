@@ -67,7 +67,6 @@
             this.buttonCancel.TabIndex = 2;
             this.buttonCancel.Text = "直接关闭(&X)";
             this.buttonCancel.UseVisualStyleBackColor = true;
-            this.buttonCancel.Click += new System.EventHandler(this.ButtonCancel_Click);
             // 
             // FormContent
             // 
@@ -81,7 +80,6 @@
             this.Name = "FormContent";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "FormContent";
-            this.Load += new System.EventHandler(this.FormContent_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

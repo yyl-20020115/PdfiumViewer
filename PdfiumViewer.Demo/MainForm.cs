@@ -14,11 +14,17 @@ namespace PdfSearcher
 
         public string PdfDatabasePath = "";
 
-        private SearchForm searchForm;
+        protected SearchForm searchForm;
 
-        private PdfViewer PdfViewer
-            => this.tabControlBooks.SelectedTab != null && this.tabControlBooks.SelectedTab.Controls.Count > 0
-                ? this.tabControlBooks.SelectedTab.Controls?[0] as PdfViewer
+        protected TabPage CurrentTabPage
+        {
+            get => this.tabControlBooks.SelectedTab;
+            set => this.tabControlBooks.SelectedTab = value;
+        }
+        protected PdfViewer PdfViewer
+            => this.CurrentTabPage != null 
+            && this.CurrentTabPage.Controls.Count > 0
+                ? this.CurrentTabPage.Controls[0] as PdfViewer
                 : null;
 
         public class PdfRecord
@@ -34,7 +40,7 @@ namespace PdfSearcher
             this.tabControlBooks.TabPages.Clear();
 
             var text = this.toolStripTextBoxTextSearch.Text;
-            text = (text ?? "").Trim();
+            text = (text ?? string.Empty).Trim();
             if (text.Length == 0) return;
 
             if (!Directory.Exists(PdfDatabasePath)) return;
@@ -75,18 +81,17 @@ namespace PdfSearcher
             }
         }
 
-        public Dictionary<string, PdfMatches> FindPdfs(string directory, string text)
-            => FindPdfs(Directory.GetFiles(directory, "*.pdf", SearchOption.AllDirectories), text);
+        public Dictionary<string, PdfMatches> FindPdfs(string directory, string text, bool matchCase =false, bool wholeWord = false)
+            => FindPdfs(Directory.GetFiles(directory, "*.pdf", SearchOption.AllDirectories), text,matchCase,wholeWord);
 
-
-        public Dictionary<string, PdfMatches> FindPdfs(string[] files, string text)
+        public Dictionary<string, PdfMatches> FindPdfs(string[] files, string text, bool matchCase =false, bool wholeWord = false)
         {
             var found = new ConcurrentBag<(string, PdfMatches)>();
             files.AsParallel().ForAll(f =>
             {
                 using (var doc = PdfDocument.Load(f))
                 {
-                    var matches = doc.Search(text, false, false);
+                    var matches = doc.Search(text, matchCase, wholeWord);
                     if (matches.Items.Any())
                         found.Add((f, matches));
                 }
@@ -117,9 +122,9 @@ namespace PdfSearcher
 
             zoom.Text = pdfViewer.Renderer.Zoom.ToString();
 
-            Disposed += (s, e) => pdfViewer?.Document?.Dispose();
-            _showBookmarks.Checked = pdfViewer.ShowBookmarks;
-            _showToolbar.Checked = pdfViewer.ShowToolbar;
+            this.Disposed += (s, e) => pdfViewer?.Document?.Dispose();
+            showBookmarks.Checked = pdfViewer.ShowBookmarks;
+            showToolbar.Checked = pdfViewer.ShowToolbar;
 
         }
         public MainForm()
@@ -142,13 +147,13 @@ namespace PdfSearcher
         {
             if (!point.IsValid)
             {
-                _pageToolStripLabel.Text = null;
-                _coordinatesToolStripLabel.Text = null;
+                pageToolStripLabel.Text = null;
+                coordinatesToolStripLabel.Text = null;
             }
             else
             {
-                _pageToolStripLabel.Text = (point.Page + 1).ToString();
-                _coordinatesToolStripLabel.Text = point.Location.X + "," + point.Location.Y;
+                pageToolStripLabel.Text = (point.Page + 1).ToString();
+                coordinatesToolStripLabel.Text = point.Location.X + "," + point.Location.Y;
             }
         }
 
@@ -166,12 +171,9 @@ namespace PdfSearcher
 
         private void MainForm_Shown(object sender, EventArgs e)
         {
-            this.PdfDatabasePath = Program.GlobalConfig.PDFDatabasePath;
-
+            this.PdfDatabasePath = Program.GlobalConfigure.PDFDatabasePath;
             if (string.IsNullOrEmpty(this.PdfDatabasePath)||!Directory.Exists(this.PdfDatabasePath))
-            {
                 SettingsToolStripMenuItem_Click(sender, e);
-            }
         }
 
         private PdfDocument OpenDocument(string fileName)
@@ -194,14 +196,14 @@ namespace PdfSearcher
 
         private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //OpenFile();
+            
         }
 
         private void RenderToBitmapsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (PdfViewer == null) return;
-            int dpiX;
-            int dpiY;
+            int dpiX = 0;
+            int dpiY = 0;
 
             using (var form = new ExportBitmapsForm())
             {
@@ -212,7 +214,7 @@ namespace PdfSearcher
                 dpiY = form.DpiY;
             }
 
-            string path;
+            var path = this.PdfDatabasePath;
 
             using (var form = new FolderBrowserDialog())
             {
@@ -355,14 +357,14 @@ namespace PdfSearcher
         {
             if (PdfViewer == null) return;
 
-            PdfViewer.ShowToolbar = _showToolbar.Checked;
+            PdfViewer.ShowToolbar = showToolbar.Checked;
         }
 
         private void HideBookmarks_Click(object sender, EventArgs e)
         {
             if (PdfViewer == null) return;
 
-            PdfViewer.ShowBookmarks = _showBookmarks.Checked;
+            PdfViewer.ShowBookmarks = showBookmarks.Checked;
         }
 
         private void DeleteCurrentPageToolStripMenuItem_Click(object sender, EventArgs e)
@@ -449,21 +451,21 @@ namespace PdfSearcher
             if (PdfViewer == null) return;
             var page = PdfViewer.Renderer.Page;
             var text = PdfViewer.Document.GetPdfText(page);
-            var caption = string.Format("页面 {0} 包含 {1} 字符:", page + 1, text.Length);
-            var cform = new FormContent() { Content = text, Text = text };
+            var caption = string.Format("页码 {0}: 包含 {1} 个字符", page + 1, text.Length);
+            var cform = new FormContent() { Content = text, Text = caption };
             cform.ShowDialog(this);
         }
 
         private void FindToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (searchForm == null)
+            if (this.searchForm == null)
             {
-                searchForm = new SearchForm(PdfViewer.Renderer);
-                searchForm.Disposed += (s, ea) => searchForm = null;
-                searchForm.Show(this);
+                this.searchForm = new SearchForm(PdfViewer.Renderer);
+                this.searchForm.Disposed += (s, ea) => searchForm = null;
+                this.searchForm.Show(this);
             }
 
-            searchForm.Focus();
+            this.searchForm.Focus();
         }
 
         private void PrintMultiplePagesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -483,7 +485,7 @@ namespace PdfSearcher
         {
             if (e.Node.Tag is TabPage page)
             {
-                this.tabControlBooks.SelectedTab = page;
+                this.CurrentTabPage = page;
             }
             else if (e.Node.Tag is PdfMatch match)
             {
@@ -492,7 +494,7 @@ namespace PdfSearcher
                 var parent = e.Node.Parent;
                 if (parent.Tag is TabPage cp && cp.Tag is PdfRecord record)
                 {
-                    this.tabControlBooks.SelectedTab = cp;
+                    this.CurrentTabPage = cp;
                     record.PdfSearchManager.ScrollIntoView(match);
                 }
 
@@ -518,8 +520,8 @@ namespace PdfSearcher
 
                 if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(dialog.SelectedPath))
                 {
-                    Program.GlobalConfig.PDFDatabasePath = this.PdfDatabasePath = dialog.SelectedPath;
-                    Program.SaveGlobalConfig();
+                    Program.GlobalConfigure.PDFDatabasePath = this.PdfDatabasePath = dialog.SelectedPath;
+                    Program.SaveGlobalConfigure();
                 }
             }
         }

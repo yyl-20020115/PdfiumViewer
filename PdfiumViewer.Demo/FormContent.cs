@@ -20,15 +20,5 @@ namespace PdfSearcher
             Clipboard.Clear();
             Clipboard.SetText(Content);
         }
-        private void ButtonCancel_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void FormContent_Load(object sender, EventArgs e)
-        {
-
-        }
-
     }
 }

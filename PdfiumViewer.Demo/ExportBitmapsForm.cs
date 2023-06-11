@@ -5,12 +5,12 @@ namespace PdfSearcher
 {
     public partial class ExportBitmapsForm : Form
     {
-        private int _dpiX;
-        private int _dpiY;
+        private int dpiX;
+        private int dpiY;
 
-        public int DpiX => _dpiX;
+        public int DpiX => dpiX;
 
-        public int DpiY => _dpiY;
+        public int DpiY => dpiY;
 
         public ExportBitmapsForm()
         {
@@ -35,9 +35,9 @@ namespace PdfSearcher
 
         private void UpdateEnabled()
         {
-            _acceptButton.Enabled =
-                int.TryParse(_dpiXTextBox.Text, out _dpiX) &&
-                int.TryParse(_dpiYTextBox.Text, out _dpiY);
+            acceptButton.Enabled =
+                int.TryParse(_dpiXTextBox.Text, out dpiX) &&
+                int.TryParse(_dpiYTextBox.Text, out dpiY);
         }
     }
 
