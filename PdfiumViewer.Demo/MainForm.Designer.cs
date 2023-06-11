@@ -62,6 +62,10 @@ namespace PdfiumViewer.Demo
             this.HelpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.AboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripTextBoxTextSearch = new System.Windows.Forms.ToolStripTextBox();
+            this.toolStripButtonTextSearch = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.page = new System.Windows.Forms.ToolStripTextBox();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -73,7 +77,7 @@ namespace PdfiumViewer.Demo
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButton4 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this._fitWidth = new System.Windows.Forms.ToolStripButton();
             this._fitHeight = new System.Windows.Forms.ToolStripButton();
             this._fitBest = new System.Windows.Forms.ToolStripButton();
@@ -91,12 +95,9 @@ namespace PdfiumViewer.Demo
             this._coordinatesToolStripLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.treeViewBooks = new System.Windows.Forms.TreeView();
             this.tabControlBooks = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
-            this.tabControlBooks.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -107,7 +108,7 @@ namespace PdfiumViewer.Demo
             this.HelpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1128, 25);
+            this.menuStrip1.Size = new System.Drawing.Size(1264, 25);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -142,7 +143,7 @@ namespace PdfiumViewer.Demo
             this.printPreviewToolStripMenuItem.Name = "printPreviewToolStripMenuItem";
             this.printPreviewToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
             this.printPreviewToolStripMenuItem.Text = "打印预览(&V)";
-            this.printPreviewToolStripMenuItem.Click += new System.EventHandler(this.printPreviewToolStripMenuItem_Click);
+            this.printPreviewToolStripMenuItem.Click += new System.EventHandler(this.PrintPreviewToolStripMenuItem_Click);
             // 
             // printMultiplePagesToolStripMenuItem
             // 
@@ -316,6 +317,10 @@ namespace PdfiumViewer.Demo
             // toolStrip1
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripLabel3,
+            this.toolStripTextBoxTextSearch,
+            this.toolStripButtonTextSearch,
+            this.toolStripSeparator3,
             this.toolStripLabel1,
             this.page,
             this.toolStripSeparator1,
@@ -327,7 +332,7 @@ namespace PdfiumViewer.Demo
             this.toolStripSeparator7,
             this.toolStripButton4,
             this.toolStripButton3,
-            this.toolStripSeparator3,
+            this.toolStripSeparator4,
             this._fitWidth,
             this._fitHeight,
             this._fitBest,
@@ -340,9 +345,38 @@ namespace PdfiumViewer.Demo
             this._getTextFromPage});
             this.toolStrip1.Location = new System.Drawing.Point(0, 25);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(1128, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(1264, 25);
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
+            // 
+            // toolStripLabel3
+            // 
+            this.toolStripLabel3.Name = "toolStripLabel3";
+            this.toolStripLabel3.Size = new System.Drawing.Size(59, 22);
+            this.toolStripLabel3.Text = "全局查找:";
+            // 
+            // toolStripTextBoxTextSearch
+            // 
+            this.toolStripTextBoxTextSearch.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
+            this.toolStripTextBoxTextSearch.Name = "toolStripTextBoxTextSearch";
+            this.toolStripTextBoxTextSearch.Size = new System.Drawing.Size(100, 25);
+            this.toolStripTextBoxTextSearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ToolStripTextBoxTextSearch_KeyDown);
+            // 
+            // toolStripButtonTextSearch
+            // 
+            this.toolStripButtonTextSearch.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.toolStripButtonTextSearch.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripButtonTextSearch.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonTextSearch.Image")));
+            this.toolStripButtonTextSearch.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonTextSearch.Name = "toolStripButtonTextSearch";
+            this.toolStripButtonTextSearch.Size = new System.Drawing.Size(60, 22);
+            this.toolStripButtonTextSearch.Text = "开始搜索";
+            this.toolStripButtonTextSearch.Click += new System.EventHandler(this.ToolStripButtonTextSearch_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
             // 
             // toolStripLabel1
             // 
@@ -425,10 +459,10 @@ namespace PdfiumViewer.Demo
             this.toolStripButton3.Text = "-";
             this.toolStripButton3.Click += new System.EventHandler(this.ToolStripButton3_Click);
             // 
-            // toolStripSeparator3
+            // toolStripSeparator4
             // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 25);
             // 
             // _fitWidth
             // 
@@ -530,9 +564,9 @@ namespace PdfiumViewer.Demo
             this._pageToolStripLabel,
             this.toolStripStatusLabel2,
             this._coordinatesToolStripLabel});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 527);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 579);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(1128, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(1264, 22);
             this.statusStrip1.TabIndex = 3;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -545,8 +579,8 @@ namespace PdfiumViewer.Demo
             // _pageToolStripLabel
             // 
             this._pageToolStripLabel.Name = "_pageToolStripLabel";
-            this._pageToolStripLabel.Size = new System.Drawing.Size(46, 17);
-            this._pageToolStripLabel.Text = "(page)";
+            this._pageToolStripLabel.Size = new System.Drawing.Size(40, 17);
+            this._pageToolStripLabel.Text = "(页码)";
             // 
             // toolStripStatusLabel2
             // 
@@ -557,53 +591,32 @@ namespace PdfiumViewer.Demo
             // _coordinatesToolStripLabel
             // 
             this._coordinatesToolStripLabel.Name = "_coordinatesToolStripLabel";
-            this._coordinatesToolStripLabel.Size = new System.Drawing.Size(85, 17);
-            this._coordinatesToolStripLabel.Text = "(coordinates)";
+            this._coordinatesToolStripLabel.Size = new System.Drawing.Size(40, 17);
+            this._coordinatesToolStripLabel.Text = "(坐标)";
             // 
             // treeViewBooks
             // 
             this.treeViewBooks.Dock = System.Windows.Forms.DockStyle.Left;
             this.treeViewBooks.Location = new System.Drawing.Point(0, 50);
             this.treeViewBooks.Name = "treeViewBooks";
-            this.treeViewBooks.Size = new System.Drawing.Size(181, 477);
+            this.treeViewBooks.Size = new System.Drawing.Size(231, 529);
             this.treeViewBooks.TabIndex = 4;
+            this.treeViewBooks.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TreeViewBooks_AfterSelect);
             // 
             // tabControlBooks
             // 
-            this.tabControlBooks.Controls.Add(this.tabPage1);
-            this.tabControlBooks.Controls.Add(this.tabPage2);
             this.tabControlBooks.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControlBooks.Location = new System.Drawing.Point(181, 50);
+            this.tabControlBooks.Location = new System.Drawing.Point(231, 50);
             this.tabControlBooks.Name = "tabControlBooks";
             this.tabControlBooks.SelectedIndex = 0;
-            this.tabControlBooks.Size = new System.Drawing.Size(947, 477);
+            this.tabControlBooks.Size = new System.Drawing.Size(1033, 529);
             this.tabControlBooks.TabIndex = 5;
-            // 
-            // tabPage1
-            // 
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(939, 451);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "tabPage1";
-            this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // tabPage2
-            // 
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(192, 74);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "tabPage2";
-            this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1128, 549);
+            this.ClientSize = new System.Drawing.Size(1264, 601);
             this.Controls.Add(this.tabControlBooks);
             this.Controls.Add(this.treeViewBooks);
             this.Controls.Add(this.statusStrip1);
@@ -619,7 +632,6 @@ namespace PdfiumViewer.Demo
             this.toolStrip1.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
-            this.tabControlBooks.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -684,8 +696,10 @@ namespace PdfiumViewer.Demo
         private System.Windows.Forms.ToolStripMenuItem AboutToolStripMenuItem;
         private System.Windows.Forms.TreeView treeViewBooks;
         private System.Windows.Forms.TabControl tabControlBooks;
-        private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.ToolStripLabel toolStripLabel3;
+        private System.Windows.Forms.ToolStripTextBox toolStripTextBoxTextSearch;
+        private System.Windows.Forms.ToolStripButton toolStripButtonTextSearch;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
     }
 }
 

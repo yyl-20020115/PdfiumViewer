@@ -41,6 +41,7 @@
             this.textBoxContent.Location = new System.Drawing.Point(12, 12);
             this.textBoxContent.Multiline = true;
             this.textBoxContent.Name = "textBoxContent";
+            this.textBoxContent.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.textBoxContent.Size = new System.Drawing.Size(776, 397);
             this.textBoxContent.TabIndex = 0;
             // 
@@ -78,6 +79,7 @@
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.textBoxContent);
             this.Name = "FormContent";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "FormContent";
             this.Load += new System.EventHandler(this.FormContent_Load);
             this.ResumeLayout(false);
