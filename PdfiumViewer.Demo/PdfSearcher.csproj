@@ -10,8 +10,8 @@
     <ProjectGuid>{ADD131F6-17EB-4E42-932F-74CBE6DBEEB3}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PdfiumViewer</RootNamespace>
-    <AssemblyName>PdSearcher</AssemblyName>
+    <RootNamespace>PdfSearcher</RootNamespace>
+    <AssemblyName>PdfSearcher</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
