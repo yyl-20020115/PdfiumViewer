@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace PdfiumViewer.Demo
+namespace PdSearcher
 {
     public partial class AboutForm : Form
     {

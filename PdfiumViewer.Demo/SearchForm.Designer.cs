@@ -1,4 +1,4 @@
-﻿namespace PdfiumViewer.Demo
+﻿namespace PdSearcher
 {
     partial class SearchForm
     {

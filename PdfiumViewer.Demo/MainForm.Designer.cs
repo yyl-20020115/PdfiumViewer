@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace PdfiumViewer.Demo
+namespace PdSearcher
 {
     partial class MainForm
     {

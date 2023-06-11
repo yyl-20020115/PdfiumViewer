@@ -5,9 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using YamlDotNet.Serialization;
+using PdfiumViewer;
 
-namespace PdfiumViewer.Demo
+namespace PdSearcher
 {
     public partial class MainForm : Form
     {

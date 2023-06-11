@@ -5,7 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 using YamlDotNet.Serialization;
 
-namespace PdfiumViewer.Demo
+namespace PdSearcher
 {
     [YamlSerializable]
     public class Config

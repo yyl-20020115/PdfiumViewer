@@ -4,8 +4,9 @@ using System.Drawing;
 using System.Drawing.Printing;
 using System.IO;
 using System.Text;
+using PdfiumViewer;
 
-namespace PdfiumViewer.Demo
+namespace PdSearcher
 {
     public class PdfRangeDocument : IPdfDocument
     {

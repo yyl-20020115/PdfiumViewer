@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace PdfiumViewer.Demo
+namespace PdSearcher
 {
     public partial class FormContent : Form
     {
