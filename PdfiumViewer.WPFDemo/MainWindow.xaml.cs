@@ -31,7 +31,7 @@ namespace PdfiumViewer.WPFDemo
             int width = (int)(this.ActualWidth - 30) / 2;
             int height = (int)this.ActualHeight - 30;
 
-            Stopwatch sw = new Stopwatch();
+            var sw = new Stopwatch();
             sw.Start();
 
             try
@@ -50,7 +50,7 @@ namespace PdfiumViewer.WPFDemo
                                     }
                             ), tokenSource.Token);
 
-                    labelMemDC.Content = String.Format("Renderd Pages: {0}, Memory: {1} MB, Time: {2:0.0} sec",
+                    labelMemDC.Content = string.Format("Renderd Pages: {0}, Memory: {1} MB, Time: {2:0.0} sec",
                         i,
                         currentProcess.PrivateMemorySize64 / (1024 * 1024),
                         sw.Elapsed.TotalSeconds);
@@ -67,7 +67,7 @@ namespace PdfiumViewer.WPFDemo
             }
 
             sw.Stop();
-            labelMemDC.Content = String.Format("Rendered {0} Pages within {1:0.0} seconds, Memory: {2} MB",
+            labelMemDC.Content = string.Format("Rendered {0} Pages within {1:0.0} seconds, Memory: {2} MB",
                 pdfDoc.PageCount,
                 sw.Elapsed.TotalSeconds,
                 currentProcess.PrivateMemorySize64 / (1024 * 1024));

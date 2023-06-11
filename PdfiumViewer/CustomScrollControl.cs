@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
-using System.Text;
 using System.Windows.Forms;
 
 #pragma warning disable 1591
@@ -13,50 +11,43 @@ namespace PdfiumViewer
 {
     public class CustomScrollControl : Control
     {
-        private Size _displaySize;
-        private Rectangle _displayRect;
-        private readonly ScrollProperties _verticalScroll;
-        private readonly ScrollProperties _horizontalScroll;
+        private Size displaySize;
+        private Rectangle displayRect;
+        private readonly ScrollProperties verticalScroll;
+        private readonly ScrollProperties vhorizontalScroll;
 
         public event ScrollEventHandler Scroll;
 
         protected virtual void OnScroll(ScrollEventArgs se)
         {
-            var ev = Scroll;
-
-            if (ev != null)
-                ev(this, se);
+            Scroll?.Invoke(this, se);
         }
 
         public event EventHandler DisplayRectangleChanged;
 
         protected virtual void OnDisplayRectangleChanged(EventArgs e)
         {
-            var ev = DisplayRectangleChanged;
-            if (ev != null)
-                ev(this, e);
+            DisplayRectangleChanged?.Invoke(this, e);
         }
 
         public event SetCursorEventHandler SetCursor;
 
         protected virtual void OnSetCursor(SetCursorEventArgs e)
         {
-            var handler = SetCursor;
-            if (handler != null)
-                handler(this, e);
+            SetCursor?.Invoke(this, e);
         }
 
         protected override CreateParams CreateParams
         {
             get
             {
-                CreateParams cp = base.CreateParams;
+                var cp = base.CreateParams;
 
-                if (HScroll || _horizontalScroll.Visible)
+                if (HScroll || vhorizontalScroll.Visible)
                     cp.Style |= NativeMethods.WS_HSCROLL;
                 else
                     cp.Style &= (~NativeMethods.WS_HSCROLL);
-                if (VScroll || _verticalScroll.Visible)
+                if (VScroll || verticalScroll.Visible)
                     cp.Style |= NativeMethods.WS_VSCROLL;
                 else
                     cp.Style &= (~NativeMethods.WS_VSCROLL);
@@ -69,17 +60,17 @@ namespace PdfiumViewer
         {
             get
             {
-                Rectangle rect = ClientRectangle;
+                var rect = ClientRectangle;
 
-                if (!_displayRect.IsEmpty)
+                if (!displayRect.IsEmpty)
                 {
-                    rect.X = _displayRect.X;
-                    rect.Y = _displayRect.Y;
+                    rect.X = displayRect.X;
+                    rect.Y = displayRect.Y;
 
                     if (HScroll)
-                        rect.Width = _displayRect.Width;
+                        rect.Width = displayRect.Width;
                     if (VScroll)
-                        rect.Height = _displayRect.Height;
+                        rect.Height = displayRect.Height;
                 }
 
                 return rect;
@@ -97,15 +88,15 @@ namespace PdfiumViewer
             SetStyle(ControlStyles.ContainerControl, true);
             SetStyle(ControlStyles.AllPaintingInWmPaint, false);
 
-            _horizontalScroll = new ScrollProperties(this, NativeMethods.SB_HORZ);
-            _verticalScroll = new ScrollProperties(this, NativeMethods.SB_VERT);
+            vhorizontalScroll = new ScrollProperties(this, NativeMethods.SB_HORZ);
+            verticalScroll = new ScrollProperties(this, NativeMethods.SB_VERT);
         }
 
         protected void SetDisplaySize(Size size)
         {
-            if (_displaySize != size)
+            if (displaySize != size)
             {
-                _displaySize = size;
+                displaySize = size;
 
                 AdjustFormScrollbars();
             }
@@ -132,8 +123,8 @@ namespace PdfiumViewer
             else
                 minClient.Width -= SystemInformation.VerticalScrollBarWidth;
 
-            int maxX = _displaySize.Width;
-            int maxY = _displaySize.Height;
+            int maxX = displaySize.Width;
+            int maxY = displaySize.Height;
 
             // Check maxX/maxY against the clientRect, we must compare it to the
             // clientRect without any scrollbars, and then we can check it against
@@ -188,13 +179,13 @@ namespace PdfiumViewer
             if (VScroll)
             {
                 var client = ClientRectangle;
-                int pos = -_displayRect.Y;
-                int maxPos = -(client.Height - _displayRect.Height);
+                int pos = -displayRect.Y;
+                int maxPos = -(client.Height - displayRect.Height);
 
                 pos = Math.Max(pos - e.Delta, 0);
                 pos = Math.Min(pos, maxPos);
 
-                SetDisplayRectLocation(_displayRect.X, -pos);
+                SetDisplayRectLocation(displayRect.X, -pos);
                 SyncScrollbars();
 
                 if (e is HandledMouseEventArgs)
@@ -203,13 +194,13 @@ namespace PdfiumViewer
             else if (HScroll)
             {
                 var client = ClientRectangle;
-                int pos = -_displayRect.X;
-                int maxPos = -(client.Width - _displayRect.Width);
+                int pos = -displayRect.X;
+                int maxPos = -(client.Width - displayRect.Width);
 
                 pos = Math.Max(pos - e.Delta, 0);
                 pos = Math.Min(pos, maxPos);
 
-                SetDisplayRectLocation(-pos, _displayRect.Y);
+                SetDisplayRectLocation(-pos, displayRect.Y);
                 SyncScrollbars();
 
                 if (e is HandledMouseEventArgs)
@@ -249,7 +240,7 @@ namespace PdfiumViewer
             int yDelta = 0;
 
             var client = ClientRectangle;
-            var displayRectangle = _displayRect;
+            var displayRectangle = displayRect;
             int minX = Math.Min(client.Width - displayRectangle.Width, 0);
             int minY = Math.Min(client.Height - displayRectangle.Height, 0);
 
@@ -267,8 +258,8 @@ namespace PdfiumViewer
             if (displayRectangle.Y != y)
                 yDelta = y - displayRectangle.Y;
 
-            _displayRect.X = x;
-            _displayRect.Y = y;
+            displayRect.X = x;
+            displayRect.Y = y;
 
             if ((xDelta != 0 || yDelta != 0) && IsHandleCreated && preserveContents)
             {
@@ -316,8 +307,8 @@ namespace PdfiumViewer
 
             if (needLayout)
             {
-                int x = _displayRect.X;
-                int y = _displayRect.Y;
+                int x = displayRect.X;
+                int y = displayRect.Y;
 
                 if (!horiz)
                     x = 0;
@@ -330,13 +321,13 @@ namespace PdfiumViewer
 
                 //Update the visible member of ScrollBars....
                 if (horiz)
-                    _horizontalScroll.Visible = true;
+                    vhorizontalScroll.Visible = true;
                 else
-                    ResetScrollProperties(_horizontalScroll);
+                    ResetScrollProperties(vhorizontalScroll);
                 if (vert)
-                    _verticalScroll.Visible = true;
+                    verticalScroll.Visible = true;
                 else
-                    ResetScrollProperties(_verticalScroll);
+                    ResetScrollProperties(verticalScroll);
 
                 UpdateStyles();
             }
@@ -348,13 +339,13 @@ namespace PdfiumViewer
         {
             bool needLayout = false;
 
-            double hScale = (double)width / _displayRect.Height;
-            double vScale = (double)height / _displayRect.Height;
+            double hScale = (double)width / displayRect.Height;
+            double vScale = (double)height / displayRect.Height;
 
-            if (_displayRect.Width != width || _displayRect.Height != height)
+            if (displayRect.Width != width || displayRect.Height != height)
             {
-                _displayRect.Width = width;
-                _displayRect.Height = height;
+                displayRect.Width = width;
+                displayRect.Height = height;
 
                 needLayout = true;
             }
@@ -367,8 +358,8 @@ namespace PdfiumViewer
             if (minY > 0)
                 minY = 0;
 
-            int x = (int)(_displayRect.X * hScale);
-            int y = (int)(_displayRect.Y * vScale);
+            int x = (int)(displayRect.X * hScale);
+            int y = (int)(displayRect.Y * vScale);
 
             if (!HScroll || x > 0)
                 x = 0;
@@ -387,33 +378,33 @@ namespace PdfiumViewer
 
         private void SyncScrollbars()
         {
-            Rectangle displayRect = _displayRect;
+            Rectangle displayRect = displayRect;
 
             if (!IsHandleCreated)
                 return;
 
             if (HScroll)
             {
-                _horizontalScroll.Maximum = displayRect.Width - 1;
-                _horizontalScroll.LargeChange = ClientRectangle.Width;
-                _horizontalScroll.SmallChange = 5;
+                vhorizontalScroll.Maximum = displayRect.Width - 1;
+                vhorizontalScroll.LargeChange = ClientRectangle.Width;
+                vhorizontalScroll.SmallChange = 5;
 
-                if (-displayRect.X >= 0 && -displayRect.X < _horizontalScroll.Maximum)
-                    _horizontalScroll.Value = -displayRect.X;
+                if (-displayRect.X >= 0 && -displayRect.X < vhorizontalScroll.Maximum)
+                    vhorizontalScroll.Value = -displayRect.X;
 
-                _horizontalScroll.UpdateScrollInfo();
+                vhorizontalScroll.UpdateScrollInfo();
             }
 
             if (VScroll)
             {
-                _verticalScroll.Maximum = displayRect.Height - 1;
-                _verticalScroll.LargeChange = ClientRectangle.Height;
-                _verticalScroll.SmallChange = 5;
+                verticalScroll.Maximum = displayRect.Height - 1;
+                verticalScroll.LargeChange = ClientRectangle.Height;
+                verticalScroll.SmallChange = 5;
 
-                if (-displayRect.Y >= 0 && -displayRect.Y < _verticalScroll.Maximum)
-                    _verticalScroll.Value = -displayRect.Y;
+                if (-displayRect.Y >= 0 && -displayRect.Y < verticalScroll.Maximum)
+                    verticalScroll.Value = -displayRect.Y;
 
-                _verticalScroll.UpdateScrollInfo();
+                verticalScroll.UpdateScrollInfo();
             }
         }
 
@@ -425,7 +416,7 @@ namespace PdfiumViewer
                 return;
             }
 
-            int pos = -_displayRect.X;
+            int pos = -displayRect.X;
             int oldValue = pos;
 
             switch (NativeMethods.Util.LOWORD(m.WParam))
@@ -434,7 +425,7 @@ namespace PdfiumViewer
                 case NativeMethods.SB_THUMBTRACK:
                     SetDisplayRectLocation(
                         -ScrollThumbPosition(NativeMethods.SB_HORZ),
-                        _displayRect.Y
+                        displayRect.Y
                     );
                     SyncScrollbars();
                     break;
@@ -475,7 +466,7 @@ namespace PdfiumViewer
                 return;
             }
 
-            int pos = -_displayRect.Y;
+            int pos = -displayRect.Y;
             int oldValue = pos;
 
             switch (NativeMethods.Util.LOWORD(m.WParam))
@@ -483,7 +474,7 @@ namespace PdfiumViewer
                 case NativeMethods.SB_THUMBPOSITION:
                 case NativeMethods.SB_THUMBTRACK:
                     SetDisplayRectLocation(
-                        _displayRect.X,
+                        displayRect.X,
                         -ScrollThumbPosition(NativeMethods.SB_VERT)
                     );
                     SyncScrollbars();
@@ -521,35 +512,35 @@ namespace PdfiumViewer
         {
             if (scrollBar == Orientation.Horizontal)
             {
-                int pos = -_displayRect.X;
-                int maxPos = _horizontalScroll.Maximum;
+                int pos = -displayRect.X;
+                int maxPos = vhorizontalScroll.Maximum;
 
                 switch (action)
                 {
                     case ScrollAction.LineUp:
-                        if (pos > _horizontalScroll.SmallChange)
-                            pos -= _horizontalScroll.SmallChange;
+                        if (pos > vhorizontalScroll.SmallChange)
+                            pos -= vhorizontalScroll.SmallChange;
                         else
                             pos = 0;
                         break;
 
                     case ScrollAction.LineDown:
-                        if (pos < maxPos - _horizontalScroll.SmallChange)
-                            pos += _horizontalScroll.SmallChange;
+                        if (pos < maxPos - vhorizontalScroll.SmallChange)
+                            pos += vhorizontalScroll.SmallChange;
                         else
                             pos = maxPos;
                         break;
 
                     case ScrollAction.PageUp:
-                        if (pos > _horizontalScroll.LargeChange)
-                            pos -= _horizontalScroll.LargeChange;
+                        if (pos > vhorizontalScroll.LargeChange)
+                            pos -= vhorizontalScroll.LargeChange;
                         else
                             pos = 0;
                         break;
 
                     case ScrollAction.PageDown:
-                        if (pos < maxPos - _horizontalScroll.LargeChange)
-                            pos += _horizontalScroll.LargeChange;
+                        if (pos < maxPos - vhorizontalScroll.LargeChange)
+                            pos += vhorizontalScroll.LargeChange;
                         else
                             pos = maxPos;
                         break;
@@ -563,39 +554,39 @@ namespace PdfiumViewer
                         break;
                 }
 
-                SetDisplayRectLocation(-pos, _displayRect.Y);
+                SetDisplayRectLocation(-pos, displayRect.Y);
             }
             else
             {
-                int pos = -_displayRect.Y;
-                int maxPos = _verticalScroll.Maximum;
+                int pos = -displayRect.Y;
+                int maxPos = verticalScroll.Maximum;
 
                 switch (action)
                 {
                     case ScrollAction.LineUp:
                         if (pos > 0)
-                            pos -= _verticalScroll.SmallChange;
+                            pos -= verticalScroll.SmallChange;
                         else
                             pos = 0;
                         break;
 
                     case ScrollAction.LineDown:
-                        if (pos < maxPos - _verticalScroll.SmallChange)
-                            pos += _verticalScroll.SmallChange;
+                        if (pos < maxPos - verticalScroll.SmallChange)
+                            pos += verticalScroll.SmallChange;
                         else
                             pos = maxPos;
                         break;
 
                     case ScrollAction.PageUp:
-                        if (pos > _verticalScroll.LargeChange)
-                            pos -= _verticalScroll.LargeChange;
+                        if (pos > verticalScroll.LargeChange)
+                            pos -= verticalScroll.LargeChange;
                         else
                             pos = 0;
                         break;
 
                     case ScrollAction.PageDown:
-                        if (pos < maxPos - _verticalScroll.LargeChange)
-                            pos += _verticalScroll.LargeChange;
+                        if (pos < maxPos - verticalScroll.LargeChange)
+                            pos += verticalScroll.LargeChange;
                         else
                             pos = maxPos;
                         break;
@@ -609,7 +600,7 @@ namespace PdfiumViewer
                         break;
                 }
 
-                SetDisplayRectLocation(_displayRect.X, -pos);
+                SetDisplayRectLocation(displayRect.X, -pos);
             }
 
             SyncScrollbars();

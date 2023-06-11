@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
-using System.Text;
-using System.Windows.Forms;
 using Microsoft.Win32.SafeHandles;
 
 namespace PdfiumViewer
@@ -17,7 +14,7 @@ namespace PdfiumViewer
         {
             // First try the custom resolving mechanism.
 
-            string fileName = PdfiumResolver.GetPdfiumFileName();
+            var fileName = PdfiumResolver.GetPdfiumFileName();
             if (fileName != null && File.Exists(fileName) && LoadLibrary(fileName) != IntPtr.Zero)
                 return;
 

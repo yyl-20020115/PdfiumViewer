@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-#pragma warning disable 1591
+﻿#pragma warning disable 1591
 
 namespace PdfiumViewer
 {
-    public enum HitTest
+    public enum HitTest :int
     {
         Border = NativeMethods.HitTestValues.HTBORDER,
         Bottom = NativeMethods.HitTestValues.HTBOTTOM,

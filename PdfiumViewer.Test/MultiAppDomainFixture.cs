@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using NUnit.Framework;
 
@@ -86,12 +84,12 @@ namespace PdfiumViewer.Test
 
         private class Runner : IDisposable
         {
-            private bool _disposed;
-            private AppDomain _appDomain;
+            private bool disposed;
+            private AppDomain appDomain;
 
             public Runner()
             {
-                _appDomain = AppDomain.CreateDomain(
+                appDomain = AppDomain.CreateDomain(
                     "Unit test",
                     AppDomain.CurrentDomain.Evidence,
                     new AppDomainSetup
@@ -104,7 +102,7 @@ namespace PdfiumViewer.Test
 
             public void Run()
             {
-                var script = (Script)_appDomain.CreateInstanceAndUnwrap(
+                var script = (Script)appDomain.CreateInstanceAndUnwrap(
                     typeof(Script).Assembly.FullName,
                     typeof(Script).FullName
                 );
@@ -114,15 +112,15 @@ namespace PdfiumViewer.Test
 
             public void Dispose()
             {
-                if (!_disposed)
+                if (!disposed)
                 {
-                    if (_appDomain != null)
+                    if (appDomain != null)
                     {
-                        AppDomain.Unload(_appDomain);
-                        _appDomain = null;
+                        AppDomain.Unload(appDomain);
+                        appDomain = null;
                     }
 
-                    _disposed = true;
+                    disposed = true;
                 }
             }
         }

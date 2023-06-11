@@ -8,29 +8,26 @@ namespace PdfiumViewer.WPFDemo
     internal class BitmapHelper
     {
 
-        public static BitmapSource ToBitmapSource(Image image)
-        {
-            return ToBitmapSource(image as Bitmap);
-        }
+        public static BitmapSource ToBitmapSource(Image image) => ToBitmapSource(image as Bitmap);
 
         /// <summary>
         /// Convert an IImage to a WPF BitmapSource. The result can be used in the Set Property of Image.Source
         /// </summary>
         /// <param name="bitmap">The Source Bitmap</param>
         /// <returns>The equivalent BitmapSource</returns>
-        public static BitmapSource ToBitmapSource(System.Drawing.Bitmap bitmap)
+        public static BitmapSource ToBitmapSource(Bitmap bitmap)
         {
             if (bitmap == null) return null;
 
-            using (System.Drawing.Bitmap source = (System.Drawing.Bitmap)bitmap.Clone())
+            using (var source = (Bitmap)bitmap.Clone())
             {
-                IntPtr ptr = source.GetHbitmap(); //obtain the Hbitmap
+                var ptr = source.GetHbitmap(); //obtain the Hbitmap
 
-                BitmapSource bs = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
+                var bs = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
                     ptr,
                     IntPtr.Zero,
-                    System.Windows.Int32Rect.Empty,
-                    System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
+                    sourceRect: System.Windows.Int32Rect.Empty,
+                    BitmapSizeOptions.FromEmptyOptions());
 
                 NativeMethods.DeleteObject(ptr); //release the HBitmap
                 bs.Freeze();
