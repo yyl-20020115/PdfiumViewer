@@ -23,6 +23,8 @@ namespace PdfiumViewer.Demo
         {
             public string Name;
             public string PdfPath;
+            public PdfMatches PdfMatches;
+            public PdfSearchManager PdfSearchManager;
         }
         private void ToolStripButtonTextSearch_Click(object sender, EventArgs e)
         {
@@ -34,12 +36,25 @@ namespace PdfiumViewer.Demo
             if (text.Length == 0) return;
 
             var found = FindPdfs(this.PdfDatabasePath, text);
-            foreach(var file in found.OrderBy(s=>s))
+            foreach(var p in found.OrderBy(p=>p.Key))
             {
+                var file = p.Key;
                 var name = Path.GetFileNameWithoutExtension(file);
 
-                var record = new PdfRecord() { Name=name,  PdfPath = file };
+                
+                var record = new PdfRecord() { Name=name,  PdfPath = file ,PdfMatches = p.Value};
                 var treeNode = new TreeNode(name);
+
+                foreach(var match in p.Value.Items)
+                {
+                    var matchNode = new TreeNode(
+                        $"{match.Text}: 页码={match.Page}, 开始位置={match.TextSpan.Offset}, 长度={match.TextSpan.Length}")
+                    {
+                        Tag = match
+                    };
+                    treeNode.Nodes.Add(matchNode);
+                }
+
                 this.treeViewBooks.Nodes.Add(treeNode);
 
                 var tabPage = new TabPage(name) { Tag = record, ToolTipText = file };
@@ -53,25 +68,33 @@ namespace PdfiumViewer.Demo
                 pdfViwer.Document = OpenDocument(record.PdfPath);
                 tabPage.Controls.Add(pdfViwer);
                 this.tabControlBooks.TabPages.Add(tabPage);
+
+                record.PdfSearchManager = new PdfSearchManager(pdfViwer.Renderer);
             }
         }
 
-        public List<string> FindPdfs(string directory, string text)
+        public Dictionary<string, PdfMatches> FindPdfs(string directory, string text)
             => FindPdfs(Directory.GetFiles(directory, "*.pdf", SearchOption.AllDirectories), text);
 
 
-        public List<string> FindPdfs(string[] files, string text)
+        public Dictionary<string,PdfMatches> FindPdfs(string[] files, string text)
         {
-            var found = new ConcurrentBag<string>();    
+            var found = new ConcurrentBag<(string,PdfMatches)>();    
             files.AsParallel().ForAll(f => {
                 using (var doc = PdfDocument.Load(f))
                 {
                     var matches = doc.Search(text, false, false);
-                    if (matches.Items.Any()) found.Add(f);
+                    if (matches.Items.Any()) 
+                        found.Add((f,matches));
                 }
 
             });
-            return found.ToList();
+            var ret = new Dictionary<string, PdfMatches>();
+            foreach(var (file,matches) in found)
+            {
+                ret[file] = matches;
+            }
+            return ret;
         }
 
 
@@ -417,9 +440,9 @@ namespace PdfiumViewer.Demo
         private void GetTextFromPage_Click(object sender, EventArgs e)
         {
             if (PdfViewer == null) return;
-            int page = PdfViewer.Renderer.Page;
-            string text = PdfViewer.Document.GetPdfText(page);
-            string caption = string.Format("页面 {0} 包含 {1} 字符:", page + 1, text.Length);
+            var page = PdfViewer.Renderer.Page;
+            var text = PdfViewer.Document.GetPdfText(page);
+            var caption = string.Format("页面 {0} 包含 {1} 字符:", page + 1, text.Length);
             var cform = new FormContent() { Content = text, Text = text };
             cform.ShowDialog(this);
         }
@@ -454,6 +477,17 @@ namespace PdfiumViewer.Demo
             if(e.Node.Tag is TabPage page)
             {
                 this.tabControlBooks.SelectedTab = page;
+            }else if(e.Node.Tag is PdfMatch match)
+            {
+                if (this.PdfViewer == null)
+                    return;
+                var parent = e.Node.Parent;
+                if(parent.Tag is TabPage cp && cp.Tag is PdfRecord record)
+                {
+                    this.tabControlBooks.SelectedTab = cp;
+                    record.PdfSearchManager.ScrollIntoView(match);
+                }
+
             }
         }
 

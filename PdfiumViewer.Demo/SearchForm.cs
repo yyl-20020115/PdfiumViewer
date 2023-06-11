@@ -10,8 +10,8 @@ namespace PdfiumViewer.Demo
 {
     public partial class SearchForm : Form
     {
-        private readonly PdfSearchManager _searchManager;
-        private bool _findDirty;
+        private readonly PdfSearchManager searchManager;
+        private bool findDirty;
 
         public SearchForm(PdfRenderer renderer)
         {
@@ -20,60 +20,60 @@ namespace PdfiumViewer.Demo
 
             InitializeComponent();
 
-            _searchManager = new PdfSearchManager(renderer);
+            searchManager = new PdfSearchManager(renderer);
 
-            _matchCase.Checked = _searchManager.MatchCase;
-            _matchWholeWord.Checked = _searchManager.MatchWholeWord;
-            _highlightAll.Checked = _searchManager.HighlightAllMatches;
+            matchCase.Checked = searchManager.MatchCase;
+            matchWholeWord.Checked = searchManager.MatchWholeWord;
+            highlightAll.Checked = searchManager.HighlightAllMatches;
         }
 
-        private void _matchCase_CheckedChanged(object sender, EventArgs e)
+        private void MatchCase_CheckedChanged(object sender, EventArgs e)
         {
-            _findDirty = true;
-            _searchManager.MatchCase = _matchCase.Checked;
+            findDirty = true;
+            searchManager.MatchCase = matchCase.Checked;
         }
 
-        private void _matchWholeWord_CheckedChanged(object sender, EventArgs e)
+        private void MatchWholeWord_CheckedChanged(object sender, EventArgs e)
         {
-            _findDirty = true;
-            _searchManager.MatchWholeWord = _matchWholeWord.Checked;
+            findDirty = true;
+            searchManager.MatchWholeWord = matchWholeWord.Checked;
         }
 
-        private void _highlightAll_CheckedChanged(object sender, EventArgs e)
+        private void HighlightAll_CheckedChanged(object sender, EventArgs e)
         {
-            _searchManager.HighlightAllMatches = _highlightAll.Checked;
+            searchManager.HighlightAllMatches = highlightAll.Checked;
         }
 
-        private void _find_TextChanged(object sender, EventArgs e)
+        private void Find_TextChanged(object sender, EventArgs e)
         {
-            _findDirty = true;
+            findDirty = true;
         }
 
-        private void _findPrevious_Click(object sender, EventArgs e)
+        private void FindPrevious_Click(object sender, EventArgs e)
         {
             Find(false);
         }
 
-        private void _findNext_Click(object sender, EventArgs e)
+        private void FindNext_Click(object sender, EventArgs e)
         {
             Find(true);
         }
 
         private void Find(bool forward)
         {
-            if (_findDirty)
+            if (findDirty)
             {
-                _findDirty = false;
+                findDirty = false;
 
-                if (!_searchManager.Search(_find.Text))
+                if (!searchManager.Search(_find.Text))
                 {
-                    MessageBox.Show(this, "No matches found.");
+                    MessageBox.Show(this, "未能找到匹配");
                     return;
                 }
             }
 
-            if (!_searchManager.FindNext(forward))
-                MessageBox.Show(this, "Find reached the starting point of the search.");
+            if (!searchManager.FindNext(forward))
+                MessageBox.Show(this, "查找已回到开始");
         }
     }
 }

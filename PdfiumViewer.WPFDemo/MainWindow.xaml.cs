@@ -125,7 +125,7 @@ namespace PdfiumViewer.WPFDemo
             {
                 sb.AppendLine(
                     String.Format(
-                    "Found \"{0}\" in page: {1}", match.Text, match.Page)
+                    "在 \"{0}\" 中找到 {1}", match.Page, match.Text)
                 );
             }
 

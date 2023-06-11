@@ -110,6 +110,7 @@
             this.MinimizeBox = false;
             this.Name = "ExportBitmapsForm";
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "输出位图";
             this.ResumeLayout(false);
             this.PerformLayout();

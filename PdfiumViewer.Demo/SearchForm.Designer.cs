@@ -30,9 +30,9 @@
         {
             this.label1 = new System.Windows.Forms.Label();
             this._find = new System.Windows.Forms.TextBox();
-            this._matchCase = new System.Windows.Forms.CheckBox();
-            this._matchWholeWord = new System.Windows.Forms.CheckBox();
-            this._highlightAll = new System.Windows.Forms.CheckBox();
+            this.matchCase = new System.Windows.Forms.CheckBox();
+            this.matchWholeWord = new System.Windows.Forms.CheckBox();
+            this.highlightAll = new System.Windows.Forms.CheckBox();
             this._findPrevious = new System.Windows.Forms.Button();
             this._findNext = new System.Windows.Forms.Button();
             this.SuspendLayout();
@@ -54,40 +54,40 @@
             this._find.Name = "_find";
             this._find.Size = new System.Drawing.Size(321, 21);
             this._find.TabIndex = 1;
-            this._find.TextChanged += new System.EventHandler(this._find_TextChanged);
+            this._find.TextChanged += new System.EventHandler(this.Find_TextChanged);
             // 
             // _matchCase
             // 
-            this._matchCase.AutoSize = true;
-            this._matchCase.Location = new System.Drawing.Point(65, 35);
-            this._matchCase.Name = "_matchCase";
-            this._matchCase.Size = new System.Drawing.Size(84, 16);
-            this._matchCase.TabIndex = 2;
-            this._matchCase.Text = "大小写匹配";
-            this._matchCase.UseVisualStyleBackColor = true;
-            this._matchCase.CheckedChanged += new System.EventHandler(this._matchCase_CheckedChanged);
+            this.matchCase.AutoSize = true;
+            this.matchCase.Location = new System.Drawing.Point(65, 35);
+            this.matchCase.Name = "_matchCase";
+            this.matchCase.Size = new System.Drawing.Size(84, 16);
+            this.matchCase.TabIndex = 2;
+            this.matchCase.Text = "大小写匹配";
+            this.matchCase.UseVisualStyleBackColor = true;
+            this.matchCase.CheckedChanged += new System.EventHandler(this.MatchCase_CheckedChanged);
             // 
             // _matchWholeWord
             // 
-            this._matchWholeWord.AutoSize = true;
-            this._matchWholeWord.Location = new System.Drawing.Point(65, 56);
-            this._matchWholeWord.Name = "_matchWholeWord";
-            this._matchWholeWord.Size = new System.Drawing.Size(72, 16);
-            this._matchWholeWord.TabIndex = 3;
-            this._matchWholeWord.Text = "全字匹配";
-            this._matchWholeWord.UseVisualStyleBackColor = true;
-            this._matchWholeWord.CheckedChanged += new System.EventHandler(this._matchWholeWord_CheckedChanged);
+            this.matchWholeWord.AutoSize = true;
+            this.matchWholeWord.Location = new System.Drawing.Point(65, 56);
+            this.matchWholeWord.Name = "_matchWholeWord";
+            this.matchWholeWord.Size = new System.Drawing.Size(72, 16);
+            this.matchWholeWord.TabIndex = 3;
+            this.matchWholeWord.Text = "全字匹配";
+            this.matchWholeWord.UseVisualStyleBackColor = true;
+            this.matchWholeWord.CheckedChanged += new System.EventHandler(this.MatchWholeWord_CheckedChanged);
             // 
             // _highlightAll
             // 
-            this._highlightAll.AutoSize = true;
-            this._highlightAll.Location = new System.Drawing.Point(65, 78);
-            this._highlightAll.Name = "_highlightAll";
-            this._highlightAll.Size = new System.Drawing.Size(120, 16);
-            this._highlightAll.TabIndex = 4;
-            this._highlightAll.Text = "高亮显示所有匹配";
-            this._highlightAll.UseVisualStyleBackColor = true;
-            this._highlightAll.CheckedChanged += new System.EventHandler(this._highlightAll_CheckedChanged);
+            this.highlightAll.AutoSize = true;
+            this.highlightAll.Location = new System.Drawing.Point(65, 78);
+            this.highlightAll.Name = "_highlightAll";
+            this.highlightAll.Size = new System.Drawing.Size(120, 16);
+            this.highlightAll.TabIndex = 4;
+            this.highlightAll.Text = "高亮显示所有匹配";
+            this.highlightAll.UseVisualStyleBackColor = true;
+            this.highlightAll.CheckedChanged += new System.EventHandler(this.HighlightAll_CheckedChanged);
             // 
             // _findPrevious
             // 
@@ -98,7 +98,7 @@
             this._findPrevious.TabIndex = 5;
             this._findPrevious.Text = "查找上一个(&P)";
             this._findPrevious.UseVisualStyleBackColor = true;
-            this._findPrevious.Click += new System.EventHandler(this._findPrevious_Click);
+            this._findPrevious.Click += new System.EventHandler(this.FindPrevious_Click);
             // 
             // _findNext
             // 
@@ -109,7 +109,7 @@
             this._findNext.TabIndex = 6;
             this._findNext.Text = "查找下一个(&N)";
             this._findNext.UseVisualStyleBackColor = true;
-            this._findNext.Click += new System.EventHandler(this._findNext_Click);
+            this._findNext.Click += new System.EventHandler(this.FindNext_Click);
             // 
             // SearchForm
             // 
@@ -119,13 +119,14 @@
             this.ClientSize = new System.Drawing.Size(398, 138);
             this.Controls.Add(this._findNext);
             this.Controls.Add(this._findPrevious);
-            this.Controls.Add(this._highlightAll);
-            this.Controls.Add(this._matchWholeWord);
-            this.Controls.Add(this._matchCase);
+            this.Controls.Add(this.highlightAll);
+            this.Controls.Add(this.matchWholeWord);
+            this.Controls.Add(this.matchCase);
             this.Controls.Add(this._find);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "SearchForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "搜索文本";
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -136,9 +137,9 @@
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox _find;
-        private System.Windows.Forms.CheckBox _matchCase;
-        private System.Windows.Forms.CheckBox _matchWholeWord;
-        private System.Windows.Forms.CheckBox _highlightAll;
+        private System.Windows.Forms.CheckBox matchCase;
+        private System.Windows.Forms.CheckBox matchWholeWord;
+        private System.Windows.Forms.CheckBox highlightAll;
         private System.Windows.Forms.Button _findPrevious;
         private System.Windows.Forms.Button _findNext;
     }
