@@ -6,7 +6,7 @@ using System.IO;
 using System.Text;
 using PdfiumViewer;
 
-namespace PdSearcher
+namespace PdfSearcher
 {
     public class PdfRangeDocument : IPdfDocument
     {

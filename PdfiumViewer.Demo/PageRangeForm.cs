@@ -7,7 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using PdfiumViewer;
 
-namespace PdSearcher
+namespace PdfSearcher
 {
     public partial class PageRangeForm : Form
     {

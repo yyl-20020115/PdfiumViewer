@@ -5,7 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 using YamlDotNet.Serialization;
 
-namespace PdSearcher
+namespace PdfSearcher
 {
     [YamlSerializable]
     public class Config

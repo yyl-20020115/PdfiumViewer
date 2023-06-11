@@ -1,4 +1,4 @@
-﻿namespace PdSearcher
+﻿namespace PdfSearcher
 {
     partial class AboutForm
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace PdSearcher
+namespace PdfSearcher
 {
     partial class MainForm
     {

@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 using PdfiumViewer;
 
-namespace PdSearcher
+namespace PdfSearcher
 {
     public partial class SearchForm : Form
     {
