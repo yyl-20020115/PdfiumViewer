@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <asmv1:assembly xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" manifestVersion="1.0" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns="urn:schemas-microsoft-com:asm.v2" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:co.v1="urn:schemas-microsoft-com:clickonce.v1" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:co.v2="urn:schemas-microsoft-com:clickonce.v2">
-  <asmv1:assemblyIdentity name="PdfiumViewer.Demo.exe" version="2.0.0.0" publicKeyToken="07d6b03b663f0d78" language="neutral" processorArchitecture="amd64" type="win32" />
+  <asmv1:assemblyIdentity name="PdfSearcher.exe" version="2.0.0.2" publicKeyToken="07d6b03b663f0d78" language="neutral" processorArchitecture="amd64" type="win32" />
   <application />
   <entryPoint>
-    <assemblyIdentity name="PdfiumViewer.Demo" version="2.11.0.0" language="neutral" processorArchitecture="amd64" />
-    <commandLine file="PdfiumViewer.Demo.exe" parameters="" />
+    <assemblyIdentity name="PdfSearcher" version="2.11.0.0" language="neutral" processorArchitecture="amd64" />
+    <commandLine file="PdfSearcher.exe" parameters="" />
   </entryPoint>
   <trustInfo>
     <security>
@@ -42,26 +42,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="PdfiumViewer.dll" size="123392">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="PdfiumViewer.dll" size="122880">
       <assemblyIdentity name="PdfiumViewer" version="2.13.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>XVP+B4ZltkWlllASy5L0xTsIynatKeVrERC6XY5WcsE=</dsig:DigestValue>
-      </hash>
-    </dependentAssembly>
-  </dependency>
-  <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="PdfiumViewer.Demo.exe" size="64960">
-      <assemblyIdentity name="PdfiumViewer.Demo" version="2.11.0.0" language="neutral" processorArchitecture="amd64" />
-      <hash>
-        <dsig:Transforms>
-          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
-        </dsig:Transforms>
-        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>QyJzZJvpr3Cl44mt7IGxe+ECegR6Rm66QIMRk0oTa2c=</dsig:DigestValue>
+        <dsig:DigestValue>J5DhRJFxYDTSyXpRyaZNygIX59YX7qvnV5HXjfKkAIs=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -73,7 +61,19 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>7cGJb1Lv1CjCyaLaj7LX9Sl0e3DNSYp3bpA0y/09r24=</dsig:DigestValue>
+        <dsig:DigestValue>klnMlWi4BuWDD7RRG8bk717Oyxvue/sdgyy0QzrEmnQ=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="PdfSearcher.exe" size="64448">
+      <assemblyIdentity name="PdfSearcher" version="2.11.0.0" language="neutral" processorArchitecture="amd64" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>VAZSBnhq5rajk19P/ClTBDbKY9bG1vO67zrY8CcrZEY=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -98,7 +98,7 @@
       <dsig:DigestValue>KlZXdUVx3P/lSQkI9G1YmMNKrgqpJrL/fPeiSPmAoeY=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="PdfiumViewer.Demo.exe.config" size="161">
+  <file name="PdfSearcher.exe.config" size="161">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
@@ -142,4 +142,4 @@
       <!--<supportedOS Id="{8e0f7a12-bfb3-4fe8-b9a5-48fd50a15a9a}" />-->
     </application>
   </compatibility>
-<publisherIdentity name="CN=I9-13900K\yilin" issuerKeyHash="7ca8b67888379fe43f3e034a5d9669b7dd35f18e" /><Signature Id="StrongNameSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha256" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" /><DigestValue>Xzgaxb5s6wzDv3rKQ0hmqMpnmnnZLCzjGRZ/uEA3gtM=</DigestValue></Reference></SignedInfo><SignatureValue>xU8B0XGd0MlvfjnpST5+Zqkk/cJAvhDtOiJkLzJWYqSrW9ewEouVQgW3oUuX8jv3kT1FMR4urqPIg6Mq7rIyVgSLw/KHkvCanDcpB8uPE7WU2o3pecJpZkKKZBVg5TtEeYYq5BXLNm0rICe80YBwEF0imRzFFkuAbsza+tPtCMA=</SignatureValue><KeyInfo Id="StrongNameKeyInfo"><KeyValue><RSAKeyValue><Modulus>y1UsLw2tK3gDxl2fknUaWV71o12DNVngoeidL9v/CUZDA/YQer94YOgbbJ0AIobAE79VPGr/Nh27kSlUtYTaFg54wrUAd8aD2IeBEC5gJ4gwiznzzVC2T4Dc5SGrOsoqCUq1m/k3uKkSlUPX3onASrG6sVY93q+hQB8/u5veWSU=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><msrel:RelData xmlns:msrel="http://schemas.microsoft.com/windows/rel/2005/reldata"><r:license xmlns:r="urn:mpeg:mpeg21:2003:01-REL-R-NS" xmlns:as="http://schemas.microsoft.com/windows/pki/2005/Authenticode"><r:grant><as:ManifestInformation Hash="d3823740b87f1619e32c2cd9799a67caa8664843ca7abfc30ceb6cbec51a385f" Description="" Url=""><as:assemblyIdentity name="PdfiumViewer.Demo.exe" version="2.0.0.0" publicKeyToken="07d6b03b663f0d78" language="neutral" processorArchitecture="amd64" type="win32" /></as:ManifestInformation><as:SignedBy /><as:AuthenticodePublisher><as:X509SubjectName>CN=I9-13900K\yilin</as:X509SubjectName></as:AuthenticodePublisher></r:grant><r:issuer><Signature Id="AuthenticodeSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha256" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" /><DigestValue>/qOhnF2PZz/ZV+gxX9WzWADkLxMzrrujIL9hBDDyPas=</DigestValue></Reference></SignedInfo><SignatureValue>LpOX2iuwrddHe6P/qWWH4BagH94SnBNvAYMok56bb84IMNNHPtb/IIyObzSOft4oKeYM60z5Kw+vZDkjg+lVKW4SiNV69z6/P1HST4W0mCy56tNXL4fcsW6PwUX+W5zvpf+SxLx3C1B4UjYSlF2CfLyy0jevu0dlc0kW0OQpUIo=</SignatureValue><KeyInfo><KeyValue><RSAKeyValue><Modulus>y1UsLw2tK3gDxl2fknUaWV71o12DNVngoeidL9v/CUZDA/YQer94YOgbbJ0AIobAE79VPGr/Nh27kSlUtYTaFg54wrUAd8aD2IeBEC5gJ4gwiznzzVC2T4Dc5SGrOsoqCUq1m/k3uKkSlUPX3onASrG6sVY93q+hQB8/u5veWSU=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><X509Data><X509Certificate>MIIB1TCCAT6gAwIBAgIQRHJBqHefQLpINC2ruZNPGjANBgkqhkiG9w0BAQsFADApMScwJQYDVQQDHh4ASQA5AC0AMQAzADkAMAAwAEsAXAB5AGkAbABpAG4wHhcNMjMwNjExMTYxMjIxWhcNMjQwNjEwMjIxMjIxWjApMScwJQYDVQQDHh4ASQA5AC0AMQAzADkAMAAwAEsAXAB5AGkAbABpAG4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAMtVLC8NrSt4A8Zdn5J1Glle9aNdgzVZ4KHonS/b/wlGQwP2EHq/eGDoG2ydACKGwBO/VTxq/zYdu5EpVLWE2hYOeMK1AHfGg9iHgRAuYCeIMIs5881Qtk+A3OUhqzrKKglKtZv5N7ipEpVD196JwEqxurFWPd6voUAfP7ub3lklAgMBAAEwDQYJKoZIhvcNAQELBQADgYEAf0RPaFF7UJ3QtEPy0ckg3LjiPjCETK2hldUNFppwpBD9Hu6Em4CSqT8JE8vXZ5lV3AqWUf6eIw5jK1Zx8UDXdJJfOn1PgOJrcVtpIJfAad4p5N3/bbZrbt3kpFSacHr5mefEYWFlINwt2G4tJIc3qm9lLSsZdn0WpG18hq7fAxg=</X509Certificate></X509Data></KeyInfo></Signature></r:issuer></r:license></msrel:RelData></KeyInfo></Signature></asmv1:assembly>
+<publisherIdentity name="CN=I9-13900K\yilin" issuerKeyHash="7ca8b67888379fe43f3e034a5d9669b7dd35f18e" /><Signature Id="StrongNameSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha256" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" /><DigestValue>amyghi8Q1tNLyNyzkPvSvibr28gc6yBbnFb4lcWpwS0=</DigestValue></Reference></SignedInfo><SignatureValue>dbe4auH1uHaUQWLhU0KB8TeKSwz38LkNBN0lpoQbAdtM0y1TiXbUIyIaS96UJkBJmofx4OaIMswompdtQyiBsoFeCu8qYABmjy2qYigxa5CKsebC0fZouwtp5o+O7SV+QBXXUNsQ8N09vU7uibQxoJjltnTpUFr9W8EYig+lUv0=</SignatureValue><KeyInfo Id="StrongNameKeyInfo"><KeyValue><RSAKeyValue><Modulus>y1UsLw2tK3gDxl2fknUaWV71o12DNVngoeidL9v/CUZDA/YQer94YOgbbJ0AIobAE79VPGr/Nh27kSlUtYTaFg54wrUAd8aD2IeBEC5gJ4gwiznzzVC2T4Dc5SGrOsoqCUq1m/k3uKkSlUPX3onASrG6sVY93q+hQB8/u5veWSU=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><msrel:RelData xmlns:msrel="http://schemas.microsoft.com/windows/rel/2005/reldata"><r:license xmlns:r="urn:mpeg:mpeg21:2003:01-REL-R-NS" xmlns:as="http://schemas.microsoft.com/windows/pki/2005/Authenticode"><r:grant><as:ManifestInformation Hash="2dc1a9c595f8569c5b20eb1cc8dbeb26bed2fb90b3dcc84bd3d6102f86a06c6a" Description="" Url=""><as:assemblyIdentity name="PdfSearcher.exe" version="2.0.0.2" publicKeyToken="07d6b03b663f0d78" language="neutral" processorArchitecture="amd64" type="win32" /></as:ManifestInformation><as:SignedBy /><as:AuthenticodePublisher><as:X509SubjectName>CN=I9-13900K\yilin</as:X509SubjectName></as:AuthenticodePublisher></r:grant><r:issuer><Signature Id="AuthenticodeSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha256" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" /><DigestValue>7ERiIhf+2gN01C+PnLAKxv/iFLHGxBG8LQ9D/TCmLKw=</DigestValue></Reference></SignedInfo><SignatureValue>iUKP+EJr5S+RVIG0tmGtJgLDTojC5BwJxHPVDT9+klrm57ArtGeGzhaH4UHlP74qa1sQgGQgHkxUsEj1Kfmtbyd1yk7wAi32zPZpDpyHPNgRarOXqd7rUAwU2Gx/63Enl6t/1/F5YYHVucoIzYEiDGVaBFQA/5c6w+CVmdryd+c=</SignatureValue><KeyInfo><KeyValue><RSAKeyValue><Modulus>y1UsLw2tK3gDxl2fknUaWV71o12DNVngoeidL9v/CUZDA/YQer94YOgbbJ0AIobAE79VPGr/Nh27kSlUtYTaFg54wrUAd8aD2IeBEC5gJ4gwiznzzVC2T4Dc5SGrOsoqCUq1m/k3uKkSlUPX3onASrG6sVY93q+hQB8/u5veWSU=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><X509Data><X509Certificate>MIIB1TCCAT6gAwIBAgIQRHJBqHefQLpINC2ruZNPGjANBgkqhkiG9w0BAQsFADApMScwJQYDVQQDHh4ASQA5AC0AMQAzADkAMAAwAEsAXAB5AGkAbABpAG4wHhcNMjMwNjExMTYxMjIxWhcNMjQwNjEwMjIxMjIxWjApMScwJQYDVQQDHh4ASQA5AC0AMQAzADkAMAAwAEsAXAB5AGkAbABpAG4wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAMtVLC8NrSt4A8Zdn5J1Glle9aNdgzVZ4KHonS/b/wlGQwP2EHq/eGDoG2ydACKGwBO/VTxq/zYdu5EpVLWE2hYOeMK1AHfGg9iHgRAuYCeIMIs5881Qtk+A3OUhqzrKKglKtZv5N7ipEpVD196JwEqxurFWPd6voUAfP7ub3lklAgMBAAEwDQYJKoZIhvcNAQELBQADgYEAf0RPaFF7UJ3QtEPy0ckg3LjiPjCETK2hldUNFppwpBD9Hu6Em4CSqT8JE8vXZ5lV3AqWUf6eIw5jK1Zx8UDXdJJfOn1PgOJrcVtpIJfAad4p5N3/bbZrbt3kpFSacHr5mefEYWFlINwt2G4tJIc3qm9lLSsZdn0WpG18hq7fAxg=</X509Certificate></X509Data></KeyInfo></Signature></r:issuer></r:license></msrel:RelData></KeyInfo></Signature></asmv1:assembly>
