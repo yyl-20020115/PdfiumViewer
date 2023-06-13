@@ -458,6 +458,8 @@ namespace PdfSearcher
 
         private void FindToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (PdfViewer == null) return;
+
             if (this.searchForm == null)
             {
                 this.searchForm = new SearchForm(PdfViewer.Renderer);
@@ -470,6 +472,7 @@ namespace PdfSearcher
 
         private void PrintMultiplePagesToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if(PdfViewer== null) return;
             using (var form = new PrintMultiplePagesForm(PdfViewer))
             {
                 form.ShowDialog(this);
