@@ -14,7 +14,7 @@ namespace PdfiumViewer
         public const double DefaultZoomFactor = 1.2;
 
         private static readonly Cursor PanCursor;
-
+        private static readonly Cursor IBeamCursor =Cursors.IBeam; 
         static PanningZoomingScrollControl()
         {
             Application.AddMessageFilter(new WheelFilter());
@@ -33,7 +33,11 @@ namespace PdfiumViewer
         private double zoomMin;
 
         public event EventHandler ZoomChanged;
-
+        public bool IsSelecting
+        {
+            get;
+            set;
+        }
         protected virtual void OnZoomChanged(EventArgs e)
         {
             ZoomChanged?.Invoke(this, e);
@@ -217,7 +221,7 @@ namespace PdfiumViewer
         protected override void OnSetCursor(SetCursorEventArgs e)
         {
             if (canPan && e.HitTest == HitTest.Client)
-                e.Cursor = PanCursor;
+                e.Cursor = this.IsSelecting ? IBeamCursor : PanCursor;
 
             base.OnSetCursor(e);
         }

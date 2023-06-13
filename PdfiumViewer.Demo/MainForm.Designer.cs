@@ -101,6 +101,7 @@ namespace PdfSearcher
             this.treeViewBooks = new System.Windows.Forms.TreeView();
             this.tabControlBooks = new System.Windows.Forms.TabControl();
             this.splitContainerRight = new System.Windows.Forms.SplitContainer();
+            this.toolStripButtonSelectText = new System.Windows.Forms.ToolStripButton();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -118,7 +119,7 @@ namespace PdfSearcher
             this.HelpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1264, 25);
+            this.menuStrip1.Size = new System.Drawing.Size(1424, 25);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -355,6 +356,7 @@ namespace PdfSearcher
             this.toolStripButtonTextSearch,
             this.toolStripSeparator3,
             this._getTextFromPage,
+            this.toolStripButtonSelectText,
             this.toolStripSeparator8,
             this.toolStripLabel1,
             this.page,
@@ -379,7 +381,7 @@ namespace PdfSearcher
             this.showBookmarks});
             this.toolStrip1.Location = new System.Drawing.Point(0, 25);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(1264, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(1424, 25);
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -617,7 +619,7 @@ namespace PdfSearcher
             this.coordinatesToolStripLabel});
             this.statusStrip1.Location = new System.Drawing.Point(0, 579);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(1264, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(1424, 22);
             this.statusStrip1.TabIndex = 3;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -650,7 +652,7 @@ namespace PdfSearcher
             this.treeViewBooks.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeViewBooks.Location = new System.Drawing.Point(0, 0);
             this.treeViewBooks.Name = "treeViewBooks";
-            this.treeViewBooks.Size = new System.Drawing.Size(405, 529);
+            this.treeViewBooks.Size = new System.Drawing.Size(458, 529);
             this.treeViewBooks.TabIndex = 4;
             this.treeViewBooks.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TreeViewBooks_AfterSelect);
             // 
@@ -660,7 +662,7 @@ namespace PdfSearcher
             this.tabControlBooks.Location = new System.Drawing.Point(0, 0);
             this.tabControlBooks.Name = "tabControlBooks";
             this.tabControlBooks.SelectedIndex = 0;
-            this.tabControlBooks.Size = new System.Drawing.Size(851, 529);
+            this.tabControlBooks.Size = new System.Drawing.Size(958, 529);
             this.tabControlBooks.TabIndex = 5;
             // 
             // splitContainerRight
@@ -676,16 +678,26 @@ namespace PdfSearcher
             // splitContainerRight.Panel2
             // 
             this.splitContainerRight.Panel2.Controls.Add(this.treeViewBooks);
-            this.splitContainerRight.Size = new System.Drawing.Size(1264, 529);
-            this.splitContainerRight.SplitterDistance = 851;
+            this.splitContainerRight.Size = new System.Drawing.Size(1424, 529);
+            this.splitContainerRight.SplitterDistance = 958;
             this.splitContainerRight.SplitterWidth = 8;
             this.splitContainerRight.TabIndex = 6;
+            // 
+            // toolStripButtonSelectText
+            // 
+            this.toolStripButtonSelectText.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripButtonSelectText.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonSelectText.Image")));
+            this.toolStripButtonSelectText.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonSelectText.Name = "toolStripButtonSelectText";
+            this.toolStripButtonSelectText.Size = new System.Drawing.Size(75, 22);
+            this.toolStripButtonSelectText.Text = "选取文本(S&)";
+            this.toolStripButtonSelectText.Click += new System.EventHandler(this.ToolStripButtonSelectText_Click);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1264, 601);
+            this.ClientSize = new System.Drawing.Size(1424, 601);
             this.Controls.Add(this.splitContainerRight);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.toolStrip1);
@@ -779,6 +791,7 @@ namespace PdfSearcher
         private System.Windows.Forms.ToolStripMenuItem NetworkPDFDatabasePathToolStripMenuItem;
         private System.Windows.Forms.SplitContainer splitContainerRight;
         private System.Windows.Forms.ToolStripButton toolStripButtonInWorking;
+        private System.Windows.Forms.ToolStripButton toolStripButtonSelectText;
     }
 }
 

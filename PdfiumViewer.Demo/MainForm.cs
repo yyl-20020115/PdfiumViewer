@@ -727,5 +727,12 @@ namespace PdfSearcher
             this.toolStripButtonInWorking.Checked =!this.toolStripButtonInWorking.Checked;
 
         }
+
+        private void ToolStripButtonSelectText_Click(object sender, EventArgs e)
+        {
+            if (this.PdfViewer == null) return;
+
+            this.PdfViewer.IsSelecting = this.toolStripButtonSelectText.Checked = !this.toolStripButtonSelectText.Checked;
+        }
     }
 }

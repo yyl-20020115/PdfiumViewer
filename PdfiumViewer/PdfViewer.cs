@@ -43,7 +43,11 @@ namespace PdfiumViewer
         {
             get { return renderer; }
         }
-
+        public bool IsSelecting
+        {
+            get=>this.renderer.IsSelecting;
+            set => this.renderer.IsSelecting = value;
+        }
         /// <summary>
         /// Gets or sets the default document name used when saving the document.
         /// </summary>
@@ -130,7 +134,11 @@ namespace PdfiumViewer
                     bookmarks.Nodes.Add(GetBookmarkNode(bookmark));
             }
         }
-
+        public bool ToolStripVisible
+        {
+            get => this._toolStrip.Visible;
+            set => this._toolStrip.Visible = false;
+        }
         /// <summary>
         /// Initializes a new instance of the PdfViewer class.
         /// </summary>
@@ -142,7 +150,7 @@ namespace PdfiumViewer
 
             ShowToolbar = true;
             ShowBookmarks = true;
-
+            this.ToolStripVisible = false;
             UpdateEnabled();
         }
 
