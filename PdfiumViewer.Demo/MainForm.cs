@@ -732,8 +732,10 @@ namespace PdfSearcher
                 if(dr == DialogResult.OK)
                 {
                     if (string.IsNullOrEmpty(path) || !path.StartsWith("\\\\"))
-                        MessageBox.Show("网络路径应当以\\\\开头", "错误");
-                    
+                    {
+                        MessageBox.Show("网络路径应当以\\\\开头", "错误", MessageBoxButtons.OK);
+                        return;
+                    }
                     Program.GlobalConfigure.PDFDatabasePath = this.PdfDatabasePath = path;
                     Program.SaveGlobalConfigure();
                 }
