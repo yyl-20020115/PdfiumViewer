@@ -8,3 +8,5 @@ Thumbs.db
 /packages
 /.vs
 /PdfiumViewer.Demo/PdfSearcher.rar
+/PdfProofReader/bin/Debug
+/PdfProofReader/obj/Debug
