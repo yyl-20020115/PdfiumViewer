@@ -148,6 +148,12 @@
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="NetworkPDFDataPathInputForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NetworkPDFDataPathInputForm.Designer.cs">
+      <DependentUpon>NetworkPDFDataPathInputForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="PageRangeForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -180,6 +186,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NetworkPDFDataPathInputForm.resx">
+      <DependentUpon>NetworkPDFDataPathInputForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PageRangeForm.resx">
       <DependentUpon>PageRangeForm.cs</DependentUpon>

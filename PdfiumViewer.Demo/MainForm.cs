@@ -1,18 +1,36 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Windows.Forms;
 using PdfiumViewer;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace PdfSearcher
 {
     public partial class MainForm : Form
     {
+        public class PdfRecord
+        {
+            public string Name;
+            public string PdfPath;
+            public PdfMatches PdfMatches;
+            public PdfSearchManager PdfSearchManager;
+        }
+        protected string pdfpath ="";
+        private TreeNode WorkingNodes;
+        private TreeNode FoundNodes;
+        private TreeNode AllNodes;
 
-        public string PdfDatabasePath = "";
+        public string PdfDatabasePath
+        {
+            get => this.pdfpath;
+            set => this.watcher.Path = this.pdfpath = value;
+        }
 
         protected SearchForm searchForm;
 
@@ -27,23 +45,26 @@ namespace PdfSearcher
                 ? this.CurrentTabPage.Controls[0] as PdfViewer
                 : null;
 
-        public class PdfRecord
-        {
-            public string Name;
-            public string PdfPath;
-            public PdfMatches PdfMatches;
-            public PdfSearchManager PdfSearchManager;
-        }
+
+        protected FileSystemWatcher watcher = new FileSystemWatcher();
+
+        protected ContextMenu deleteMenu = new ContextMenu();
+        protected ContextMenu appendMenu = new ContextMenu();
         private void ToolStripButtonTextSearch_Click(object sender, EventArgs e)
         {
-            this.treeViewBooks.Nodes.Clear();
-            this.tabControlBooks.TabPages.Clear();
-
             var text = this.toolStripTextBoxTextSearch.Text;
             text = (text ?? string.Empty).Trim();
-            if (text.Length == 0) return;
+            if (text.Length == 0)
+            {
+                return;
+            }
+            var adding = this.WorkingNodes.Nodes.Count == 0;
+            //this.WorkingNodes.Nodes.Clear();
+            this.FoundNodes.Nodes.Clear();
+            this.tabControlBooks.TabPages.Clear();
 
             if (!Directory.Exists(PdfDatabasePath)) return;
+
             var found = FindPdfs(this.PdfDatabasePath, text);
             foreach (var p in found.OrderBy(p => p.Key))
             {
@@ -52,7 +73,7 @@ namespace PdfSearcher
 
                 var record = new PdfRecord() { Name = name, PdfPath = file, PdfMatches = p.Value };
                 var treeNode = new TreeNode(name);
-
+                
                 foreach (var match in p.Value.Items)
                 {
                     var matchNode = new TreeNode(
@@ -62,11 +83,17 @@ namespace PdfSearcher
                     };
                     treeNode.Nodes.Add(matchNode);
                 }
-
-                this.treeViewBooks.Nodes.Add(treeNode);
+                treeNode.ContextMenu = this.appendMenu;
+                this.FoundNodes.Nodes.Add(treeNode);
 
                 var tabPage = new TabPage(name) { Tag = record, ToolTipText = file };
                 treeNode.Tag = tabPage;
+                if (adding)
+                {
+                    var clone = treeNode.Clone() as TreeNode;
+                    this.WorkingNodes.Nodes.Add(clone);
+                    clone.ContextMenu = this.deleteMenu;
+                }
                 var pdfViwer = new PdfViewer
                 {
                     Dock = DockStyle.Fill,
@@ -78,6 +105,11 @@ namespace PdfSearcher
                 this.tabControlBooks.TabPages.Add(tabPage);
 
                 record.PdfSearchManager = new PdfSearchManager(pdfViwer.Renderer);
+            }
+            this.FoundNodes.Expand();
+            if (adding)
+            {
+                this.WorkingNodes.Expand();
             }
         }
 
@@ -130,6 +162,32 @@ namespace PdfSearcher
         public MainForm()
         {
             InitializeComponent();
+
+            this.WorkingNodes = new TreeNode("使用中的PDF文档");
+            this.FoundNodes = new TreeNode("已找到的PDF文档");
+            this.AllNodes = new TreeNode("全部PDF文档");
+
+            this.treeViewBooks.Nodes.Add(WorkingNodes);
+            this.treeViewBooks.Nodes.Add(FoundNodes);
+            this.treeViewBooks.Nodes.Add(AllNodes);
+
+        }
+
+        private void Watcher_Operations(object sender, FileSystemEventArgs e)
+        {
+            this.UpdateFileList();
+        }
+        private void UpdateFileList()
+        {
+            this.AllNodes.Nodes.Clear();
+            var files = Directory.GetFiles(this.PdfDatabasePath, "*.pdf", SearchOption.AllDirectories);
+            foreach (var file in files.OrderBy(f=>f))
+            {
+                var fileNode = new TreeNode(
+                    Path.GetFileNameWithoutExtension(file));
+                this.AllNodes.Nodes.Add(fileNode);
+            }
+            this.AllNodes.ExpandAll();
         }
 
         private void Renderer_MouseLeave(object sender, EventArgs e)
@@ -174,6 +232,62 @@ namespace PdfSearcher
             this.PdfDatabasePath = Program.GlobalConfigure.PDFDatabasePath;
             if (string.IsNullOrEmpty(this.PdfDatabasePath)||!Directory.Exists(this.PdfDatabasePath))
                 SettingsToolStripMenuItem_Click(sender, e);
+
+            var appendMenuItem = this.appendMenu.MenuItems.Add("加入(&A)");
+
+            var deleteMenuItem = this.deleteMenu.MenuItems.Add("删除(&D)");
+
+            appendMenuItem.Click += AppendMenuItem_Click;
+            deleteMenuItem.Click += DeleteMenuItem_Click;
+            this.treeViewBooks.MouseDown += TreeViewBooks_MouseDown;
+            this.watcher.Filter = "*.pdf";
+            this.watcher.IncludeSubdirectories = true;
+            this.watcher.EnableRaisingEvents = true;
+            this.watcher.Created += Watcher_Operations;
+            this.watcher.Deleted += Watcher_Operations;
+            this.watcher.Changed += Watcher_Operations;
+            this.watcher.Renamed += Watcher_Operations;
+
+            this.UpdateFileList();
+        }
+
+        private void TreeViewBooks_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)//判断你点的是不是右键
+            {
+                var ClickPoint = new Point(e.X, e.Y);
+                var CurrentNode = this.treeViewBooks.GetNodeAt(ClickPoint);
+                if (CurrentNode != null)//判断你点的是不是一个节点
+                {
+                    this.treeViewBooks.SelectedNode = CurrentNode;//选中这个节点
+                }
+            }
+        }
+        private bool HasAny(TreeNode node,string text)
+        {
+            for(int i = 0; i < node.Nodes.Count; i++)
+            {
+                if (node.Nodes[i].Text == text) return true;
+            }
+            return false;
+        }
+        private void AppendMenuItem_Click(object sender, EventArgs e)
+        {
+            var node = this.treeViewBooks.SelectedNode;
+            if (node != null)
+            {
+                if (!this.HasAny(this.WorkingNodes,node.Text))
+                {
+                    node = node.Clone() as TreeNode;
+                    node.ContextMenu = deleteMenu;
+                    this.WorkingNodes.Nodes.Add(node);
+                }
+            }
+        }
+
+        private void DeleteMenuItem_Click(object sender, EventArgs e)
+        {
+            this.treeViewBooks.SelectedNode?.Remove();
         }
 
         private PdfDocument OpenDocument(string fileName)
@@ -483,7 +597,6 @@ namespace PdfSearcher
         {
             new AboutForm().ShowDialog(this);
         }
-
         private void TreeViewBooks_AfterSelect(object sender, TreeViewEventArgs e)
         {
             if (e.Node.Tag is TabPage page)
@@ -527,6 +640,29 @@ namespace PdfSearcher
                     Program.SaveGlobalConfigure();
                 }
             }
+        }
+
+        private void NetworkPDFDatabasePathToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var input = new NetworkPDFDataPathInputForm())
+            {
+                input.Path = this.PdfDatabasePath;
+                var dr = input.ShowDialog(this);
+                var path = input.Path;
+                if(dr == DialogResult.OK)
+                {
+                    if (string.IsNullOrEmpty(path) || !path.StartsWith("\\\\"))
+                        MessageBox.Show("网络路径应当以\\\\开头", "错误");
+                    
+                    Program.GlobalConfigure.PDFDatabasePath = this.PdfDatabasePath = path;
+                    Program.SaveGlobalConfigure();
+                }
+            }
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
