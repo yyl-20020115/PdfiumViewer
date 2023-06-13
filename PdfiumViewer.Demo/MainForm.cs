@@ -4,11 +4,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Windows.Forms;
 using PdfiumViewer;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace PdfSearcher
 {
@@ -65,54 +63,112 @@ namespace PdfSearcher
 
             if (!Directory.Exists(PdfDatabasePath)) return;
 
-            var found = FindPdfs(this.PdfDatabasePath, text);
-            foreach (var p in found.OrderBy(p => p.Key))
+            if(this.toolStripButtonInWorking.Checked)
             {
-                var file = p.Key;
-                var name = Path.GetFileNameWithoutExtension(file);
-
-                var record = new PdfRecord() { Name = name, PdfPath = file, PdfMatches = p.Value };
-                var treeNode = new TreeNode(name);
                 
-                foreach (var match in p.Value.Items)
+                var found = FindPdfs(this.GetFiles(this.WorkingNodes), text);
+                foreach (var p in found.OrderBy(p => p.Key))
                 {
-                    var matchNode = new TreeNode(
-                        $"{match.Text}: 页码={match.Page}, 开始位置={match.TextSpan.Offset}, 长度={match.TextSpan.Length}")
-                    {
-                        Tag = match
-                    };
-                    treeNode.Nodes.Add(matchNode);
-                }
-                treeNode.ContextMenu = this.appendMenu;
-                this.FoundNodes.Nodes.Add(treeNode);
+                    var file = p.Key;
+                    var name = Path.GetFileNameWithoutExtension(file);
 
-                var tabPage = new TabPage(name) { Tag = record, ToolTipText = file };
-                treeNode.Tag = tabPage;
+                    var record = new PdfRecord() { Name = name, PdfPath = file, PdfMatches = p.Value };
+                    var treeNode = new TreeNode(name);
+
+                    foreach (var match in p.Value.Items)
+                    {
+                        var matchNode = new TreeNode(
+                            $"{match.Text}: 页码={match.Page}, 开始位置={match.TextSpan.Offset}, 长度={match.TextSpan.Length}")
+                        {
+                            Tag = match
+                        };
+                        treeNode.Nodes.Add(matchNode);
+                    }
+                    treeNode.ContextMenu = this.appendMenu;
+                    this.FoundNodes.Nodes.Add(treeNode);
+
+                    var tabPage = new TabPage(name) { Tag = record, ToolTipText = file };
+                    treeNode.Tag = tabPage;
+                    var pdfViwer = new PdfViewer
+                    {
+                        Dock = DockStyle.Fill,
+                        Tag = record
+                    };
+                    InitPdfViewer(pdfViwer);
+                    pdfViwer.Document = OpenDocument(record.PdfPath);
+                    tabPage.Controls.Add(pdfViwer);
+                    this.tabControlBooks.TabPages.Add(tabPage);
+
+                    record.PdfSearchManager = new PdfSearchManager(pdfViwer.Renderer);
+                }
+                this.FoundNodes.Expand();
+            }
+            else
+            {
+                var found = FindPdfs(this.PdfDatabasePath, text);
+
+                foreach (var p in found.OrderBy(p => p.Key))
+                {
+                    var file = p.Key;
+                    var name = Path.GetFileNameWithoutExtension(file);
+
+                    var record = new PdfRecord() { Name = name, PdfPath = file, PdfMatches = p.Value };
+                    var treeNode = new TreeNode(name);
+
+                    foreach (var match in p.Value.Items)
+                    {
+                        var matchNode = new TreeNode(
+                            $"{match.Text}: 页码={match.Page}, 开始位置={match.TextSpan.Offset}, 长度={match.TextSpan.Length}")
+                        {
+                            Tag = match
+                        };
+                        treeNode.Nodes.Add(matchNode);
+                    }
+                    treeNode.ContextMenu = this.appendMenu;
+                    this.FoundNodes.Nodes.Add(treeNode);
+
+                    var tabPage = new TabPage(name) { Tag = record, ToolTipText = file };
+                    treeNode.Tag = tabPage;
+                    if (adding)
+                    {
+                        var clone = treeNode.Clone() as TreeNode;
+                        this.WorkingNodes.Nodes.Add(clone);
+                        clone.ContextMenu = this.deleteMenu;
+                    }
+                    var pdfViwer = new PdfViewer
+                    {
+                        Dock = DockStyle.Fill,
+                        Tag = record
+                    };
+                    InitPdfViewer(pdfViwer);
+                    pdfViwer.Document = OpenDocument(record.PdfPath);
+                    tabPage.Controls.Add(pdfViwer);
+                    this.tabControlBooks.TabPages.Add(tabPage);
+
+                    record.PdfSearchManager = new PdfSearchManager(pdfViwer.Renderer);
+                }
+                this.FoundNodes.Expand();
                 if (adding)
                 {
-                    var clone = treeNode.Clone() as TreeNode;
-                    this.WorkingNodes.Nodes.Add(clone);
-                    clone.ContextMenu = this.deleteMenu;
+                    this.WorkingNodes.Expand();
+                    this.toolStripButtonInWorking.Checked = true;
                 }
-                var pdfViwer = new PdfViewer
-                {
-                    Dock = DockStyle.Fill,
-                    Tag = record
-                };
-                InitPdfViewer(pdfViwer);
-                pdfViwer.Document = OpenDocument(record.PdfPath);
-                tabPage.Controls.Add(pdfViwer);
-                this.tabControlBooks.TabPages.Add(tabPage);
+            }
 
-                record.PdfSearchManager = new PdfSearchManager(pdfViwer.Renderer);
-            }
-            this.FoundNodes.Expand();
-            if (adding)
-            {
-                this.WorkingNodes.Expand();
-            }
         }
-
+        public string[] GetFiles(TreeNode workingNode)
+        {
+            var files = new List<string>();
+            for (int i = 0; i < workingNode.Nodes.Count; i++)
+            {
+                var fn = workingNode.Nodes[i];
+                if (fn.Tag is TabPage page && page.Tag is PdfRecord record)
+                {
+                    files.Add(record.PdfPath);
+                }
+            }
+            return files.ToArray();
+        }
         public Dictionary<string, PdfMatches> FindPdfs(string directory, string text, bool matchCase =false, bool wholeWord = false)
             => FindPdfs(Directory.GetFiles(directory, "*.pdf", SearchOption.AllDirectories), text,matchCase,wholeWord);
 
@@ -163,20 +219,21 @@ namespace PdfSearcher
         {
             InitializeComponent();
 
-            this.WorkingNodes = new TreeNode("使用中的PDF文档");
+            this.WorkingNodes = new TreeNode("关注中的PDF文档");
             this.FoundNodes = new TreeNode("已找到的PDF文档");
             this.AllNodes = new TreeNode("全部PDF文档");
 
-            this.treeViewBooks.Nodes.Add(WorkingNodes);
             this.treeViewBooks.Nodes.Add(FoundNodes);
+            this.treeViewBooks.Nodes.Add(WorkingNodes);
             this.treeViewBooks.Nodes.Add(AllNodes);
 
         }
 
         private void Watcher_Operations(object sender, FileSystemEventArgs e)
         {
-            this.UpdateFileList();
+            this.Invoke(new Action(() =>{ this.UpdateFileList(); }));
         }
+
         private void UpdateFileList()
         {
             this.AllNodes.Nodes.Clear();
@@ -662,6 +719,12 @@ namespace PdfSearcher
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+
+        }
+
+        private void ToolStripButtonInWorking_Click(object sender, EventArgs e)
+        {
+            this.toolStripButtonInWorking.Checked =!this.toolStripButtonInWorking.Checked;
 
         }
     }

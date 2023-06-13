@@ -61,9 +61,11 @@ namespace PdfSearcher
             this.informationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem8 = new System.Windows.Forms.ToolStripSeparator();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.NetworkPDFDatabasePathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.HelpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.AboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.toolStripButtonInWorking = new System.Windows.Forms.ToolStripButton();
             this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripTextBoxTextSearch = new System.Windows.Forms.ToolStripTextBox();
             this.toolStripButtonTextSearch = new System.Windows.Forms.ToolStripButton();
@@ -98,7 +100,6 @@ namespace PdfSearcher
             this.coordinatesToolStripLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.treeViewBooks = new System.Windows.Forms.TreeView();
             this.tabControlBooks = new System.Windows.Forms.TabControl();
-            this.NetworkPDFDatabasePathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainerRight = new System.Windows.Forms.SplitContainer();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -323,6 +324,13 @@ namespace PdfSearcher
             this.settingsToolStripMenuItem.Text = "设置PDF目录(&S)";
             this.settingsToolStripMenuItem.Click += new System.EventHandler(this.SettingsToolStripMenuItem_Click);
             // 
+            // NetworkPDFDatabasePathToolStripMenuItem
+            // 
+            this.NetworkPDFDatabasePathToolStripMenuItem.Name = "NetworkPDFDatabasePathToolStripMenuItem";
+            this.NetworkPDFDatabasePathToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+            this.NetworkPDFDatabasePathToolStripMenuItem.Text = "设置网络PDF目录(&N)";
+            this.NetworkPDFDatabasePathToolStripMenuItem.Click += new System.EventHandler(this.NetworkPDFDatabasePathToolStripMenuItem_Click);
+            // 
             // HelpToolStripMenuItem
             // 
             this.HelpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -341,6 +349,7 @@ namespace PdfSearcher
             // toolStrip1
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripButtonInWorking,
             this.toolStripLabel3,
             this.toolStripTextBoxTextSearch,
             this.toolStripButtonTextSearch,
@@ -374,11 +383,22 @@ namespace PdfSearcher
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
             // 
+            // toolStripButtonInWorking
+            // 
+            this.toolStripButtonInWorking.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripButtonInWorking.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonInWorking.Image")));
+            this.toolStripButtonInWorking.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonInWorking.Name = "toolStripButtonInWorking";
+            this.toolStripButtonInWorking.Size = new System.Drawing.Size(118, 22);
+            this.toolStripButtonInWorking.Text = "在关注中的PDF文档";
+            this.toolStripButtonInWorking.ToolTipText = "在关注中的PDF里";
+            this.toolStripButtonInWorking.Click += new System.EventHandler(this.ToolStripButtonInWorking_Click);
+            // 
             // toolStripLabel3
             // 
             this.toolStripLabel3.Name = "toolStripLabel3";
-            this.toolStripLabel3.Size = new System.Drawing.Size(59, 22);
-            this.toolStripLabel3.Text = "全局查找:";
+            this.toolStripLabel3.Size = new System.Drawing.Size(35, 22);
+            this.toolStripLabel3.Text = "查找:";
             // 
             // toolStripTextBoxTextSearch
             // 
@@ -643,13 +663,6 @@ namespace PdfSearcher
             this.tabControlBooks.Size = new System.Drawing.Size(851, 529);
             this.tabControlBooks.TabIndex = 5;
             // 
-            // NetworkPDFDatabasePathToolStripMenuItem
-            // 
-            this.NetworkPDFDatabasePathToolStripMenuItem.Name = "NetworkPDFDatabasePathToolStripMenuItem";
-            this.NetworkPDFDatabasePathToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
-            this.NetworkPDFDatabasePathToolStripMenuItem.Text = "设置网络PDF目录(&N)";
-            this.NetworkPDFDatabasePathToolStripMenuItem.Click += new System.EventHandler(this.NetworkPDFDatabasePathToolStripMenuItem_Click);
-            // 
             // splitContainerRight
             // 
             this.splitContainerRight.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -765,6 +778,7 @@ namespace PdfSearcher
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem NetworkPDFDatabasePathToolStripMenuItem;
         private System.Windows.Forms.SplitContainer splitContainerRight;
+        private System.Windows.Forms.ToolStripButton toolStripButtonInWorking;
     }
 }
 
