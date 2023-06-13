@@ -124,9 +124,9 @@ namespace PdfSearcher
                         };
                         treeNode.Nodes.Add(matchNode);
                     }
-                    treeNode.ContextMenu = this.appendMenu;
                     this.FoundNodes.Nodes.Add(treeNode);
 
+                    treeNode.ContextMenu = this.appendMenu;
                     var tabPage = new TabPage(name) { Tag = record, ToolTipText = file };
                     treeNode.Tag = tabPage;
                     if (adding)
@@ -240,11 +240,29 @@ namespace PdfSearcher
             var files = Directory.GetFiles(this.PdfDatabasePath, "*.pdf", SearchOption.AllDirectories);
             foreach (var file in files.OrderBy(f=>f))
             {
-                var fileNode = new TreeNode(
-                    Path.GetFileNameWithoutExtension(file));
-                this.AllNodes.Nodes.Add(fileNode);
+                var name = Path.GetFileNameWithoutExtension(file);
+                var treeNode = new TreeNode(name);
+                var record = new PdfRecord() { Name = name, PdfPath = file, 
+                    PdfMatches = new PdfMatches(0,0,new List<PdfMatch>()) };
+                this.AllNodes.Nodes.Add(treeNode);
+
+                treeNode.ContextMenu = this.appendMenu;
+                var tabPage = new TabPage(name) { Tag = record, ToolTipText = file };
+                treeNode.Tag = tabPage;
+                var pdfViwer = new PdfViewer
+                {
+                    Dock = DockStyle.Fill,
+                    Tag = record
+                };
+                InitPdfViewer(pdfViwer);
+                pdfViwer.Document = OpenDocument(record.PdfPath);
+                tabPage.Controls.Add(pdfViwer);
+                this.tabControlBooks.TabPages.Add(tabPage);
+
+                record.PdfSearchManager = new PdfSearchManager(pdfViwer.Renderer);
+
             }
-            this.AllNodes.ExpandAll();
+            this.AllNodes.Expand();
         }
 
         private void Renderer_MouseLeave(object sender, EventArgs e)
@@ -338,6 +356,7 @@ namespace PdfSearcher
                     node = node.Clone() as TreeNode;
                     node.ContextMenu = deleteMenu;
                     this.WorkingNodes.Nodes.Add(node);
+                    this.WorkingNodes.Expand();
                 }
             }
         }
@@ -620,11 +639,15 @@ namespace PdfSearcher
         private void GetTextFromPage_Click(object sender, EventArgs e)
         {
             if (PdfViewer == null) return;
+
             var page = PdfViewer.Renderer.Page;
-            var text = PdfViewer.Document.GetPdfText(page);
-            var caption = string.Format("页码 {0}: 包含 {1} 个字符", page + 1, text.Length);
-            var cform = new FormContent() { Content = text, Text = caption };
-            cform.ShowDialog(this);
+            var text = PdfViewer.Renderer.GetCurrentSelectedText();
+            Clipboard.Clear();
+            Clipboard.SetText(text);
+
+            //var caption = string.Format("页码 {0}: 包含 {1} 个字符", page + 1, text.Length);
+            //var cform = new FormContent() { Content = text, Text = caption };
+            //cform.ShowDialog(this);
         }
 
         private void FindToolStripMenuItem_Click(object sender, EventArgs e)

@@ -188,8 +188,8 @@ namespace PdfiumViewer
                 SetDisplayRectLocation(displayRect.X, -pos);
                 SyncScrollbars();
 
-                if (e is HandledMouseEventArgs)
-                    ((HandledMouseEventArgs)e).Handled = true;
+                if (e is HandledMouseEventArgs args)
+                    args.Handled = true;
             }
             else if (HScroll)
             {
