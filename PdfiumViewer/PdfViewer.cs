@@ -52,6 +52,14 @@ namespace PdfiumViewer
                 if (value) this.Focus();
             }
         }
+        public bool RowSelecting
+        {
+            get => this.renderer.RowSelecting;
+            set
+            {
+                this.renderer.RowSelecting = value;
+            }
+        }
         /// <summary>
         /// Gets or sets the default document name used when saving the document.
         /// </summary>
@@ -152,7 +160,9 @@ namespace PdfiumViewer
 
             ShowToolbar = true;
             ShowBookmarks = true;
+            this.IsSelecting = true;
             this.ToolStripVisible = false;
+            this.RowSelecting = true;
             UpdateEnabled();
         }
 

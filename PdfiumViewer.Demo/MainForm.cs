@@ -48,6 +48,21 @@ namespace PdfSearcher
 
         protected ContextMenu deleteMenu = new ContextMenu();
         protected ContextMenu appendMenu = new ContextMenu();
+
+        protected bool RowSelecting
+        {
+            get => this.toolStripButtonRowSelect.Checked;
+            set
+            {
+                this.toolStripButtonRowSelect.Checked = value;
+            }
+        }
+        protected bool UseWorking
+        {
+            get => this.toolStripButtonInWorking.Checked; 
+            set => this.toolStripButtonInWorking.Checked=value;
+        }
+
         private void ToolStripButtonTextSearch_Click(object sender, EventArgs e)
         {
             var text = this.toolStripTextBoxTextSearch.Text;
@@ -227,6 +242,7 @@ namespace PdfSearcher
             this.treeViewBooks.Nodes.Add(WorkingNodes);
             this.treeViewBooks.Nodes.Add(AllNodes);
 
+            this.RowSelecting = true;
         }
 
         private void Watcher_Operations(object sender, FileSystemEventArgs e)
@@ -749,14 +765,14 @@ namespace PdfSearcher
 
         private void ToolStripButtonInWorking_Click(object sender, EventArgs e)
         {
-            this.toolStripButtonInWorking.Checked =!this.toolStripButtonInWorking.Checked;
+            this.UseWorking = !this.UseWorking;
         }
 
-        private void ToolStripButtonSelectText_Click(object sender, EventArgs e)
+        private void ToolStripButtonRowSelect_Click(object sender, EventArgs e)
         {
+            this.RowSelecting = !this.RowSelecting;
             if (this.PdfViewer == null) return;
-
-            this.PdfViewer.IsSelecting = this.toolStripButtonSelectText.Checked = !this.toolStripButtonSelectText.Checked;
+            this.PdfViewer.RowSelecting = this.RowSelecting;
         }
     }
 }

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
 
@@ -48,6 +49,11 @@ namespace PdfiumViewer
                 base.IsSelecting = value;
                 if (!value) this.dragged = false;
             }
+        }
+        public virtual bool RowSelecting
+        {
+            get;
+            set;
         }
         public Color SelectionColor { get; set; } = Color.FromArgb(0x40, Color.Yellow);
         public Color SelectionBorderColor { get; set; } = Color.FromArgb(0x80, Color.Blue);// Color.FromArgb(0x80, Color.Yellow);
@@ -345,12 +351,12 @@ namespace PdfiumViewer
         /// </summary>
         /// <param name="bounds">The PDF bounds to convert.</param>
         /// <returns>The bounds of the PDF bounds in client coordinates.</returns>
-        public Rectangle BoundsFromPdf(PdfRectangle bounds)
-        {
-            return BoundsFromPdf(bounds, true);
-        }
+        //public Rectangle BoundsFromPdf(PdfRectangle bounds)
+        //{
+        //    return BoundsFromPdf(bounds, true);
+        //}
             
-        private Rectangle BoundsFromPdf(PdfRectangle bounds, bool translateOffset)
+        public Rectangle BoundsFromPdf(PdfRectangle bounds, bool translateOffset = true)
         {
             var offset = translateOffset ? GetScrollOffset() : Size.Empty;
             var pageBounds = _pageCache[bounds.Page].Bounds;
@@ -658,7 +664,7 @@ namespace PdfiumViewer
         {
             var builder = new StringBuilder();
 
-            foreach(var cr in this.currentRectanges)
+            foreach(var cr in this.currentPdfRectanges)
             {
                 int page = cr.Page;
                 if (page >= 0)
@@ -897,7 +903,7 @@ namespace PdfiumViewer
         protected Point ep = new Point();
         protected bool dragging = false;
         protected bool dragged = false;
-        protected List<PdfRectangle> currentRectanges = new List<PdfRectangle>();
+        protected List<PdfRectangle> currentPdfRectanges = new List<PdfRectangle>();
         protected override void OnMouseWheel(MouseEventArgs e)
         {
             base.OnMouseWheel(e);
@@ -1002,6 +1008,34 @@ namespace PdfiumViewer
 
             return RectangleF.FromLTRB(right, bottom, left, top);
         }
+        protected bool Interest(List<RectangleF> rects, Rectangle charBoundDevice,int left,int right)
+        {
+            var cx = (charBoundDevice.Left+charBoundDevice.Right)/ 2;
+            var cy = (charBoundDevice.Top+charBoundDevice.Bottom)/ 2;
+
+            using (var region = new Region())
+            {
+                for (int i = 0; i < rects.Count; i++)
+                {
+                    var cr = rects[i];
+                    if (i == 0)
+                    {
+                        cr = new RectangleF(left, cr.Y, ClientRectangle.Width - left, cr.Height);
+                    }
+                    else if (i == rects.Count - 1)
+                    {
+                        cr = new RectangleF(0, cr.Y, right, cr.Height);
+                    }
+                    region.Union(cr);
+                }
+                var v= region.IsVisible(cx, cy);
+                if (v)
+                {
+
+                }
+                return v;
+            }
+        }
         protected virtual void BuildSelection()
         {
             var x = Math.Min(sp.X, ep.X);
@@ -1009,35 +1043,45 @@ namespace PdfiumViewer
             var w = Math.Abs(ep.X - sp.X);
             var h = Math.Abs(ep.Y - sp.Y);
 
-            var r = new Rectangle(x, y, w, h);
-            var markers = new List<IPdfMarker>();
-            this.currentRectanges = BoundsToPdfList(r);
-            foreach (var cr in this.currentRectanges)
+            var selectionRect = new Rectangle(x, y, w, h);
+            var left = selectionRect.Left;
+            var right = selectionRect.Right;
+            var markers = new List<PdfMarker>();
+            this.currentPdfRectanges = BoundsToPdfList(selectionRect);
+            if (this.RowSelecting)
             {
-                int page = cr.Page;
+                selectionRect = new Rectangle(0, selectionRect.Y, ClientRectangle.Width, selectionRect.Height);
+            }
+            var boundList = new List<RectangleF>();
+            foreach (var currentPdfRectangle in this.currentPdfRectanges)
+            {
+                int page = currentPdfRectangle.Page;
 
                 if (page >= 0)
                 {
-                    var s = Document.GetPdfText(page);
+                    var text = Document.GetPdfText(page);
                     RectangleF? lastRect = null;
                     RectangleF? fullRect = null;
                     int p = 0;
-                    for (int i = 0; i < s.Length; i++)
+                    for (int i = 0; i < text.Length; i++)
                     {
-                        var pts = new PdfTextSpan(page, i, 1);
-                        var _bounds = Document.GetTextBounds(pts);
-                        if (_bounds.Count == 1)
+                        forChar:
+                        var charSpan = new PdfTextSpan(page, i, 1);
+                        var charBounds = Document.GetTextBounds(charSpan);
+                        if (charBounds.Count == 1)
                         {
                             retry:
-                            var bx = _bounds[0];
-                            var rx = this.BoundsFromPdf(bx);
-                            if (r.IntersectsWith(rx))
+                            var charBound = charBounds[0];
+                            var charBoundDevice = this.BoundsFromPdf(charBound,true);
+                            if (selectionRect.IntersectsWith(charBoundDevice))
                             {
+                                if (markers.Count > 0 && !Interest(boundList, charBoundDevice, left, right))
+                                    continue;
                                 var rect = new RectangleF(
-                                    bx.Bounds.Left - 1,
-                                    bx.Bounds.Top + 1,
-                                    bx.Bounds.Width + 2,
-                                    bx.Bounds.Height - 2);
+                                    charBound.Bounds.Left - 1,
+                                    charBound.Bounds.Top + 1,
+                                    charBound.Bounds.Width + 2,
+                                    charBound.Bounds.Height - 2);
 
                                 if (lastRect == null)
                                 {
@@ -1050,12 +1094,12 @@ namespace PdfiumViewer
                                     p = i;
                                 }
 
-                                float mt = (rect.Top+ rect.Bottom) / 2;
+                                float middleY = (rect.Top+ rect.Bottom) / 2;
                                 
-                                if (InvRectContains(fullRect.Value,mt)) 
+                                if (InvRectContains(fullRect.Value,middleY)) 
                                 {
-                                    markers.Add(new PdfMarker(page,
-                                        rect, this.SelectionColor, SelectionBorderColor, 1, p));
+                                    //markers.Add(new PdfMarker(page,
+                                    //    rect, this.SelectionColor, SelectionBorderColor, 1, p));
 
                                     fullRect = InvRectUnion(rect, fullRect.Value);
                                 }
@@ -1065,8 +1109,21 @@ namespace PdfiumViewer
                                         fullRect.Value,
                                         this.SelectionColor,
                                         SelectionBorderColor, 1, p));
-                                    fullRect = null;
-                                    goto retry;
+                                    
+                                    if (RowSelecting)
+                                    {
+                                        boundList.Add(fullRect.Value);
+                                        i = text.LastIndexOf('\n', i) + 1;
+                                        lastRect = null;
+                                        fullRect = null;
+                                        goto forChar;
+                                    }
+                                    else
+                                    {
+                                        fullRect = null;
+
+                                        goto retry;
+                                    }
                                 }
                                 lastRect = rect;
                             }

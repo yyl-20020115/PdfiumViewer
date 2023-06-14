@@ -71,7 +71,6 @@ namespace PdfSearcher
             this.toolStripButtonTextSearch = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this._getTextFromPage = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonSelectText = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.page = new System.Windows.Forms.ToolStripTextBox();
@@ -102,6 +101,7 @@ namespace PdfSearcher
             this.treeViewBooks = new System.Windows.Forms.TreeView();
             this.tabControlBooks = new System.Windows.Forms.TabControl();
             this.splitContainerRight = new System.Windows.Forms.SplitContainer();
+            this.toolStripButtonRowSelect = new System.Windows.Forms.ToolStripButton();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -355,8 +355,8 @@ namespace PdfSearcher
             this.toolStripTextBoxTextSearch,
             this.toolStripButtonTextSearch,
             this.toolStripSeparator3,
+            this.toolStripButtonRowSelect,
             this._getTextFromPage,
-            this.toolStripButtonSelectText,
             this.toolStripSeparator8,
             this.toolStripLabel1,
             this.page,
@@ -436,16 +436,6 @@ namespace PdfSearcher
             this._getTextFromPage.Text = "复制文本";
             this._getTextFromPage.ToolTipText = "复制当前选择的文本(可点击鼠标右键)";
             this._getTextFromPage.Click += new System.EventHandler(this.GetTextFromPage_Click);
-            // 
-            // toolStripButtonSelectText
-            // 
-            this.toolStripButtonSelectText.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButtonSelectText.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonSelectText.Image")));
-            this.toolStripButtonSelectText.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonSelectText.Name = "toolStripButtonSelectText";
-            this.toolStripButtonSelectText.Size = new System.Drawing.Size(75, 22);
-            this.toolStripButtonSelectText.Text = "选取文本(S&)";
-            this.toolStripButtonSelectText.Click += new System.EventHandler(this.ToolStripButtonSelectText_Click);
             // 
             // toolStripSeparator8
             // 
@@ -693,6 +683,18 @@ namespace PdfSearcher
             this.splitContainerRight.SplitterWidth = 8;
             this.splitContainerRight.TabIndex = 6;
             // 
+            // toolStripButtonRowSelect
+            // 
+            this.toolStripButtonRowSelect.Checked = true;
+            this.toolStripButtonRowSelect.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.toolStripButtonRowSelect.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripButtonRowSelect.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonRowSelect.Image")));
+            this.toolStripButtonRowSelect.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonRowSelect.Name = "toolStripButtonRowSelect";
+            this.toolStripButtonRowSelect.Size = new System.Drawing.Size(76, 22);
+            this.toolStripButtonRowSelect.Text = "整行选取(&R)";
+            this.toolStripButtonRowSelect.Click += new System.EventHandler(this.ToolStripButtonRowSelect_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -791,7 +793,7 @@ namespace PdfSearcher
         private System.Windows.Forms.ToolStripMenuItem NetworkPDFDatabasePathToolStripMenuItem;
         private System.Windows.Forms.SplitContainer splitContainerRight;
         private System.Windows.Forms.ToolStripButton toolStripButtonInWorking;
-        private System.Windows.Forms.ToolStripButton toolStripButtonSelectText;
+        private System.Windows.Forms.ToolStripButton toolStripButtonRowSelect;
     }
 }
 

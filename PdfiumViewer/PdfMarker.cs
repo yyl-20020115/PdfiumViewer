@@ -9,7 +9,7 @@ namespace PdfiumViewer
     {
         public int Page { get; }
         public int CharIndex { get; }
-        public RectangleF Bounds { get; }
+        public RectangleF Bounds { get; set; }
         public Color Color { get; }
         public Color BorderColor { get; }
         public float BorderWidth { get; }
