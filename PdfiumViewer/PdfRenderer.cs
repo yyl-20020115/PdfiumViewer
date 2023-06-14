@@ -50,7 +50,7 @@ namespace PdfiumViewer
             }
         }
         public Color SelectionColor { get; set; } = Color.FromArgb(0x40, Color.Yellow);
-        public Color SelectionBorderColor { get; set; } = Color.Blue;// Color.FromArgb(0x80, Color.Yellow);
+        public Color SelectionBorderColor { get; set; } = Color.FromArgb(0x80, Color.Blue);// Color.FromArgb(0x80, Color.Yellow);
 
         public bool RightClickCopy { get; protected set; }
         /// <summary>
@@ -1054,6 +1054,9 @@ namespace PdfiumViewer
                                 
                                 if (InvRectContains(fullRect.Value,mt)) 
                                 {
+                                    markers.Add(new PdfMarker(page,
+                                        rect, this.SelectionColor, SelectionBorderColor, 1, p));
+
                                     fullRect = InvRectUnion(rect, fullRect.Value);
                                 }
                                 else //not following, save last and empty new
