@@ -10,6 +10,7 @@ namespace PdfiumViewer
         public int Page { get; }
         public int CharIndex { get; }
         public RectangleF Bounds { get; set; }
+        public string Text { get; set; } = "";
         public Color Color { get; }
         public Color BorderColor { get; }
         public float BorderWidth { get; }
@@ -58,5 +59,6 @@ namespace PdfiumViewer
             : base.Equals(o);
         public override int GetHashCode()
             => (this.Page << 16) + this.CharIndex;
+        public override string ToString() => this.Text;
     }
 }

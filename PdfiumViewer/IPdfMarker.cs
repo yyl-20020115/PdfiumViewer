@@ -13,6 +13,7 @@ namespace PdfiumViewer
         int Page { get; }
         int CharIndex { get; }
         RectangleF Bounds { get; }
+        string Text { get; }
         /// <summary>
         /// Draw the marker.
         /// </summary>
