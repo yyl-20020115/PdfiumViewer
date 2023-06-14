@@ -271,7 +271,6 @@ namespace PdfSearcher
                     Tag = record
                 };
                 InitPdfViewer(pdfViwer);
-                pdfViwer.Document = OpenDocument(record.PdfPath);
                 tabPage.Controls.Add(pdfViwer);
                 this.tabControlBooks.TabPages.Add(tabPage);
 

@@ -1093,16 +1093,15 @@ namespace PdfiumViewer
                 { Text = line.line });
             }
 
-            //if (markers.Count != this.Markers.Count
-            //    || !Enumerable.SequenceEqual(markers, this.Markers))
+            if (markers.Count != this.Markers.Count
+                || !Enumerable.SequenceEqual(markers, this.Markers))
             {
-                this.Markers.Clear();
                 this.LastMarkers.Clear();
-                foreach (var m in markers)
-                {
-                    this.Markers.Add(m);
-                    this.LastMarkers.Add(m);
-                }
+                this.LastMarkers.AddRange(markers);
+
+                this.Markers.Clear();
+                this.Markers.AddRange(markers);
+
                 this.RedrawMarkers();
                 this.Refresh();
             }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 #pragma warning disable 1591
@@ -9,6 +10,14 @@ namespace PdfiumViewer
     {
         public event EventHandler CollectionChanged;
 
+        public PdfMarkerCollection AddRange(IEnumerable<IPdfMarker> markers)
+        {
+            foreach(var marker in markers)
+            {
+                this.Add(marker);
+            }
+            return this;
+        }
         protected override void ClearItems()
         {
             base.ClearItems();
