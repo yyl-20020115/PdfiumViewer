@@ -11,7 +11,7 @@ namespace PdfiumViewer
     {
         private bool highlightAllMatches;
         private PdfMatches matches;
-        private List<(PdfMatch,IList<PdfRectangle>)> bounds;
+        private List<(PdfMatch match,IList<PdfRectangle> rects)> bounds;
         private int firstMatch;
         private int offset;
 
@@ -200,9 +200,9 @@ namespace PdfiumViewer
         }
         private void ScrollCurrentIntoView()
         {
-            var current = bounds[offset];
-            if (current.Item2.Count > 0)
-                Renderer.ScrollIntoView(current.Item2[0]);
+            var (_, rects) = bounds[offset];
+            if (rects.Count > 0)
+                Renderer.ScrollIntoView(rects[0]);
         }
 
         private int FindFirstFromCurrentPage()
@@ -252,7 +252,7 @@ namespace PdfiumViewer
 
         private void AddMatch(int index, bool current)
         {
-            foreach (var pdfBounds in bounds[index].Item2)
+            foreach (var pdfBounds in bounds[index].rects)
             {
                 var bounds = new RectangleF(
                     pdfBounds.Bounds.Left - 1,

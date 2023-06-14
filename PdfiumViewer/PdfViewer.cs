@@ -46,7 +46,11 @@ namespace PdfiumViewer
         public bool IsSelecting
         {
             get=>this.renderer.IsSelecting;
-            set => this.renderer.IsSelecting = value;
+            set
+            {
+                this.renderer.IsSelecting = value;
+                if (value) this.Focus();
+            }
         }
         /// <summary>
         /// Gets or sets the default document name used when saving the document.
@@ -114,9 +118,7 @@ namespace PdfiumViewer
         /// <param name="e"></param>
         protected virtual void OnLinkClick(LinkClickEventArgs e)
         {
-            var handler = LinkClick;
-            if (handler != null)
-                handler(this, e);
+            LinkClick?.Invoke(this, e);
         }
 
         private void UpdateBookmarks()
@@ -159,17 +161,17 @@ namespace PdfiumViewer
             _toolStrip.Enabled = document != null;
         }
 
-        private void _zoomInButton_Click(object sender, EventArgs e)
+        private void ZoomInButton_Click(object sender, EventArgs e)
         {
             renderer.ZoomIn();
         }
 
-        private void _zoomOutButton_Click(object sender, EventArgs e)
+        private void ZoomOutButton_Click(object sender, EventArgs e)
         {
             renderer.ZoomOut();
         }
 
-        private void _saveButton_Click(object sender, EventArgs e)
+        private void SaveButton_Click(object sender, EventArgs e)
         {
             using (var form = new SaveFileDialog())
             {
@@ -199,7 +201,7 @@ namespace PdfiumViewer
             }
         }
 
-        private void _printButton_Click(object sender, EventArgs e)
+        private void PrintButton_Click(object sender, EventArgs e)
         {
             using (var form = new PrintDialog())
             using (var document = this.document.CreatePrintDocument(DefaultPrintMode))
@@ -229,8 +231,10 @@ namespace PdfiumViewer
 
         private TreeNode GetBookmarkNode(PdfBookmark bookmark)
         {
-            TreeNode node = new TreeNode(bookmark.Title);
-            node.Tag = bookmark;
+            var node = new TreeNode(bookmark.Title)
+            {
+                Tag = bookmark
+            };
             if (bookmark.Children != null)
             {
                 foreach (var child in bookmark.Children)
@@ -239,12 +243,12 @@ namespace PdfiumViewer
             return node;
         }
 
-        private void _bookmarks_AfterSelect(object sender, TreeViewEventArgs e)
+        private void Bookmarks_AfterSelect(object sender, TreeViewEventArgs e)
         {
             renderer.Page = ((PdfBookmark)e.Node.Tag).PageIndex;
         }
 
-        private void _renderer_LinkClick(object sender, LinkClickEventArgs e)
+        private void Renderer_LinkClick(object sender, LinkClickEventArgs e)
         {
             OnLinkClick(e);
         }

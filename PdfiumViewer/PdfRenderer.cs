@@ -33,13 +33,25 @@ namespace PdfiumViewer
         private PageLink _cachedLink;
         private DragState _dragState;
         private PdfRotation _rotation;
-        private List<IPdfMarker>[] _markers;
+        private List<IPdfMarker>[] displayingMarkers;
 
         /// <summary>
         /// The associated PDF document.
         /// </summary>
         public IPdfDocument Document { get; private set; }
         public string SelectedText { get; protected set; }
+        public override bool IsSelecting 
+        { 
+            get => base.IsSelecting;
+            set
+            {
+                base.IsSelecting = value;
+                if (!value) this.dragged = false;
+            }
+        }
+        public Color SelectionColor { get; set; } = Color.FromArgb(0x40, Color.Yellow);
+        public Color SelectionBorderColor { get; set; } = Color.Blue;// Color.FromArgb(0x80, Color.Yellow);
+
         public bool RightClickCopy { get; protected set; }
         /// <summary>
         /// Gets or sets a value indicating whether the user can give the focus to this control using the TAB key.
@@ -472,7 +484,7 @@ namespace PdfiumViewer
 
             documentScaleFactor = maxHeight != 0 ? (double)maxWidth / maxHeight : 0D;
 
-            _markers = null;
+            displayingMarkers = null;
 
             UpdateScrollbars();
 
@@ -483,7 +495,7 @@ namespace PdfiumViewer
         {
             if (Document == null)
                 return;
-
+            
             UpdateScaleFactor(ScrollBars.Both);
 
             var bounds = GetScrollClientArea(ScrollBars.Both);
@@ -728,6 +740,13 @@ namespace PdfiumViewer
                 e.Graphics.FillRectangle(brush, e.ClipRectangle);
             }
 
+            //using (var pen = new Pen(this.SelectionBorderColor))
+            //{
+            //    var outerBound = this.UnionAllRects(
+            //            this.Markers.Select(
+            //                m => this.BoundsFromPdf(new PdfRectangle(m.Page, m.Bounds))).ToArray());
+            //    e.Graphics.DrawRectangle(pen, outerBound);
+            //}
             _visiblePageStart = -1;
             _visiblePageEnd = -1;
 
@@ -782,44 +801,6 @@ namespace PdfiumViewer
             if (_visiblePageEnd == -1)
                 _visiblePageEnd = Document.PageCount - 1;
 
-            if (this.IsSelecting && (this.dragging||this.dragged))
-            {
-                var x = Math.Min(sp.X, ep.X);
-                var y = Math.Min(sp.Y, ep.Y);
-                var w = Math.Abs(ep.X - sp.X);
-                var h = Math.Abs(ep.Y - sp.Y);
-
-                var r = new Rectangle((int)(x ),(int)(y ),
-                    (int)(w ),(int)(h ));
-
-                e.Graphics.DrawRectangle(
-                    Pens.YellowGreen, r);
-
-                this.currentRectanges = BoundsToPdfList(r);
-
-                foreach(var cr in this.currentRectanges)
-                {
-                    int page = cr.Page;
-
-                    if (page >= 0)
-                    {
-                        var s = Document.GetPdfText(page);
-                        for (int i = 0; i < s.Length; i++)
-                        {
-                            var pts = new PdfTextSpan(page, i, 1);
-                            var _bounds = Document.GetTextBounds(pts);
-                            if (_bounds.Count == 1)
-                            {
-                                var rx = this.BoundsFromPdf(_bounds[0]);
-                                if (r.IntersectsWith(rx))
-                                {
-                                    e.Graphics.DrawRectangle(Pens.Red, rx);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
         }
 
         private void DrawPageImage(Graphics graphics, int page, Rectangle pageBounds)
@@ -863,7 +844,7 @@ namespace PdfiumViewer
         }
 
         /// <summary>
-        /// Called whent he cursor changes.
+        /// Called whent the cursor changes.
         /// </summary>
         /// <param name="e">The event args.</param>
         protected override void OnSetCursor(SetCursorEventArgs e)
@@ -895,11 +876,7 @@ namespace PdfiumViewer
 
             base.OnSetCursor(e);
         }
-        protected override void OnKeyDown(KeyEventArgs e)
-        {
-            base.OnKeyDown(e);
-        }
-        
+  
         protected override void OnPreviewKeyDown(PreviewKeyDownEventArgs e)
         {
             if (e.Control && e.KeyCode == Keys.C)
@@ -925,6 +902,23 @@ namespace PdfiumViewer
         {
             base.OnMouseWheel(e);
         }
+
+        protected Rectangle UnionAllRects(Rectangle[] rects)
+        {
+            var result = new Rectangle();
+            for(var i = 0; i < rects.Length; i++)
+            {
+                if (i == 0)
+                {
+                    result = rects[i];
+                }
+                else
+                {
+                    result = Rectangle.Union(rects[i], result);
+                }
+            }
+            return result;
+        }
         /// <summary>Raises the <see cref="E:System.Windows.Forms.Control.MouseDown" /> event.</summary>
         /// <param name="e">A <see cref="T:System.Windows.Forms.MouseEventArgs" /> that contains the event data. </param>
         protected override void OnMouseDown(MouseEventArgs e)
@@ -942,11 +936,16 @@ namespace PdfiumViewer
                     }
                     dragging = false;
                     dragged = false;
+                    this.Markers.Clear();
                     this.Invalidate();
                 }
                 else if(e.Button == MouseButtons.Left)
                 {
-                    if (dragged)
+                    var ob = this.UnionAllRects(
+                            this.Markers.Select(
+                                m => this.BoundsFromPdf(new PdfRectangle(m.Page, m.Bounds))).ToArray());
+
+                    if (dragged && ob.Contains(e.Location))
                     {
                         this.SelectedText
                             = this.GetCurrentSelectedText();
@@ -954,6 +953,8 @@ namespace PdfiumViewer
                     }
                     else
                     {
+                        if (!this.Focused) this.Focus();
+                        this.Markers.Clear();
                         sp = e.Location;
                         dragging = true;
                         dragged = false;
@@ -975,11 +976,121 @@ namespace PdfiumViewer
                 }
             }
         }
+        protected static bool InvRectContains(RectangleF rect, float y)
+        {
+            float top = Math.Min(rect.Top, rect.Bottom);
+            float bottom = Math.Max(rect.Top, rect.Bottom);
+            return y>=top && y <= bottom;
+        }
+        protected static RectangleF InvRectUnion(RectangleF rect1, RectangleF rect2)
+        {
+            float top1 = Math.Min(rect1.Top, rect1.Bottom);
+            float bottom1 = Math.Max(rect1.Top, rect1.Bottom);
+            float left1 = Math.Min(rect1.Left, rect1.Right);
+            float right1 = Math.Max(rect1.Left, rect1.Right);
+
+            float top2 = Math.Min(rect2.Top, rect2.Bottom);
+            float bottom2 = Math.Max(rect2.Top, rect2.Bottom);
+            float left2 = Math.Min(rect2.Left, rect2.Right);
+            float right2 = Math.Max(rect2.Left, rect2.Right);
+
+            float top = Math.Min(top1, top2);
+            float bottom = Math.Max(bottom1, bottom2);
+            float left = Math.Min(left1, left2);
+            float right = Math.Max(right1, right2);
+
+
+            return RectangleF.FromLTRB(right, bottom, left, top);
+        }
+        protected virtual void BuildSelection()
+        {
+            var x = Math.Min(sp.X, ep.X);
+            var y = Math.Min(sp.Y, ep.Y);
+            var w = Math.Abs(ep.X - sp.X);
+            var h = Math.Abs(ep.Y - sp.Y);
+
+            var r = new Rectangle(x, y, w, h);
+            var markers = new List<IPdfMarker>();
+            this.currentRectanges = BoundsToPdfList(r);
+            foreach (var cr in this.currentRectanges)
+            {
+                int page = cr.Page;
+
+                if (page >= 0)
+                {
+                    var s = Document.GetPdfText(page);
+                    RectangleF? lastRect = null;
+                    RectangleF? fullRect = null;
+                    int p = 0;
+                    for (int i = 0; i < s.Length; i++)
+                    {
+                        var pts = new PdfTextSpan(page, i, 1);
+                        var _bounds = Document.GetTextBounds(pts);
+                        if (_bounds.Count == 1)
+                        {
+                            retry:
+                            var bx = _bounds[0];
+                            var rx = this.BoundsFromPdf(bx);
+                            if (r.IntersectsWith(rx))
+                            {
+                                var rect = new RectangleF(
+                                    bx.Bounds.Left - 1,
+                                    bx.Bounds.Top + 1,
+                                    bx.Bounds.Width + 2,
+                                    bx.Bounds.Height - 2);
+
+                                if (lastRect == null)
+                                {
+                                    lastRect = rect;
+                                }
+                 
+                                if(fullRect == null)
+                                {
+                                    fullRect = rect;
+                                    p = i;
+                                }
+
+                                float mt = (rect.Top+ rect.Bottom) / 2;
+                                
+                                if (InvRectContains(fullRect.Value,mt)) 
+                                {
+                                    fullRect = InvRectUnion(rect, fullRect.Value);
+                                }
+                                else //not following, save last and empty new
+                                {
+                                    markers.Add(new PdfMarker(page,
+                                        fullRect.Value,
+                                        this.SelectionColor,
+                                        SelectionBorderColor, 1, p));
+                                    fullRect = null;
+                                    goto retry;
+                                }
+                                lastRect = rect;
+                            }
+                        }
+                    }
+                    if (fullRect != null)
+                    {
+                        markers.Add(new PdfMarker(page,
+                            fullRect.Value, this.SelectionColor, SelectionBorderColor, 1, p));
+                    }
+                }
+            }
+            if (markers.Count!=this.Markers.Count)
+            {
+                this.Markers.Clear();
+                foreach(var m in markers)this.Markers.Add(m);
+
+                this.RedrawMarkers();
+                this.Refresh();
+            }
+        }
         protected override void OnMouseMove(MouseEventArgs e)
         {
             if(this.IsSelecting && e.Button == MouseButtons.Left)
             {
                 this.ep = e.Location;
+                this.BuildSelection();
                 this.Invalidate();
             }
             else
@@ -1153,33 +1264,33 @@ namespace PdfiumViewer
 
         private void RedrawMarkers()
         {
-            _markers = null;
+            displayingMarkers = null;
 
             Invalidate();
         }
 
         private void EnsureMarkers()
         {
-            if (_markers != null)
+            if (displayingMarkers != null)
                 return;
 
-            _markers = new List<IPdfMarker>[_pageCache.Count];
+            displayingMarkers = new List<IPdfMarker>[_pageCache.Count];
 
             foreach (var marker in Markers)
             {
-                if (marker.Page < 0 || marker.Page >= _markers.Length)
+                if (marker.Page < 0 || marker.Page >= displayingMarkers.Length)
                     continue;
 
-                if (_markers[marker.Page] == null)
-                    _markers[marker.Page] = new List<IPdfMarker>();
+                if (displayingMarkers[marker.Page] == null)
+                    displayingMarkers[marker.Page] = new List<IPdfMarker>();
 
-                _markers[marker.Page].Add(marker);
+                displayingMarkers[marker.Page].Add(marker);
             }
         }
 
         private void DrawMarkers(Graphics graphics, int page)
         {
-            var markers = _markers[page];
+            var markers = displayingMarkers[page];
             if (markers == null)
                 return;
 

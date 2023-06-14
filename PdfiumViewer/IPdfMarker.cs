@@ -11,7 +11,8 @@ namespace PdfiumViewer
         /// The page where the marker is drawn on.
         /// </summary>
         int Page { get; }
-
+        int CharIndex { get; }
+        RectangleF Bounds { get; }
         /// <summary>
         /// Draw the marker.
         /// </summary>

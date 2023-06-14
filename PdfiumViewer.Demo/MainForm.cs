@@ -750,7 +750,6 @@ namespace PdfSearcher
         private void ToolStripButtonInWorking_Click(object sender, EventArgs e)
         {
             this.toolStripButtonInWorking.Checked =!this.toolStripButtonInWorking.Checked;
-
         }
 
         private void ToolStripButtonSelectText_Click(object sender, EventArgs e)

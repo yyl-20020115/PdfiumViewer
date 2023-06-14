@@ -8,23 +8,25 @@ namespace PdfiumViewer
     public class PdfMarker : IPdfMarker
     {
         public int Page { get; }
+        public int CharIndex { get; }
         public RectangleF Bounds { get; }
         public Color Color { get; }
         public Color BorderColor { get; }
         public float BorderWidth { get; }
 
-        public PdfMarker(int page, RectangleF bounds, Color color)
-            : this(page, bounds, color, Color.Transparent, 0)
+        public PdfMarker(int page, RectangleF bounds, Color color, int charIndex = -1)
+            : this(page, bounds, color, Color.Transparent, 0, charIndex)
         {
         }
 
-        public PdfMarker(int page, RectangleF bounds, Color color, Color borderColor, float borderWidth)
+        public PdfMarker(int page, RectangleF bounds, Color color, Color borderColor, float borderWidth, int charIndex = -1)
         {
             Page = page;
             Bounds = bounds;
             Color = color;
             BorderColor = borderColor;
             BorderWidth = borderWidth;
+            CharIndex = charIndex;
         }
 
         public void Draw(PdfRenderer renderer, Graphics graphics)
@@ -34,7 +36,8 @@ namespace PdfiumViewer
             if (graphics == null)
                 throw new ArgumentNullException(nameof(graphics));
 
-            var bounds = renderer.BoundsFromPdf(new PdfRectangle(Page, Bounds));
+            var bounds = renderer.BoundsFromPdf(
+                new PdfRectangle(Page, Bounds));
 
             using (var brush = new SolidBrush(Color))
             {
@@ -49,5 +52,11 @@ namespace PdfiumViewer
                 }
             }
         }
+        public override bool Equals(object o)
+            => o is IPdfMarker marker 
+            ? this.Page == marker.Page && this.CharIndex == marker.CharIndex 
+            : base.Equals(o);
+        public override int GetHashCode()
+            => (this.Page << 16) + this.CharIndex;
     }
 }

@@ -66,7 +66,7 @@ namespace PdfiumViewer
             this.saveButton.Image = global::PdfiumViewer.Properties.Resources.disk_blue;
             resources.ApplyResources(this.saveButton, "_saveButton");
             this.saveButton.Name = "_saveButton";
-            this.saveButton.Click += new System.EventHandler(this._saveButton_Click);
+            this.saveButton.Click += new System.EventHandler(this.SaveButton_Click);
             // 
             // _printButton
             // 
@@ -74,7 +74,7 @@ namespace PdfiumViewer
             this.printButton.Image = global::PdfiumViewer.Properties.Resources.printer;
             resources.ApplyResources(this.printButton, "_printButton");
             this.printButton.Name = "_printButton";
-            this.printButton.Click += new System.EventHandler(this._printButton_Click);
+            this.printButton.Click += new System.EventHandler(this.PrintButton_Click);
             // 
             // toolStripSeparator1
             // 
@@ -87,7 +87,7 @@ namespace PdfiumViewer
             this.zoomInButton.Image = global::PdfiumViewer.Properties.Resources.zoom_in;
             resources.ApplyResources(this.zoomInButton, "_zoomInButton");
             this.zoomInButton.Name = "_zoomInButton";
-            this.zoomInButton.Click += new System.EventHandler(this._zoomInButton_Click);
+            this.zoomInButton.Click += new System.EventHandler(this.ZoomInButton_Click);
             // 
             // _zoomOutButton
             // 
@@ -95,7 +95,7 @@ namespace PdfiumViewer
             this.zoomOutButton.Image = global::PdfiumViewer.Properties.Resources.zoom_out;
             resources.ApplyResources(this.zoomOutButton, "_zoomOutButton");
             this.zoomOutButton.Name = "_zoomOutButton";
-            this.zoomOutButton.Click += new System.EventHandler(this._zoomOutButton_Click);
+            this.zoomOutButton.Click += new System.EventHandler(this.ZoomOutButton_Click);
             // 
             // _container
             // 
@@ -118,7 +118,7 @@ namespace PdfiumViewer
             this.bookmarks.FullRowSelect = true;
             this.bookmarks.Name = "_bookmarks";
             this.bookmarks.ShowLines = false;
-            this.bookmarks.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this._bookmarks_AfterSelect);
+            this.bookmarks.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.Bookmarks_AfterSelect);
             // 
             // _renderer
             // 
@@ -128,7 +128,7 @@ namespace PdfiumViewer
             this.renderer.Page = 0;
             this.renderer.Rotation = PdfiumViewer.PdfRotation.Rotate0;
             this.renderer.ZoomMode = PdfiumViewer.PdfViewerZoomMode.FitHeight;
-            this.renderer.LinkClick += new PdfiumViewer.LinkClickEventHandler(this._renderer_LinkClick);
+            this.renderer.LinkClick += new PdfiumViewer.LinkClickEventHandler(this.Renderer_LinkClick);
             // 
             // PdfViewer
             // 

@@ -434,7 +434,7 @@ namespace PdfSearcher
             this._getTextFromPage.Name = "_getTextFromPage";
             this._getTextFromPage.Size = new System.Drawing.Size(60, 22);
             this._getTextFromPage.Text = "复制文本";
-            this._getTextFromPage.ToolTipText = "Get Text From Current Page";
+            this._getTextFromPage.ToolTipText = "复制当前选择的文本(可点击鼠标右键)";
             this._getTextFromPage.Click += new System.EventHandler(this.GetTextFromPage_Click);
             // 
             // toolStripButtonSelectText

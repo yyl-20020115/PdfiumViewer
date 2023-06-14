@@ -33,10 +33,12 @@ namespace PdfiumViewer
         private double zoomMin;
 
         public event EventHandler ZoomChanged;
-        public bool IsSelecting
+
+        protected bool selecting = true;
+        public virtual bool IsSelecting
         {
-            get;
-            set;
+            get => this.selecting;
+            set=>this.selecting = value;
         }
         protected virtual void OnZoomChanged(EventArgs e)
         {
