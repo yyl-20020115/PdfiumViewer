@@ -688,8 +688,12 @@ namespace PdfiumViewer
                     return base.IsInputKey(keyData);
             }
         }
+        protected virtual void OnUpdateScrollInfo()
+        {
 
-        private class ScrollProperties
+        }
+
+        protected  class ScrollProperties
         {
             private int _smallChange = 1;
             private int _largeChange = 10;
@@ -722,7 +726,7 @@ namespace PdfiumViewer
                 set { _smallChange = value; }
             }
 
-            public void UpdateScrollInfo()
+            public virtual void UpdateScrollInfo()
             {
                 if (!_parentControl.IsHandleCreated || !Visible)
                     return;
@@ -739,6 +743,8 @@ namespace PdfiumViewer
                 };
 
                 NativeMethods.SetScrollInfo(new HandleRef(_parentControl, _parentControl.Handle), _orientation, si, true);
+
+                this._parentControl.OnUpdateScrollInfo();
             }
         }
     }

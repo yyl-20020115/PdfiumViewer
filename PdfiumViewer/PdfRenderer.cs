@@ -39,6 +39,7 @@ namespace PdfiumViewer
         /// The associated PDF document.
         /// </summary>
         public IPdfDocument Document { get; private set; }
+        public string CurrentPageText => this.Document?.GetPdfText(this.Page);
         public string SelectedText { get; protected set; }
         public override bool IsSelecting
         {
@@ -160,6 +161,25 @@ namespace PdfiumViewer
                 }
             }
         }
+        private int lastPage = -1;
+        protected override void OnUpdateScrollInfo()
+        {
+            base.OnUpdateScrollInfo();
+
+            var page = this.Page;
+
+            if (page != this.lastPage)
+            {
+                this.OnPageChanged(page, this.lastPage);
+            }
+            this.lastPage = page;
+        }
+        protected virtual void OnPageChanged(int currentPage,int lastPage)
+        {
+            PageChanged?.Invoke(currentPage, lastPage);
+        }
+        public delegate void OnPageChangedDelegate(int currentPage, int lastPage);
+        public event OnPageChangedDelegate PageChanged;
 
         /// <summary>
         /// Gets a collection with all markers.
@@ -975,7 +995,6 @@ namespace PdfiumViewer
                     }
                 }
                 builder.AppendLine();
-                builder.AppendLine();
                 rets.Add((rects.page, ret ?? new RectangleF(),builder.ToString()));
             }
             return rets;
@@ -1076,9 +1095,9 @@ namespace PdfiumViewer
                         }
                     }
                 }
-                if (fullRect != null)
+                if (fullRect != null && charRects.Count>0)
                 {
-                    linesRects.Add((page, charRects.ToList()));
+                    linesRects.Add((page, charRects));
                     charRects = new List<(int,char,RectangleF)>();
                     fullRect = null;
                 }
@@ -1089,8 +1108,7 @@ namespace PdfiumViewer
                     line.page,
                     line.rect,
                     this.SelectionColor,
-                    SelectionBorderColor, 1)
-                { Text = line.line });
+                    SelectionBorderColor, 1){ Text = line.line });
             }
 
             if (markers.Count != this.Markers.Count

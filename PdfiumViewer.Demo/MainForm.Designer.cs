@@ -70,6 +70,7 @@ namespace PdfSearcher
             this.toolStripTextBoxTextSearch = new System.Windows.Forms.ToolStripTextBox();
             this.toolStripButtonTextSearch = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButtonRowSelect = new System.Windows.Forms.ToolStripButton();
             this._getTextFromPage = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
@@ -99,9 +100,10 @@ namespace PdfSearcher
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.coordinatesToolStripLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.treeViewBooks = new System.Windows.Forms.TreeView();
-            this.tabControlBooks = new System.Windows.Forms.TabControl();
             this.splitContainerRight = new System.Windows.Forms.SplitContainer();
-            this.toolStripButtonRowSelect = new System.Windows.Forms.ToolStripButton();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.tabControlBooks = new System.Windows.Forms.TabControl();
+            this.textBoxCurrentTextPage = new System.Windows.Forms.TextBox();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -109,6 +111,10 @@ namespace PdfSearcher
             this.splitContainerRight.Panel1.SuspendLayout();
             this.splitContainerRight.Panel2.SuspendLayout();
             this.splitContainerRight.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -425,6 +431,18 @@ namespace PdfSearcher
             this.toolStripSeparator3.Name = "toolStripSeparator3";
             this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
             // 
+            // toolStripButtonRowSelect
+            // 
+            this.toolStripButtonRowSelect.Checked = true;
+            this.toolStripButtonRowSelect.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.toolStripButtonRowSelect.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripButtonRowSelect.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonRowSelect.Image")));
+            this.toolStripButtonRowSelect.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonRowSelect.Name = "toolStripButtonRowSelect";
+            this.toolStripButtonRowSelect.Size = new System.Drawing.Size(76, 22);
+            this.toolStripButtonRowSelect.Text = "整行选取(&R)";
+            this.toolStripButtonRowSelect.Click += new System.EventHandler(this.ToolStripButtonRowSelect_Click);
+            // 
             // _getTextFromPage
             // 
             this._getTextFromPage.BackColor = System.Drawing.SystemColors.ActiveCaption;
@@ -656,15 +674,6 @@ namespace PdfSearcher
             this.treeViewBooks.TabIndex = 4;
             this.treeViewBooks.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TreeViewBooks_AfterSelect);
             // 
-            // tabControlBooks
-            // 
-            this.tabControlBooks.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControlBooks.Location = new System.Drawing.Point(0, 0);
-            this.tabControlBooks.Name = "tabControlBooks";
-            this.tabControlBooks.SelectedIndex = 0;
-            this.tabControlBooks.Size = new System.Drawing.Size(957, 529);
-            this.tabControlBooks.TabIndex = 5;
-            // 
             // splitContainerRight
             // 
             this.splitContainerRight.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -673,7 +682,7 @@ namespace PdfSearcher
             // 
             // splitContainerRight.Panel1
             // 
-            this.splitContainerRight.Panel1.Controls.Add(this.tabControlBooks);
+            this.splitContainerRight.Panel1.Controls.Add(this.splitContainer1);
             // 
             // splitContainerRight.Panel2
             // 
@@ -683,17 +692,40 @@ namespace PdfSearcher
             this.splitContainerRight.SplitterWidth = 8;
             this.splitContainerRight.TabIndex = 6;
             // 
-            // toolStripButtonRowSelect
+            // splitContainer1
             // 
-            this.toolStripButtonRowSelect.Checked = true;
-            this.toolStripButtonRowSelect.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.toolStripButtonRowSelect.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButtonRowSelect.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonRowSelect.Image")));
-            this.toolStripButtonRowSelect.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonRowSelect.Name = "toolStripButtonRowSelect";
-            this.toolStripButtonRowSelect.Size = new System.Drawing.Size(76, 22);
-            this.toolStripButtonRowSelect.Text = "整行选取(&R)";
-            this.toolStripButtonRowSelect.Click += new System.EventHandler(this.ToolStripButtonRowSelect_Click);
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.tabControlBooks);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.textBoxCurrentTextPage);
+            this.splitContainer1.Size = new System.Drawing.Size(957, 529);
+            this.splitContainer1.SplitterDistance = 592;
+            this.splitContainer1.TabIndex = 0;
+            // 
+            // tabControlBooks
+            // 
+            this.tabControlBooks.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControlBooks.Location = new System.Drawing.Point(0, 0);
+            this.tabControlBooks.Name = "tabControlBooks";
+            this.tabControlBooks.SelectedIndex = 0;
+            this.tabControlBooks.Size = new System.Drawing.Size(592, 529);
+            this.tabControlBooks.TabIndex = 6;
+            // 
+            // textBoxCurrentTextPage
+            // 
+            this.textBoxCurrentTextPage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxCurrentTextPage.Location = new System.Drawing.Point(0, 0);
+            this.textBoxCurrentTextPage.Multiline = true;
+            this.textBoxCurrentTextPage.Name = "textBoxCurrentTextPage";
+            this.textBoxCurrentTextPage.Size = new System.Drawing.Size(361, 529);
+            this.textBoxCurrentTextPage.TabIndex = 0;
             // 
             // MainForm
             // 
@@ -719,6 +751,11 @@ namespace PdfSearcher
             this.splitContainerRight.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerRight)).EndInit();
             this.splitContainerRight.ResumeLayout(false);
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -782,7 +819,6 @@ namespace PdfSearcher
         private System.Windows.Forms.ToolStripMenuItem HelpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem AboutToolStripMenuItem;
         private System.Windows.Forms.TreeView treeViewBooks;
-        private System.Windows.Forms.TabControl tabControlBooks;
         private System.Windows.Forms.ToolStripLabel toolStripLabel3;
         private System.Windows.Forms.ToolStripTextBox toolStripTextBoxTextSearch;
         private System.Windows.Forms.ToolStripButton toolStripButtonTextSearch;
@@ -794,6 +830,9 @@ namespace PdfSearcher
         private System.Windows.Forms.SplitContainer splitContainerRight;
         private System.Windows.Forms.ToolStripButton toolStripButtonInWorking;
         private System.Windows.Forms.ToolStripButton toolStripButtonRowSelect;
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.TabControl tabControlBooks;
+        private System.Windows.Forms.TextBox textBoxCurrentTextPage;
     }
 }
 

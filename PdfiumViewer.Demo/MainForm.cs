@@ -216,7 +216,7 @@ namespace PdfSearcher
 
             pdfViewer.Renderer.DisplayRectangleChanged += Renderer_DisplayRectangleChanged;
             pdfViewer.Renderer.ZoomChanged += Renderer_ZoomChanged;
-
+            pdfViewer.Renderer.PageChanged += Renderer_PageChanged;
             pdfViewer.Renderer.MouseMove += Renderer_MouseMove;
             pdfViewer.Renderer.MouseLeave += Renderer_MouseLeave;
             ShowPdfLocation(PdfPoint.Empty);
@@ -230,6 +230,13 @@ namespace PdfSearcher
             showToolbar.Checked = pdfViewer.ShowToolbar;
 
         }
+
+        private void Renderer_PageChanged(int currentPage, int lastPage)
+        {
+            var text = this.PdfViewer?.Renderer.CurrentPageText;
+            this.textBoxCurrentTextPage.Text = text ?? string.Empty;
+        }
+
         public MainForm()
         {
             InitializeComponent();
