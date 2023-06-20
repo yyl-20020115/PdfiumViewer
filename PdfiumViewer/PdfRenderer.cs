@@ -999,6 +999,9 @@ namespace PdfiumViewer
             }
             return rets;
         }
+
+        protected Dictionary<int, (string, List<RectangleF>)> pageRectsCache = new Dictionary<int, (string, List<RectangleF>)>();
+
         protected virtual void BuildSelection()
         {
             var x = Math.Min(sp.X, ep.X);
@@ -1023,21 +1026,51 @@ namespace PdfiumViewer
                 int page = currentPdfRectangle.Page;
 
                 if (page < 0) continue;
+
+
                 var col = -1;
-                var charRects = new List<(int i,char c, RectangleF r)>();
-                var text = Document.GetPdfText(page);
+                List < (int i, char c, RectangleF r)> charRects = new List<(int i,char c, RectangleF r)>();
+                string text = string.Empty;
+                List<RectangleF> rs = new List<RectangleF>();
+                if (!pageRectsCache.TryGetValue(page, out var ls))
+                {
+                    rs = new List<RectangleF>();
+
+                    text = Document.GetPdfText(page);
+                    for (int i = 0; i < text.Length; i++)
+                    {
+                        var pdfCharSpan = new PdfTextSpan(page, i, 1);
+                        var pdfCharBounds = Document.GetTextBounds(pdfCharSpan);
+                        if (pdfCharBounds.Count == 1)
+                        {
+                            var pdfCharBound = pdfCharBounds[0];
+                            var devCharBound = this.BoundsFromPdf(pdfCharBound, true);
+                            rs.Add(pdfCharBound.Bounds);
+                        }
+                        else
+                        {
+                            rs.Add(new RectangleF());
+                        }
+                    }
+
+                    pageRectsCache.Add(page, (text, rs));
+
+                }
+                else
+                {
+                    text = ls.Item1;
+                    rs = ls.Item2;
+                }
+
                 RectangleF? lastRect = null;
                 RectangleF? fullRect = null;
                 for (int i = 0; i < text.Length; i++)
                 {
                 forChar:
-                    var pdfCharSpan = new PdfTextSpan(page, i, 1);
-                    var pdfCharBounds = Document.GetTextBounds(pdfCharSpan);
-                    if (pdfCharBounds.Count == 1)
                     {
                     retry:
-                        var pdfCharBound = pdfCharBounds[0];
-                        var devCharBound = this.BoundsFromPdf(pdfCharBound, true);
+                        var pdfCharBound = rs[i];
+                        var devCharBound = this.BoundsFromPdf(new PdfRectangle(page, pdfCharBound), true);
                         if (selectionRect.IntersectsWith(devCharBound))
                         {
                             col++;
@@ -1050,10 +1083,10 @@ namespace PdfiumViewer
                                 right = col;
                             }
                             var rect = new RectangleF(
-                                pdfCharBound.Bounds.Left - 1,
-                                pdfCharBound.Bounds.Top + 1,
-                                pdfCharBound.Bounds.Width + 2,
-                                pdfCharBound.Bounds.Height - 2);
+                                pdfCharBound.Left - 1,
+                                pdfCharBound.Top + 1,
+                                pdfCharBound.Width + 2,
+                                pdfCharBound.Height - 2);
 
                             if (lastRect == null)
                             {
