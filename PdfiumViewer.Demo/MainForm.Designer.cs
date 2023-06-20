@@ -721,11 +721,14 @@ namespace PdfSearcher
             // textBoxCurrentTextPage
             // 
             this.textBoxCurrentTextPage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxCurrentTextPage.HideSelection = false;
             this.textBoxCurrentTextPage.Location = new System.Drawing.Point(0, 0);
             this.textBoxCurrentTextPage.Multiline = true;
             this.textBoxCurrentTextPage.Name = "textBoxCurrentTextPage";
+            this.textBoxCurrentTextPage.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.textBoxCurrentTextPage.Size = new System.Drawing.Size(361, 529);
             this.textBoxCurrentTextPage.TabIndex = 0;
+            this.textBoxCurrentTextPage.WordWrap = false;
             // 
             // MainForm
             // 

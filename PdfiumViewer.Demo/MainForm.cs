@@ -714,6 +714,13 @@ namespace PdfSearcher
                 {
                     this.CurrentTabPage = cp;
                     record.PdfSearchManager.ScrollIntoView(match);
+                    if(e.Node.Tag is PdfMatch pm)
+                    {
+                        this.textBoxCurrentTextPage.Select(pm.TextSpan.Offset, pm.TextSpan.Length);
+                        this.textBoxCurrentTextPage.ScrollToCaret();
+                        //this.textBoxCurrentTextPage.Focus();
+                    }
+
                 }
 
             }
